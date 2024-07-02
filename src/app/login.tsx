@@ -1,7 +1,7 @@
 // app/login.tsx
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, Pressable } from "react-native";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { useRouter } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
