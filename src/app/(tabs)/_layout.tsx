@@ -1,12 +1,26 @@
-import { Tabs } from "expo-router";
+import { Tabs, router } from "expo-router";
 import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { Pressable } from "react-native";
 
 const TabsLayout = () => {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
+        headerShadowVisible: false,
+        headerRight: () => {
+          return (
+            <Pressable onPress={()=>{
+                router.push("/settings")
+            }}>
+              <Ionicons
+                name="settings-outline"
+                size={24}
+                className="mr-4 font-bold"
+              />
+            </Pressable>
+          );
+        },
         tabBarStyle: {
           elevation: 0,
           borderTopColor: "transparent",
@@ -30,17 +44,15 @@ const TabsLayout = () => {
           },
         }}
       />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: "Settings",
-          tabBarIcon(props) {
-            return <Ionicons name="settings-outline" size={24} {...props} />;
-          },
-          headerShown: true,
-          headerShadowVisible: false,
-        }}
-      />
+        <Tabs.Screen
+            name="projects"
+            options={{
+            title: "Projects",
+            tabBarIcon(props) {
+                return <Ionicons name="folder-outline" size={24} {...props} />;
+            },
+            }}
+        />
     </Tabs>
   );
 };

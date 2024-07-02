@@ -1,20 +1,17 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Pressable, StyleSheet, Text, View } from 'react-native'
+import React from 'react'
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from '@/context/AuthContext';
 
 export default function Settings() {
-  const { logout } = useAuth();
-  const handleLogout = () => {
-    logout();
-    router.replace("/login");
-  };
-
+    const { logout } = useAuth();
+    const handleLogout = () => {
+      logout();
+      router.replace("/login");
+    };
   return (
-    <SafeAreaView>
-      <View className="flex px-5 gap-4">
+    <View className="flex px-5 gap-4 mt-6">
         {/* add fingerprint */}
         <View className="flex flex-row gap-4">
           <View className="flex justify-center">
@@ -40,8 +37,7 @@ export default function Settings() {
           </View>
         </Pressable>
       </View>
-    </SafeAreaView>
-  );
+  )
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({})
