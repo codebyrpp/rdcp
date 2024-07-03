@@ -1,20 +1,45 @@
 // app/login.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Button, Pressable } from "react-native";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import * as LocalAuthentication from "expo-local-authentication";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();
   const router = useRouter();
+  const [isFingerprintAvailable, setIsFingerprintAvailable] = useState(false);
+
+  useEffect(() => {
+    LocalAuthentication.hasHardwareAsync().then((result) => {
+      if (result) {
+        LocalAuthentication.isEnrolledAsync().then((result) => {
+          setIsFingerprintAvailable(result);
+        });
+      }
+    });
+  }, []);
 
   const handleLogin = () => {
     // Perform your login logic here
     login();
     router.replace("/home");
+  };
+
+  const handleFingerprintLogin = () => {
+    LocalAuthentication.authenticateAsync({
+      promptMessage: "Login with fingerprint",
+    }).then((result) => {
+      if (result.success) {
+        // Perform your login logic here
+        handleLogin();
+      } else {
+        alert("Fingerprint authentication failed");
+      }
+    });
   };
 
   return (
@@ -63,6 +88,18 @@ export default function Login() {
           <Text className="font-bold underline">Register</Text>
         </Pressable>
       </View>
+      {/* login with biometrics */}
+
+      {isFingerprintAvailable && (
+        <Pressable onPress={handleFingerprintLogin}>
+          <View className="flex flex-row justify-center mt-8">
+            <View className="w-fit border flex flex-row rounded-lg p-3">
+              <Ionicons name="finger-print" size={24} />
+              <Text className="ml-2">Login with fingerprint</Text>
+            </View>
+          </View>
+        </Pressable>
+      )}
     </View>
   );
 }
