@@ -1,10 +1,11 @@
 // app/login.tsx
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Button, Pressable } from "react-native";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as LocalAuthentication from "expo-local-authentication";
+import { TextButton } from "../ui/button";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -70,26 +71,8 @@ export default function Login() {
         <Ionicons name="eye" size={20} className="mb-0 p-0" />
       </View>
       {/* <Text className="text-red-500 mb-4">Invalid email or password!</Text> */}
-      <Pressable className="bg-black p-4 rounded-lg" onPress={handleLogin}>
-        <Text className="text-center text-white font-bold">Login</Text>
-      </Pressable>
-      <Pressable
-        className="text-blue-500 mt-4"
-        onPress={() => router.push("/forgot-password")}
-      >
-        <Text className="text-center underline">Forgot password?</Text>
-      </Pressable>
-      <View className="flex flex-row justify-center mt-8">
-        <Text className="text-center">Don't have an account?</Text>
-        <Pressable
-          className="text-blue-500 ml-2"
-          onPress={() => router.push("/register")}
-        >
-          <Text className="font-bold underline">Register</Text>
-        </Pressable>
-      </View>
-      {/* login with biometrics */}
-
+      <TextButton text="Login" onPress={handleLogin} />
+    
       {isFingerprintAvailable && (
         <Pressable onPress={handleFingerprintLogin}>
           <View className="flex flex-row justify-center mt-8">

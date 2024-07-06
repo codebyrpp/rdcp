@@ -2,7 +2,6 @@ import "../global.css";
 import React from "react";
 import { Stack } from "expo-router";
 import { AuthProvider, useAuth } from "../context/AuthContext";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const Layout = () => {
   const { isLoggedIn } = useAuth();
@@ -10,15 +9,11 @@ const Layout = () => {
   return isLoggedIn ? (
     <AppStack>
       <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="settings" options={{
-        title: "Settings",
-        headerShown: true,
-      }} />
+      <Stack.Screen name="forms/[id]"/>
     </AppStack>
   ) : (
     <AppStack>
-      <Stack.Screen name="login" />
-      <Stack.Screen name="register" options={{}} />
+      <Stack.Screen name="index" />
     </AppStack>
   );
 };

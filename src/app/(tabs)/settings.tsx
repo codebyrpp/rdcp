@@ -86,7 +86,7 @@ export default function Settings() {
   const { logout } = useAuth();
   const handleLogout = () => {
     logout();
-    router.replace("/login");
+    router.replace("/");
   };
   return (
     <View className="flex px-5 gap-4 mt-6">
