@@ -61,7 +61,7 @@ export default function VideoFileInput(props: VideoFileInputProps) {
         </View>
       )}
       {!video && (
-        <View className="flex flex-row gap-4">
+        <View className="flex sm:flex-row gap-2 sm:gap-4">
           {/* Pick image from camera roll */}
           <Pressable
             onPress={pickVideo}

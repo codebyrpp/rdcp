@@ -45,13 +45,13 @@ function FormListElement({ form }: FormListElementProps): React.JSX.Element {
   return (
     <View
       key={form.id}
-      className="flex flex-row justify-between p-3 border rounded-xl my-1"
+      className="flex sm:flex-row gap-2 justify-between p-3 border rounded-xl my-1"
     >
-      <View>
+      <View className="flex">
         <Text className="font-bold">{form.title}</Text>
         <Text className="text-gray-500">{form.description}</Text>
       </View>
-      <View className="flex flex-row justify-center gap-3">
+      <View className="flex flex-row gap-3">
         <Link
           className="bg-black p-2 rounded-lg"
           href={{

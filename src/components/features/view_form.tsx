@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import { View, TextInput, Text, Image, Button } from "react-native";
+import { View, TextInput, Text, Image, Button, ScrollView } from "react-native";
 import ImageFileInput from "../ui/form-elements/form-image-input";
 import FormInput from "../ui/form-elements/form-input";
 import TextInputForm from "../ui/form-elements/form-text-input";
 import VideoFileInput from "../ui/form-elements/form-video-input";
 import DropdownInput from "../ui/form-elements/form-dropdown";
+import AudioFileInput from "../ui/form-elements/form-audio-input";
 
 const ViewForm = () => {
   return (
-    <View className="p-4 flex gap-4">
+    <ScrollView>
+      <View className="p-4 flex gap-4">
       <TextInputForm
         question="What is your name?"
         description="This is a text input field."
@@ -28,8 +30,12 @@ const ViewForm = () => {
         description="This is a video input field."
         isRequired={true}
       />
-
+      <AudioFileInput
+        question="Pick an audio"
+        description="This is an audio input field."
+      />
     </View>
+    </ScrollView>
   );
 };
 
