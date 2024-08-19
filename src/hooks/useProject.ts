@@ -1,4 +1,4 @@
-import { PROJECT_ROUTE } from "@/constants/routes"
+import { PROJECT_ROUTE, PROJECT_SETTINGS_ROUTE } from "@/constants/routes"
 import { useNavigate } from "react-router-dom"
 
 const useProject = () => {
@@ -10,12 +10,19 @@ const useProject = () => {
         navigate(route);
     }
 
+    const navigateToProjectSettings = (projectId: string) => {
+        // Open the project settings
+        const route = `${PROJECT_SETTINGS_ROUTE.replace(':projectId', projectId)}`
+        navigate(route);
+    }
+
     const createProject = () => {
         // Create a new project
     }
 
     return {
         navigateToProject,
+        navigateToProjectSettings,
         createProject
     }
 }

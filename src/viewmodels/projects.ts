@@ -51,7 +51,7 @@ export const useCreateProjectViewModel = () => {
         // Call the API to create a project
         try {
             const project = await createProjectMutation(values).unwrap();
-            navigateToProject(project._id);
+            navigateToProject(project.id);
         } catch (error) {
             console.error("Failed to create project", error);
         }
