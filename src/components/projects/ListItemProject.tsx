@@ -1,22 +1,17 @@
-import React from 'react'
 import { Button } from '../ui/button'
 import { Project } from '@/models/projects'
 import { formatDate } from '@/utils'
 import { useNavigate } from 'react-router-dom'
 import { PROJECT_ROUTE } from '@/constants/routes'
+import useProject from '@/hooks/useProject'
 
 interface ProjectListItemProps {
     project: Project
 }
 
-const ProjectListItem = ({project}: ProjectListItemProps) => {
+const ProjectListItem = ({ project }: ProjectListItemProps) => {
 
-    const navigate = useNavigate()
-    const handleOpenProject = () => {
-        // Open the project
-        const route = PROJECT_ROUTE.replace(':projectId', project.id)
-        navigate(route);
-    }
+    const { navigateToProject } = useProject()
 
     return (
         <div className='flex justify-between
@@ -32,7 +27,9 @@ const ProjectListItem = ({project}: ProjectListItemProps) => {
                     <div className='text-sm text-slate-700'>{formatDate(project.createdAt)}</div>
                 </div>
                 <Button className='bg-slate-800 hover:bg-slate-900'
-                    onClick={handleOpenProject}>
+                    onClick={() => {
+                        navigateToProject(project.id)
+                    }}>
                     Open
                 </Button>
             </div>
