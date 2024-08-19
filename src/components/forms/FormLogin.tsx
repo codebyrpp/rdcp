@@ -20,13 +20,13 @@ import { useLoginFormViewModel } from "@/viewmodels/login"
 
 export default function LoginForm() {
 
-  const {form, handleSubmit} = useLoginFormViewModel()
+  const { form, handleLogin, isLoading, isError, errorMessage } = useLoginFormViewModel()
 
   return (
-    <FormWrapper title="Sign In" 
-    description="to access your projects and forms">
+    <FormWrapper title="Sign In"
+      description="to access your projects and forms">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-2 w-80">
+        <form onSubmit={form.handleSubmit(handleLogin)} className="space-y-2 w-80">
           <FormField
             control={form.control}
             name="email"
@@ -56,7 +56,16 @@ export default function LoginForm() {
               </FormItem>
             )}
           />
-          <Button type="submit">Login</Button>
+          
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? 'Logging in...' : 'Login'}
+          </Button>
+
+          {isError && (
+            <p className="text-red-500 mt-2">
+              {errorMessage || 'Failed to login. Please try again.'}
+            </p>
+          )}
         </form>
       </Form>
     </FormWrapper>
