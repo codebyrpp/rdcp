@@ -26,7 +26,7 @@ const ProjectListItem = ({ project }: ProjectListItemProps) => {
                 </div>
                 <Button className='bg-slate-800 hover:bg-slate-900'
                     onClick={() => {
-                        navigateToProject(project.id)
+                        navigateToProject(project._id)
                     }}>
                     Open
                 </Button>

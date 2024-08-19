@@ -9,7 +9,14 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
                 method: 'GET'
             }),
         }),
+        createProject: builder.mutation<Project, Partial<Project>>({
+            query: (body) => ({
+                url: 'projects',
+                method: 'POST',
+                body
+            }),
+        }),
     }),
 });
 
-export const { useGetProjectsQuery } = projectsApiSlice;
+export const { useGetProjectsQuery, useCreateProjectMutation } = projectsApiSlice;

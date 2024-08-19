@@ -2,7 +2,7 @@ import { PROJECT_ROUTE } from "@/constants/routes"
 import { useNavigate } from "react-router-dom"
 
 const useProject = () => {
-    
+
     const navigate = useNavigate()
     const navigateToProject = (projectId: string) => {
         // Open the project
@@ -10,8 +10,13 @@ const useProject = () => {
         navigate(route);
     }
 
+    const createProject = () => {
+        // Create a new project
+    }
+
     return {
-        navigateToProject
+        navigateToProject,
+        createProject
     }
 }
 
