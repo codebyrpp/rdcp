@@ -2,9 +2,18 @@ import ProjectListItem from '@/components/projects/ListItemProject'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { useProjectsViewModel } from '@/viewmodels/projects'
+import { useEffect } from 'react'
 import { FaPlus } from 'react-icons/fa6'
 
 const PageDashboard = () => {
+
+  const { projects, isLoading, isError, error } = useProjectsViewModel();
+  
+  useEffect(() => {
+    console.log(projects)
+  }, [projects])
+
   return (
     <div className='p-4'>
       {/* top */}
@@ -32,8 +41,17 @@ const PageDashboard = () => {
       </div>
       {/* content */}
       <div className="grid grid-cols-2 gap-2">
-        <ProjectListItem />
-        <ProjectListItem />
+        {
+          isLoading ? (
+            <div>Loading...</div>
+          ) : isError ? (
+            // @ts-ignore
+            <div>{error?.data?.message}</div>
+          ) : projects.map((project: any) => (
+            <ProjectListItem key={project.id} project={project} />
+          ))
+        }
+        
       </div>
     </div>
   )
