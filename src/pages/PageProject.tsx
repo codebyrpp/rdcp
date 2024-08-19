@@ -1,7 +1,9 @@
 import CreateForm from '@/components/feats/forms/CreateForm';
+import FormListItem from '@/components/feats/forms/ListItemForm';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import useProject from '@/hooks/useProject';
+import { forms_data } from '@/models/forms';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -10,7 +12,7 @@ const PageProject = () => {
     const { projectId } = useParams<{ projectId: string }>();
     const { navigateToProjectSettings } = useProject();
     const navigate = useNavigate();
-    
+
     useEffect(() => {
         if (!projectId) {
             // redirect to the home page
@@ -24,9 +26,9 @@ const PageProject = () => {
                 <h4 className='text-xl font-bold'>
                     {"{Project Name}"}
                 </h4>
-                <Button variant={"secondary"} onClick={()=>{
+                <Button variant={"secondary"} onClick={() => {
                     // navigate to project settings
-                   navigateToProjectSettings(projectId!); 
+                    navigateToProjectSettings(projectId!);
                 }}>
                     Project Settings
                 </Button>
@@ -42,6 +44,16 @@ const PageProject = () => {
 
             </div>
             {/* end of top */}
+
+            {/* List of forms */}
+            <div className="grid grid-cols-1 gap-3">
+                {/* <FormListItem form={form} /> */}
+                {
+                    forms_data.map((form) => {
+                        return <FormListItem form={form} key={form.id} />
+                    })
+                }
+            </div>
         </div>
     );
 };
