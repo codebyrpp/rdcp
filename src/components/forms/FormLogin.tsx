@@ -1,7 +1,4 @@
 "use client"
-
-
-
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -15,11 +12,16 @@ import {
 import { Input } from "@/components/ui/input"
 import FormWrapper from "@/components/forms/FormWrapper"
 import { useLoginFormViewModel } from "@/viewmodels/login"
-
+import { useNavigate } from "react-router-dom"
+import { FORGOT_PASSWORD_ROUTE } from "@/constants/routes"
 
 
 export default function LoginForm() {
 
+  const navigate = useNavigate()
+  const handleForgetPassword = () => {
+    navigate(FORGOT_PASSWORD_ROUTE)
+  }
   const { form, handleLogin, isLoading, isError, errorMessage } = useLoginFormViewModel()
 
   return (
@@ -56,7 +58,7 @@ export default function LoginForm() {
               </FormItem>
             )}
           />
-          
+
           <Button type="submit" disabled={isLoading}>
             {isLoading ? 'Logging in...' : 'Login'}
           </Button>
@@ -68,6 +70,12 @@ export default function LoginForm() {
           )}
         </form>
       </Form>
+      {/* TODO: Add forget password link */}
+      <div className="flex justify-center">
+        <Button onClick={handleForgetPassword} className="mt-3" variant={"link"}>
+          Forgot your password?
+        </Button>
+      </div>
     </FormWrapper>
   )
 }

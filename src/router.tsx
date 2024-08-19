@@ -4,12 +4,15 @@ import PageLogin from "./pages/PageLogin";
 import AppLayout from "./layouts/AppLayout";
 import PageNotFound from "./pages/PageNotFound";
 import RootLayout from "./layouts/RootLayout";
+import PageForgetPassword from "./pages/PageForgetPassword";
+import { FORGOT_PASSWORD_ROUTE, LOGIN_ROUTE, PROJECTS_ROUTE } from "./constants/routes";
 
 const router = createBrowserRouter(createRoutesFromElements(
     <Route element={<RootLayout/>} errorElement={<PageNotFound/>}>
-        <Route path="/login" element={<PageLogin/>}/>
+        <Route path={LOGIN_ROUTE} element={<PageLogin/>}/>
+        <Route path={FORGOT_PASSWORD_ROUTE} element={<PageForgetPassword/>}/>
         <Route element={<AppLayout/>}>
-            <Route path="/projects" element={<PageDashboard />} />
+            <Route path={PROJECTS_ROUTE} element={<PageDashboard />} />
         </Route>
     </Route>
 ));
