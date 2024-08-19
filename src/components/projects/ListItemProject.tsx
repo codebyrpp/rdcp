@@ -1,8 +1,6 @@
 import { Button } from '../ui/button'
 import { Project } from '@/models/projects'
 import { formatDate } from '@/utils'
-import { useNavigate } from 'react-router-dom'
-import { PROJECT_ROUTE } from '@/constants/routes'
 import useProject from '@/hooks/useProject'
 
 interface ProjectListItemProps {
