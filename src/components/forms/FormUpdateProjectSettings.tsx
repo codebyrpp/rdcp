@@ -1,12 +1,13 @@
-import FormWrapper from './FormWrapper'
-import { Form } from 'react-router-dom'
 import { Button } from '../ui/button'
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '../ui/form'
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Textarea } from '../ui/textarea'
+import useProjectViewModel from '@/viewmodels/projects/single'
+import { useParams } from 'react-router-dom'
+import { useEffect } from 'react'
 
 const projectSchema = z.object({
     // name is a required string
@@ -19,7 +20,11 @@ const projectSchema = z.object({
 })
 
 
-const FormProjectSettings = () => {
+const FormUpdateProjectSettings = () => {
+
+    const { projectId } = useParams<{ projectId: string }>();
+
+    const { project } = useProjectViewModel({ projectId, withForms: false });
 
     const form = useForm<z.infer<typeof projectSchema>>({
         resolver: zodResolver(projectSchema),
@@ -28,16 +33,19 @@ const FormProjectSettings = () => {
             description: "",
         },
     });
+
     const handleSubmit = async (values: z.infer<typeof projectSchema>) => {
         // Call the API to create a project
         console.log(values)
     }
 
     return (
-        <FormWrapper title="Sign In"
-            description="to access your projects and forms">
-            <Form {...form} >
-                <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-2">
+        <div className="flex flex-col w-full">
+            <h5 className='text-lg my-2 font-bold'>
+                Update Project Settings
+            </h5>
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-2 w-full">
                     <FormField
                         control={form.control}
                         name="name"
@@ -65,14 +73,13 @@ const FormProjectSettings = () => {
                             </FormItem>
                         )}
                     />
-
-                    <div className="flex space-x-2">
-                        <Button type="submit">Update</Button>
+                    <div className="flex my-3">
+                        <Button type="submit">Save Changes</Button>
                     </div>
                 </form>
             </Form>
-        </FormWrapper>
+        </div>
     )
 }
 
-export default FormProjectSettings
+export default FormUpdateProjectSettings

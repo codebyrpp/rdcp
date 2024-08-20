@@ -25,6 +25,19 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        updateProject: builder.mutation<any, Partial<Project>>({
+            query: (body) => ({
+                url: 'projects',
+                method: 'PATCH',
+                body
+            }),
+        }),
+        deleteProject: builder.mutation<any, {projectId: string}>({
+            query: ({projectId}) => ({
+                url: `projects/${projectId}`,
+                method: 'DELETE',
+            }),
+        }),
     }),
 });
 
@@ -35,4 +48,7 @@ export interface ProjectDTO extends Project{
 export const { 
     useGetProjectsQuery,
     useGetProjectQuery, 
-    useCreateProjectMutation } = projectsApiSlice;
+    useCreateProjectMutation,
+    useUpdateProjectMutation,
+    useDeleteProjectMutation
+} = projectsApiSlice;

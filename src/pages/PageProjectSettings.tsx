@@ -1,5 +1,5 @@
 import BreadCrumbs from "@/components/common/BreadCrumbs"
-import FormProjectSettings from "@/components/forms/FormProjectSettings";
+import FormUpdateProjectSettings from "@/components/forms/FormUpdateProjectSettings";
 import DeleteProject from "@/components/projects/DeleteProject";
 import useProjectViewModel from "@/viewmodels/projects/single";
 import { useEffect } from "react";
@@ -24,12 +24,12 @@ const PageProjectSettings = () => {
                 <BreadCrumbs links={[
                     { name: 'Projects', url: '/projects' },
                     { name: `Project: ${project?.name}`, url: `/projects/${projectId}` },
-                ]} pageName={`Project Settings`} />
+                ]} pageName={`Settings`} />
             </div>
 
-            <div className="grid grid-cols-2">
+            <div className="grid grid-cols-2 mt-2">
                 <div className="flex flex-col gap-3">
-                    {/* <FormProjectSettings /> */}
+                    <FormUpdateProjectSettings />
                     <DeleteProject />
                 </div>
             </div>

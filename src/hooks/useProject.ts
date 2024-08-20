@@ -1,4 +1,4 @@
-import { PROJECT_ROUTE, PROJECT_SETTINGS_ROUTE } from "@/constants/routes"
+import { PROJECT_ROUTE, PROJECT_SETTINGS_ROUTE, PROJECTS_ROUTE } from "@/constants/routes"
 import { useNavigate } from "react-router-dom"
 
 const useProject = () => {
@@ -17,9 +17,14 @@ const useProject = () => {
         navigate(route);
     }
 
+    const navigateToAllProjects = () => {
+        navigate(PROJECTS_ROUTE);
+    }
+
     return {
         navigateToProject,
         navigateToProjectSettings,
+        navigateToAllProjects
     }
 }
 

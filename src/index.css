@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Space+Grotesk:wght@300..700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Space+Grotesk:wght@300..700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -30,6 +30,8 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+    --success: 120 50% 40%; /* A moderate green for general success */
+    --success-foreground: 120 60% 90%; /* A lighter green for text on success elements */
   }
 
   .dark {
@@ -70,8 +72,9 @@
     @apply bg-slate-200;
     font-family: "Inter", sans-serif;
   }
-  h1,h2,h3{
+  h1,
+  h2,
+  h3 {
     font-family: "Space Grotesk", sans-serif;
   }
 }
-
