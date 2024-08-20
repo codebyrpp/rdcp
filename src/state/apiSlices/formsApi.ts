@@ -1,6 +1,6 @@
 import { Form } from "@/models/forms";
 import { apiSlice } from "../api";
-import { ProjectRole } from "@/models/user";
+import { ProjectRole } from "@/models/projects";
 
 export interface ProjectDTO {
     id: string;
@@ -21,16 +21,17 @@ export const formsApiSlice = apiSlice.injectEndpoints({
             async onQueryStarted({ projectId }, { dispatch, queryFulfilled }) {
                 try {
                     const { data: newForm } = await queryFulfilled;
-
+                    console.log('Successfully created a new form:', newForm);
                     // Optimistically update the getProject cache with the new form
-                    dispatch(apiSlice.util.updateQueryData('getProject', projectId, (draft: ProjectDTO) => {
-                        console.log('Updating the project with the new form:', draft, newForm);
-                        if (draft.forms) {
-                            draft.forms.push(newForm);
-                        } else {
-                            draft.forms = [newForm];
-                        }
-                    }));
+                    dispatch(apiSlice.util.updateQueryData('getProject', projectId,
+                        (draft: ProjectDTO) => {
+                            console.log('Updating the project with the new form:', draft, newForm);
+                            if (draft.forms) {
+                                draft.forms.push(newForm);
+                            } else {
+                                draft.forms = [newForm];
+                            }
+                        }));
 
                 } catch (error) {
                     console.error('Failed to update the project with the new form:', error);

@@ -1,16 +1,13 @@
-import { useGetProjectQuery } from "@/state/apiSlices/projectsApi";
+import { useGetProjectWithFormsQuery } from "@/state/apiSlices/projectsApi";
 
-const useProjectViewModel = ({ projectId, withForms = false }: {
+const useProjectViewModel = ({ projectId }: {
     projectId: string | undefined
-    withForms?: boolean,
 }) => {
 
     // Fetch projects using the query hook
     // Call the query only if projectId has a valid value
-    const { data, isLoading, isError, error } = useGetProjectQuery({
-        projectId: projectId ?? '',
-        withForms
-    }, {
+    const { data, isLoading, isError, error } = useGetProjectWithFormsQuery({
+        projectId: projectId ?? '',}, {
         skip: !projectId,
     });
 

@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from './store';
+import { PROJECT_TAG, FORM_TAG } from './tags';
 
 const baseUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
@@ -19,5 +20,6 @@ export const apiSlice = createApi({
             return headers;
         },
     }),
+    tagTypes:[PROJECT_TAG, FORM_TAG],
     endpoints: (_) => ({}),
 });
