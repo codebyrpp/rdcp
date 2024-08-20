@@ -3,7 +3,7 @@ import ProjectListItem from '@/components/projects/ListItemProject'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { useProjectsViewModel } from '@/viewmodels/projects'
+import { useProjectsViewModel } from '@/viewmodels/projects/list'
 import { useEffect } from 'react'
 import { FaPlus } from 'react-icons/fa6'
 

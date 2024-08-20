@@ -9,9 +9,9 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useCreateProjectViewModel } from "@/viewmodels/projects"
 import { Textarea } from "../ui/textarea"
 import { ReactNode } from "react"
+import { useCreateProjectViewModel } from "@/viewmodels/projects/create"
 
 
 export default function CreateProjectForm({

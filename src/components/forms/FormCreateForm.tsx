@@ -11,7 +11,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "../ui/textarea"
 import { ReactNode } from "react"
-import { useCreateFormViewModel } from "@/viewmodels/forms"
+import { useCreateFormViewModel } from "@/viewmodels/forms/create"
+import { useParams } from "react-router-dom"
 
 
 export default function FormCreateForm({
@@ -20,11 +21,13 @@ export default function FormCreateForm({
     cancelActionButton: ReactNode
 }) {
 
-    const { form, handleCreateProject, isLoading } = useCreateFormViewModel();
+    const { projectId } = useParams<{ projectId: string }>();
+    const { form, handleCreateForm, isLoading } = useCreateFormViewModel({ projectId });
+
     return (
         <div className={"w-full"}>
             <Form {...form} >
-                <form onSubmit={form.handleSubmit(handleCreateProject)} className="space-y-2">
+                <form onSubmit={form.handleSubmit(handleCreateForm)} className="space-y-2">
                     <FormField
                         control={form.control}
                         name="name"
@@ -32,9 +35,9 @@ export default function FormCreateForm({
                             <FormItem>
                                 <FormLabel>Name</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Project Name is Required." {...field} />
+                                    <Input placeholder="Form Name is Required." {...field} />
                                 </FormControl>
-                                <FormMessage  />
+                                <FormMessage />
                             </FormItem>
                         )}
                     />

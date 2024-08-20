@@ -3,7 +3,7 @@ import FormListItem from '@/components/feats/forms/ListItemForm';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import useProject from '@/hooks/useProject';
-import { forms_data } from '@/models/forms';
+import useProjectViewModel from '@/viewmodels/projects/single';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -11,6 +11,8 @@ const PageProject = () => {
 
     const { projectId } = useParams<{ projectId: string }>();
     const { navigateToProjectSettings } = useProject();
+    const { forms, isLoading, isError, error } = useProjectViewModel({ projectId });
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -18,7 +20,11 @@ const PageProject = () => {
             // redirect to the home page
             navigate("/");
         }
-    }, [projectId]);
+
+        console.log("Project ID: ", projectId);
+        console.log("Forms: ", forms);
+
+    }, [projectId, forms]);
 
     return (
         <div className='p-4'>
@@ -49,9 +55,13 @@ const PageProject = () => {
             <div className="grid grid-cols-1 gap-3">
                 {/* <FormListItem form={form} /> */}
                 {
-                    forms_data.map((form) => {
-                        return <FormListItem form={form} key={form.id} />
-                    })
+                    isLoading ? <p>Loading...</p> :
+                        // @ts-ignore
+                        isError ? <p>{error?.message}</p> :
+                            forms?.length === 0 ? <p className='m-5 text-muted-foreground'>No forms found</p> :
+                                forms?.map((form) => {
+                                    return <FormListItem key={form.id} form={form} />
+                                })
                 }
             </div>
         </div>

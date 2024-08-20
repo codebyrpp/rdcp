@@ -1,8 +1,8 @@
-import { useCreateFormMutation } from "@/state/apiSlices/formsApi";
+import useProject from "@/hooks/useProject";
+import { useCreateProjectMutation } from "@/state/apiSlices/projectsApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 
 const projectFormSchema = z.object({
     // name is a required string
@@ -14,9 +14,10 @@ const projectFormSchema = z.object({
     description: z.string(),
 })
 
-export const useCreateFormViewModel = () => {
+export const useCreateProjectViewModel = () => {
 
-    const [createProjectMutation, {isLoading}] = useCreateFormMutation();
+    const {navigateToProject} = useProject();
+    const [createProjectMutation, {isLoading}] = useCreateProjectMutation();
 
     const form = useForm<z.infer<typeof projectFormSchema>>({
         resolver: zodResolver(projectFormSchema),
@@ -29,9 +30,8 @@ export const useCreateFormViewModel = () => {
     const handleCreateProject = async (values: z.infer<typeof projectFormSchema>) => {
         // Call the API to create a project
         try {
-            const form = await createProjectMutation(values).unwrap();
-            // TODO: add form to the list of forms
-        
+            const project = await createProjectMutation(values).unwrap();
+            navigateToProject(project.id);
         } catch (error) {
             console.error("Failed to create project", error);
         }
