@@ -1,6 +1,6 @@
 import { Project } from "@/models/projects";
 import { apiSlice } from "../api";
-import { PROJECT_TAG } from "../tags";
+import { FORM_TAG, PROJECT_TAG } from "../tags";
 
 export const projectsApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -25,11 +25,12 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
-        getProjectWithForms: builder.query<ProjectDTO, {projectId: string}>({
-            query: ({projectId}) => ({
+        getProjectWithForms: builder.query<ProjectDTO, { projectId: string }>({
+            query: ({ projectId }) => ({
                 url: `projects/${projectId}?forms=true`,
                 method: 'GET',
             }),
+            providesTags: [PROJECT_TAG, FORM_TAG]
         }),
         updateProject: builder.mutation<any, Partial<Project>>({
             query: (body) => ({
@@ -38,8 +39,8 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
                 body
             }),
         }),
-        deleteProject: builder.mutation<any, {projectId: string}>({
-            query: ({projectId}) => ({
+        deleteProject: builder.mutation<any, { projectId: string }>({
+            query: ({ projectId }) => ({
                 url: `projects/${projectId}`,
                 method: 'DELETE',
             }),
@@ -48,13 +49,13 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
     }),
 });
 
-export interface ProjectDTO extends Project{
+export interface ProjectDTO extends Project {
 
 }
 
-export const { 
+export const {
     useGetProjectsQuery,
-    useGetProjectQuery, 
+    useGetProjectQuery,
     useGetProjectWithFormsQuery,
     useCreateProjectMutation,
     useUpdateProjectMutation,
