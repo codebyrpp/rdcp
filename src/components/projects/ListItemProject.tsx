@@ -1,10 +1,11 @@
 import { Button } from '../ui/button'
-import { Project } from '@/models/projects'
 import { formatDate } from '@/utils'
 import useProject from '@/hooks/useProject'
+import { ProjectDTO } from '@/state/apiSlices/projectsApi'
+import { getRoleName } from '@/models/projects'
 
 interface ProjectListItemProps {
-    project: Project
+    project: ProjectDTO
 }
 
 const ProjectListItem = ({ project }: ProjectListItemProps) => {
@@ -16,8 +17,21 @@ const ProjectListItem = ({ project }: ProjectListItemProps) => {
      border border-slate-300 
      rounded-xl p-3 bg-slate-100'>
             <div className=''>
-                <h5 className='text-lg font-bold'>{project.name}</h5>
+                <div className="flex gap-2">
+                    <h5 className='text-lg font-bold'>{project.name}</h5>
+                    <div className="flex">
+                        {project.roles.map((role) => {
+                            return (
+                                <div key={role}
+                                    className='text-sm text-slate-700 bg-slate-200 rounded-lg px-2 py-1 mr-1'>
+                                    {getRoleName(role)}
+                                </div>
+                            )
+                        })}
+                    </div>
+                </div>
                 <p className='text-sm text-slate-700 truncate text-ellipsis max-w-sm'>{project.description}</p>
+
             </div>
             <div className="flex gap-3 items-center">
                 <div className='flex flex-col items-end'>

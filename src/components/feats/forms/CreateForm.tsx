@@ -1,6 +1,8 @@
+import { dialogCloseWrapper } from '@/components/common/DialogCloseWrapper'
 import FormCreateForm from '@/components/forms/FormCreateForm'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { ReactNode } from 'react'
 import { FaPlus } from 'react-icons/fa6'
 
 const CreateForm = () => {
@@ -23,13 +25,7 @@ const CreateForm = () => {
                     </DialogDescription>
                 </DialogHeader>
                 <FormCreateForm
-                    cancelActionButton={
-                        <DialogClose asChild>
-                            <Button variant='outline' className='border-red-500 text-red-500
-                            hover:text-red-600
-                                bg-white hover:bg-red-50'>Cancel</Button>
-                        </DialogClose>
-                    }
+                    buttonWrapper={dialogCloseWrapper}
                 />
             </DialogContent>
         </Dialog>

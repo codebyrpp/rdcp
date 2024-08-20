@@ -16,7 +16,23 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
                 body
             }),
         }),
+        getProject: builder.query<ProjectDTO, {projectId: string, withForms: boolean}>({
+            query: ({
+                projectId,
+                withForms
+            }) => ({
+                url: `projects/${projectId}?forms={${withForms}}`,
+                method: 'GET',
+            }),
+        }),
     }),
 });
 
-export const { useGetProjectsQuery, useCreateProjectMutation } = projectsApiSlice;
+export interface ProjectDTO extends Project{
+
+}
+
+export const { 
+    useGetProjectsQuery,
+    useGetProjectQuery, 
+    useCreateProjectMutation } = projectsApiSlice;

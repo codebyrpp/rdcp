@@ -15,11 +15,11 @@ import { useCreateFormViewModel } from "@/viewmodels/forms/create"
 import { useParams } from "react-router-dom"
 
 
-export default function FormCreateForm({
-    cancelActionButton
-}: {
-    cancelActionButton: ReactNode
-}) {
+interface FormCreateFormProps {
+    buttonWrapper: (children: ReactNode) => ReactNode;
+}
+
+export default function FormCreateForm({ buttonWrapper }: FormCreateFormProps) {
 
     const { projectId } = useParams<{ projectId: string }>();
     const { form, handleCreateForm, isLoading } = useCreateFormViewModel({ projectId });
@@ -57,14 +57,14 @@ export default function FormCreateForm({
                     />
 
                     <div className="flex justify-end space-x-2">
-                        {cancelActionButton}
-                        <Button type="submit" disabled={isLoading}
-                        >Create</Button>
+                        {buttonWrapper(
+                            <Button type="submit" disabled={isLoading}
+                            >Create</Button>
+                        )}
                     </div>
                 </form>
             </Form>
         </div>
-
-    )
+    );
 }
 

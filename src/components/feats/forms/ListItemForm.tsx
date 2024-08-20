@@ -2,14 +2,15 @@ import { formatDate } from '@/utils'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/models/forms'
 import { Badge } from '@/components/ui/badge'
-import { ProjectRole } from '@/models/user'
 import { useEffect, useState } from 'react'
+import { ProjectRole } from '@/models/projects'
 
 interface FormListItemProps {
     form: Form
+    roles: ProjectRole[]
 }
 
-const FormListItem = ({ form }: FormListItemProps) => {
+const FormListItem = ({ form, roles }: FormListItemProps) => {
 
     const [buttonVisibility, setButtonVisibility] = useState({
         edit: false,
@@ -17,34 +18,35 @@ const FormListItem = ({ form }: FormListItemProps) => {
         dashboard: false,
         settings: false
     })
-    const canDesign = (role: string) => {
-        return role === ProjectRole.OWNER || role === ProjectRole.EDITOR
+
+    const canDo = (roles: ProjectRole[], compareRoles:ProjectRole[]) => {
+        return roles.some(role => compareRoles.includes(role))
     }
 
-    const canCheckResponses = (role: string) => {
-        return role === ProjectRole.OWNER || role === ProjectRole.DATA_ANALYST
+    const canDesign = (roles: ProjectRole[]) => {
+        return canDo(roles, [ProjectRole.OWNER, ProjectRole.EDITOR])
     }
 
-    const canViewDashboard = (role: string) => {
-        return role === ProjectRole.OWNER || role === ProjectRole.DATA_ANALYST
+    const canCheckResponses = (roles: ProjectRole[]) => {
+        return canDesign(roles) || roles.includes(ProjectRole.DATA_ANALYST)
     }
 
-    const canEditSettings = (role: string) => {
-        return role === ProjectRole.OWNER || role === ProjectRole.MANAGER
+    const canViewDashboard = (roles: ProjectRole[]) => {
+        return canDesign(roles) || roles.includes(ProjectRole.DATA_ANALYST)
+    }
+
+    const canEditSettings = (roles: ProjectRole[]) => {
+        return canDesign(roles) || roles.includes(ProjectRole.MANAGER)
     }
 
     useEffect(() => {
-        // FIXME: get project role from project hook
-        const user = {
-            role: ProjectRole.EDITOR
-        }
         setButtonVisibility({
-            edit: canDesign(user!.role),
-            responses: canCheckResponses(user!.role),
-            dashboard: canViewDashboard(user!.role),
-            settings: canEditSettings(user!.role)
+            edit: canDesign(roles),
+            responses: canCheckResponses(roles),
+            dashboard: canViewDashboard(roles),
+            settings: canEditSettings(roles)
         })
-    }, [])
+    }, [roles])
 
     return (
         <div className='flex justify-between

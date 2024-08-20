@@ -1,8 +1,8 @@
 import { FaPlus } from 'react-icons/fa6'
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle, AlertDialogTrigger } from '../ui/alert-dialog'
 import { Button } from '../ui/button'
 import CreateProjectForm from '../forms/FormCreateProject'
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
+import { dialogCloseWrapper } from '../common/DialogCloseWrapper'
 
 const CreateProject = () => {
     return (
@@ -24,13 +24,7 @@ const CreateProject = () => {
                     </DialogDescription>
                 </DialogHeader>
                 <CreateProjectForm
-                    cancelActionButton={
-                        <DialogClose asChild>
-                            <Button variant='outline' className='border-red-500 text-red-500
-                            hover:text-red-600
-                                bg-white hover:bg-red-50'>Cancel</Button>
-                        </DialogClose>
-                    }
+                    buttonWrapper={dialogCloseWrapper}
                 />
             </DialogContent>
         </Dialog>

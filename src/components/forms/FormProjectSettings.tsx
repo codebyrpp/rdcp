@@ -1,30 +1,43 @@
-"use client"
-import { Button } from "@/components/ui/button"
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "../ui/textarea"
-import { ReactNode } from "react"
-import { useCreateProjectViewModel } from "@/viewmodels/projects/create"
+import FormWrapper from './FormWrapper'
+import { Form } from 'react-router-dom'
+import { Button } from '../ui/button'
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '../ui/form'
+import { Input } from '../ui/input'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { Textarea } from '../ui/textarea'
+
+const projectSchema = z.object({
+    // name is a required string
+    name: z.string().min(1, {
+        message: "Name is required"
+    }).max(255, {
+        message: "Name is too long"
+    }),
+    description: z.string(),
+})
 
 
-interface FormCreateFormProps {
-    buttonWrapper: (children: ReactNode) => ReactNode;
-}
+const FormProjectSettings = () => {
 
-export default function CreateProjectForm({ buttonWrapper }: FormCreateFormProps) {
+    const form = useForm<z.infer<typeof projectSchema>>({
+        resolver: zodResolver(projectSchema),
+        defaultValues: {
+            name: "",
+            description: "",
+        },
+    });
+    const handleSubmit = async (values: z.infer<typeof projectSchema>) => {
+        // Call the API to create a project
+        console.log(values)
+    }
 
-    const { form, handleCreateProject, isLoading } = useCreateProjectViewModel();
     return (
-        <div className={"w-full"}>
+        <FormWrapper title="Sign In"
+            description="to access your projects and forms">
             <Form {...form} >
-                <form onSubmit={form.handleSubmit(handleCreateProject)} className="space-y-2">
+                <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-2">
                     <FormField
                         control={form.control}
                         name="name"
@@ -53,18 +66,13 @@ export default function CreateProjectForm({ buttonWrapper }: FormCreateFormProps
                         )}
                     />
 
-                    <div className="flex justify-end space-x-2">
-                        {
-                            buttonWrapper(
-                                <Button type="submit" disabled={isLoading}
-                                >Create</Button>
-                            )
-                        }
+                    <div className="flex space-x-2">
+                        <Button type="submit">Update</Button>
                     </div>
                 </form>
             </Form>
-        </div>
-
+        </FormWrapper>
     )
 }
 
+export default FormProjectSettings

@@ -1,27 +1,43 @@
 import { Form } from "@/models/forms";
 import { apiSlice } from "../api";
+import { ProjectRole } from "@/models/user";
 
-interface ProjectResponseDto {
-    forms: Form[];
-    roles: any[];
+export interface ProjectDTO {
+    id: string;
+    name: string;
+    description: string;
+    roles: ProjectRole[];
+    forms?: Form[];
 }
 
 export const formsApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getForms: builder.query<ProjectResponseDto, string>({
-            query: (projectId) => ({
-                url: `forms/${projectId}`,
-                method: 'GET',
-            }),
-        }),
-        createForm: builder.mutation<any, {projectId: string}>({
+        createForm: builder.mutation<Form, { projectId: string }>({
             query: (body) => ({
                 url: 'forms',
                 method: 'POST',
                 body
             }),
+            async onQueryStarted({ projectId }, { dispatch, queryFulfilled }) {
+                try {
+                    const { data: newForm } = await queryFulfilled;
+
+                    // Optimistically update the getProject cache with the new form
+                    dispatch(apiSlice.util.updateQueryData('getProject', projectId, (draft: ProjectDTO) => {
+                        console.log('Updating the project with the new form:', draft, newForm);
+                        if (draft.forms) {
+                            draft.forms.push(newForm);
+                        } else {
+                            draft.forms = [newForm];
+                        }
+                    }));
+
+                } catch (error) {
+                    console.error('Failed to update the project with the new form:', error);
+                }
+            },
         }),
     }),
 });
 
-export const { useGetFormsQuery, useCreateFormMutation } = formsApiSlice;
+export const { useCreateFormMutation } = formsApiSlice;
