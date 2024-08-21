@@ -8,7 +8,7 @@ function useDesigner() {
     const context = useContext(DesignerContext);
 
     if (!context) {
-        throw new Error("useDesigner must be ussed within a DesignerContext");
+        throw new Error("useDesigner must be used within a DesignerContext");
     }
   return context;
 }
