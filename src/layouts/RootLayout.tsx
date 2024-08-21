@@ -1,9 +1,9 @@
 import Brand from '@/components/common/Brand'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 
 const RootLayout = () => {
-    const [isPageLoading, setIsPageLoading] = useState(false)
+    const [isPageLoading] = useState(false)
 
     return isPageLoading ? (
         <div className='flex flex-col h-screen justify-center items-center'>
