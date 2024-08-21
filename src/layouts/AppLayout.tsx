@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import Header from '../components/common/Header'
 import { Outlet, useNavigate } from 'react-router-dom'
 import useSession from '@/hooks/useSession'
-import PageWrapper from '@/components/common/PageWrapper'
+import { PageWrapper } from '@/components/common/wrapper'
 
 const AppLayout = () => {
 

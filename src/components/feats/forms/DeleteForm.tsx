@@ -1,21 +1,25 @@
-import { Button } from '../ui/button'
 import { FaTrash } from 'react-icons/fa6'
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
+import {
+    Dialog, DialogClose, DialogContent,
+    DialogDescription, DialogFooter,
+    DialogHeader, DialogTitle, DialogTrigger
+} from '@/components/ui/dialog'
 import { useParams } from 'react-router-dom'
-import { useDeleteProjectMutation } from '@/state/apiSlices/projectsApi'
 import useProjectNavigation from '@/hooks/useProjectNavigation'
-import { ToastAction } from '../ui/toast'
-import { useToast } from '../ui/use-toast'
-import { SectionWrapper } from '../common/wrapper'
+import { useToast } from '@/components/ui/use-toast'
+import { ToastAction } from '@/components/ui/toast'
+import { Button } from '@/components/ui/button'
+import { useDeleteFormMutation } from '@/state/apiSlices/formsApi'
+import { SectionWrapper } from '@/components/common/wrapper'
 
 const DeleteProject = () => {
     return (
         <SectionWrapper>
             <div className='flex justify-between items-center'>
                 <div className="flex flex-col">
-                    <h5 className='text-lg font-bold mb-1'>Delete Project</h5>
+                    <h5 className='text-lg font-bold mb-1'>Delete Form</h5>
                     <p className='mb-2 text-muted-foreground text-sm'>
-                        Delete this project and all its associated data.
+                        Delete this form and all its associated data.
                     </p>
                 </div>
                 <DeleteAction />
@@ -26,22 +30,21 @@ const DeleteProject = () => {
 
 const DeleteAction = () => {
 
+    const { formId } = useParams<{ formId: string }>();
     const { projectId } = useParams<{ projectId: string }>();
-    const [deleteProjectMutation, { isLoading, isError, error, isSuccess }] = useDeleteProjectMutation()
-    const { navigateToAllProjects } = useProjectNavigation()
+    const [deleteFormMutation, { isLoading, isError, error, isSuccess }] = useDeleteFormMutation()
+    const { navigateToProject } = useProjectNavigation()
     const { toast } = useToast()
 
     const handleDelete = async () => {
-        if (projectId) {
+        if (formId) {
             try {
-                await deleteProjectMutation({ projectId }).unwrap();
-                const t = toast({
+                await deleteFormMutation({ formId }).unwrap();
+                toast({
                     title: 'Project deleted successfully',
+                    duration: 5000
                 });
-                setTimeout(() => {
-                    t.dismiss();
-                }, 3000);
-                navigateToAllProjects();
+                navigateToProject(projectId ?? '');
 
             } catch (e) {
                 toast({
@@ -67,11 +70,11 @@ const DeleteAction = () => {
             <DialogHeader>
                 <DialogTitle asChild>
                     <h4 className="text-xl font-bold">
-                        Delete Project
+                        Delete Form
                     </h4>
                 </DialogTitle>
                 <DialogDescription className='text-slate-900'>
-                    Are you sure you want to delete this project?
+                    Are you sure you want to delete this form?
                     This action cannot be undone.
                 </DialogDescription>
             </DialogHeader>

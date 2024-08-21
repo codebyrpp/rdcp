@@ -4,6 +4,7 @@ import { Form } from '@/models/forms'
 import { Badge } from '@/components/ui/badge'
 import { useEffect, useState } from 'react'
 import { ProjectRole } from '@/models/projects'
+import useProjectNavigation from '@/hooks/useProjectNavigation'
 
 interface FormListItemProps {
     form: Form
@@ -19,6 +20,8 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
         settings: false
     })
 
+    const { navigateToFormSettings } = useProjectNavigation()
+
     const canDo = (roles: ProjectRole[], compareRoles:ProjectRole[]) => {
         return roles.some(role => compareRoles.includes(role))
     }
@@ -28,15 +31,15 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
     }
 
     const canCheckResponses = (roles: ProjectRole[]) => {
-        return canDesign(roles) || roles.includes(ProjectRole.DATA_ANALYST)
+        return canDo(roles, [ProjectRole.OWNER, ProjectRole.DATA_ANALYST, ProjectRole.DATA_ANALYST_VIEW_ONLY])
     }
 
     const canViewDashboard = (roles: ProjectRole[]) => {
-        return canDesign(roles) || roles.includes(ProjectRole.DATA_ANALYST)
+        return canCheckResponses(roles)
     }
 
     const canEditSettings = (roles: ProjectRole[]) => {
-        return canDesign(roles) || roles.includes(ProjectRole.MANAGER)
+        return canDo(roles, [ProjectRole.OWNER, ProjectRole.MANAGER])
     }
 
     useEffect(() => {
@@ -96,6 +99,7 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
                 {
                     buttonVisibility.settings && <Button className='bg-slate-600'
                         onClick={() => {
+                            navigateToFormSettings(form.projectId, form.id)
                         }}>
                         Settings
                     </Button>

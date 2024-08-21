@@ -1,7 +1,7 @@
-import { PROJECT_ROUTE, PROJECT_SETTINGS_ROUTE, PROJECTS_ROUTE } from "@/constants/routes"
+import { FORM_SETTINGS_ROUTE, PROJECT_ROUTE, PROJECT_SETTINGS_ROUTE, PROJECTS_ROUTE } from "@/constants/routes"
 import { useNavigate } from "react-router-dom"
 
-const useProject = () => {
+const useProjectNavigation = () => {
 
     const navigate = useNavigate()
 
@@ -21,11 +21,18 @@ const useProject = () => {
         navigate(PROJECTS_ROUTE);
     }
 
+    const navigateToFormSettings = (projectId: string, formId: string) => {
+        // Open the form settings
+        const route = FORM_SETTINGS_ROUTE.replace(':projectId', projectId).replace(':formId', formId)
+        navigate(route);
+    }
+
     return {
         navigateToProject,
         navigateToProjectSettings,
-        navigateToAllProjects
+        navigateToAllProjects,
+        navigateToFormSettings
     }
 }
 
-export default useProject
+export default useProjectNavigation

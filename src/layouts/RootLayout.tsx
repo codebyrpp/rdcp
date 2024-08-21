@@ -1,6 +1,6 @@
 import Brand from '@/components/common/Brand'
 import { Toaster } from '@/components/ui/toaster'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 
 const RootLayout = () => {

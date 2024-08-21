@@ -1,6 +1,6 @@
 import { Button } from '../ui/button'
 import { formatDate } from '@/utils'
-import useProject from '@/hooks/useProject'
+import useProjectNavigation from '@/hooks/useProjectNavigation'
 import { ProjectDTO } from '@/state/apiSlices/projectsApi'
 import { getRoleName } from '@/models/projects'
 
@@ -10,7 +10,7 @@ interface ProjectListItemProps {
 
 const ProjectListItem = ({ project }: ProjectListItemProps) => {
 
-    const { navigateToProject } = useProject()
+    const { navigateToProject } = useProjectNavigation()
 
     return (
         <div className='flex justify-between

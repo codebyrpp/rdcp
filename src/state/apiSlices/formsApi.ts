@@ -1,7 +1,6 @@
 import { Form } from "@/models/forms";
 import { apiSlice } from "../api";
 import { ProjectRole } from "@/models/projects";
-import { projectsApiSlice } from "./projectsApi";
 import { FORM_TAG } from "../tags";
 
 export interface ProjectDTO {
@@ -22,7 +21,33 @@ export const formsApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags:[FORM_TAG]
         }),
+        getForm: builder.query<Form, { formId: string }>({
+            query: ({ formId }) => ({
+                url: `forms/${formId}`,
+                method: 'GET',
+            }),
+        }),
+        updateForm: builder.mutation<Form, { formId: string }>({
+            query: ({ formId, ...body }) => ({
+                url: `forms/${formId}`,
+                method: 'PATCH',
+                body
+            }),
+            invalidatesTags:[FORM_TAG]
+        }),
+        deleteForm: builder.mutation<Form, { formId: string }>({
+            query: ({ formId }) => ({
+                url: `forms/${formId}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags:[FORM_TAG]
+        }),
     }),
 });
 
-export const { useCreateFormMutation } = formsApiSlice;
+export const { 
+    useCreateFormMutation,
+    useGetFormQuery,
+    useUpdateFormMutation,
+    useDeleteFormMutation
+} = formsApiSlice;

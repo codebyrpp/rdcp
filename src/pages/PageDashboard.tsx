@@ -5,7 +5,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { cn } from '@/lib/utils'
 import { Project, ProjectRole } from '@/models/projects'
 import { useProjectsViewModel } from '@/viewmodels/projects/list'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 // Define filter constants
 const FILTERS = {
@@ -42,60 +42,74 @@ const PageDashboard = () => {
     });
   };
 
-  useEffect(() => {
-    console.log(projects);
-  }, [projects]);
-
   return (
-    <>
+    <div className=''>
       {/* Top */}
-      <div className="flex justify-between mb-2">
-        <CreateProject />
-
-        {/* Search and Filter */}
-        <div className='flex gap-3 items-center'>
-          <Input
-            placeholder='Search Projects'
-            onChange={(event) => setSearchTerm(event.target.value)}
-          />
-          <div className="border border-slate-400 rounded-lg bg-slate-50 p-1">
-            <ToggleGroup
-              variant="outline"
-              type="single"
-              value={filter}
-              onValueChange={handleFilterChange}
-            >
-              {Object.entries(FILTERS).map(([key, value]) => (
-                <ToggleGroupItem
-                  key={value}
-                  value={value}
-                  aria-label={key.charAt(0).toUpperCase() + key.slice(1)}
-                  className={cn(filter === value ? "!bg-slate-300" : "")}
+      {
+        projects && projects.length > 0 && (
+          <div className='flex justify-between mb-2'>
+            <CreateProject />
+            {/* Search and Filter */}
+            <div className='flex gap-3 items-center'>
+              <Input
+                placeholder='Search Projects'
+                onChange={(event) => setSearchTerm(event.target.value)}
+              />
+              <div className="border border-slate-400 rounded-lg bg-slate-50 p-1">
+                <ToggleGroup
+                  variant="outline"
+                  type="single"
+                  value={filter}
+                  onValueChange={handleFilterChange}
                 >
-                  <span>{key.charAt(0).toUpperCase() + key.slice(1)}</span>
-                </ToggleGroupItem>
-              ))}
-            </ToggleGroup>
-          </div>
-        </div>
-        {/* End of Search and Filter */}
-      </div>
+                  {Object.entries(FILTERS).map(([key, value]) => (
+                    <ToggleGroupItem
+                      key={value}
+                      value={value}
+                      aria-label={key.charAt(0).toUpperCase() + key.slice(1)}
+                      className={cn(filter === value ? "!bg-slate-300" : "")}
+                    >
+                      <span>{key.charAt(0).toUpperCase() + key.slice(1)}</span>
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
+              </div>
+            </div>
+            {/* End of Search and Filter */}
+          </div>)
+      }
       {/* End of Top */}
 
       {/* Content */}
-      <div className="grid grid-cols-2 gap-2">
-        {
-          isLoading ? (
-            <div>Loading...</div>
-          ) : isError ? (
-            // @ts-ignore
-            <div>{error?.data?.message}</div>
-          ) : filteredProjects().map((project: Project) => (
-            <ProjectListItem key={project.id} project={project} />
-          ))
-        }
-      </div>
-    </>
+      {
+        isLoading ? (
+          <div>Loading...</div>
+        ) : isError ? (
+          // @ts-ignore
+          <div>{error?.data?.message}</div>
+        ) : (
+          projects?.length === 0 ? (
+            <div className="w-full flex flex-col items-center gap-2 my-8">
+              <p className='text-muted-foreground'>No projects found</p>
+              <p className='text-muted-foreground mb-3'>Create a new project to get started</p>
+              {
+                projects && projects.length == 0 && (
+                  <CreateProject />)
+              }
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-2">
+              {
+                filteredProjects().map((project) => (
+                  <ProjectListItem key={project.id} project={project} />
+                ))
+              }
+            </div>
+          )
+        )
+      }
+
+    </div>
   );
 };
 

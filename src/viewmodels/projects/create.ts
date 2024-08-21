@@ -1,4 +1,4 @@
-import useProject from "@/hooks/useProject";
+import useProjectNavigation from "@/hooks/useProjectNavigation";
 import { useCreateProjectMutation } from "@/state/apiSlices/projectsApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -16,7 +16,7 @@ const projectFormSchema = z.object({
 
 export const useCreateProjectViewModel = () => {
 
-    const {navigateToProject} = useProject();
+    const {navigateToProject} = useProjectNavigation();
     const [createProjectMutation, {isLoading}] = useCreateProjectMutation();
 
     const form = useForm<z.infer<typeof projectFormSchema>>({

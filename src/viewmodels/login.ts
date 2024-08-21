@@ -7,8 +7,8 @@ import { useState } from "react"
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query"
 
 const formSchema = z.object({
-    email: z.string().email(),
-    password: z.string(),
+    email: z.string().email({ message: 'Invalid Email' }),
+    password: z.string().min(1, { message: 'Password is required' }),
 })
 
 export const useLoginFormViewModel = () => {

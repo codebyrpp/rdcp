@@ -7,20 +7,24 @@ import RootLayout from "./layouts/RootLayout";
 import PageForgetPassword from "./pages/PageForgetPassword";
 import {
     FORGOT_PASSWORD_ROUTE,
+    FORM_SETTINGS_ROUTE,
     LOGIN_ROUTE, PROJECT_ROUTE,
     PROJECT_SETTINGS_ROUTE, PROJECTS_ROUTE
 } from "./constants/routes";
 import PageProject from "./pages/PageProject";
 import PageProjectSettings from "./pages/PageProjectSettings";
+import PageError from "./pages/PageError";
+import PageFormSettings from "./pages/PageFormSettings";
 
 const router = createBrowserRouter(createRoutesFromElements(
-    <Route element={<RootLayout />} errorElement={<PageNotFound />}>
+    <Route element={<RootLayout />} errorElement={<PageError />}>
         <Route path={LOGIN_ROUTE} element={<PageLogin />} />
         <Route path={FORGOT_PASSWORD_ROUTE} element={<PageForgetPassword />} />
         <Route element={<AppLayout />}>
             <Route path={PROJECTS_ROUTE} element={<PageDashboard />} />
             <Route path={PROJECT_ROUTE} element={<PageProject />} />
             <Route path={PROJECT_SETTINGS_ROUTE} element={<PageProjectSettings />} />
+            <Route path={FORM_SETTINGS_ROUTE} element={<PageFormSettings />} />
         </Route>
         <Route path="*" element={<PageNotFound />} />
     </Route>

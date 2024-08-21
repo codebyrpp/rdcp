@@ -3,31 +3,22 @@ import CreateForm from '@/components/feats/forms/CreateForm';
 import FormListItem from '@/components/feats/forms/ListItemForm';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import useProject from '@/hooks/useProject';
+import useProjectNavigation from '@/hooks/useProjectNavigation';
 import { Form } from '@/models/forms';
 import useProjectViewModel from '@/viewmodels/projects/single';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 const PageProject = () => {
 
     const { projectId } = useParams<{ projectId: string }>();
-    const { navigateToProjectSettings } = useProject();
-    const { forms, project, isLoading, isError, error } = useProjectViewModel({ projectId, withForms: true });
+    const { navigateToProjectSettings } = useProjectNavigation();
+    const { forms, project, isLoading, isError, error } = useProjectViewModel({ projectId });
     const [searchTerm, setSearchTerm] = useState<string>('');
 
     const filteredForms = forms?.filter((form: Form) => {
         return form.name.toLowerCase().includes(searchTerm.toLowerCase());
     });
-
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!projectId) {
-            // redirect to the home page
-            navigate("/");
-        }
-    }, [projectId]);
 
     return (
         <>

@@ -1,6 +1,8 @@
 import { apiSlice } from "../api";
 
 interface LoginResponseDto {
+    message: string;
+    success: boolean;
     email: string;
     role: string;
     jwt: string;
