@@ -66,10 +66,10 @@ const PageDashboard = () => {
                     <ToggleGroupItem
                       key={value}
                       value={value}
-                      aria-label={key.charAt(0).toUpperCase() + key.slice(1)}
+                      aria-label={key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}
                       className={cn(filter === value ? "!bg-slate-300" : "")}
                     >
-                      <span>{key.charAt(0).toUpperCase() + key.slice(1)}</span>
+                      <span>{key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}</span>
                     </ToggleGroupItem>
                   ))}
                 </ToggleGroup>
@@ -100,7 +100,7 @@ const PageDashboard = () => {
           ) : (
             <div className="grid grid-cols-2 gap-2">
               {
-                filteredProjects().map((project) => (
+                filteredProjects().map((project:Project) => (
                   <ProjectListItem key={project.id} project={project} />
                 ))
               }

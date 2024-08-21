@@ -68,7 +68,7 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
                             <Badge variant={"outline"} className='bg-yellow-500'>Draft</Badge>
                     }
                 </div>
-                <p className='text-sm text-slate-700 truncate text-ellipsis max-w-sm'>{form.description}</p>
+                <p className='text-sm text-slate-700 truncate text-ellipsis max-w-lg'>{form.description}</p>
             </div>
             <div className="flex gap-3 items-center">
                 <div className='flex flex-col items-end'>
