@@ -49,8 +49,8 @@ export default Header
 
 
 function NavBrand() {
-    return <div className='flex gap-3 items-center'>
+    return <a className='flex gap-3 items-center' href='/'>
         <img src={logo} alt='logo' className='w-8 h-8' />
         <h1 className='text-lg font-bold text-slate-900 tracking-tight'>Research Data Collector Platform</h1>
-    </div>
+    </a>
 }
