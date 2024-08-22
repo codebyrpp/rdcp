@@ -77,6 +77,7 @@ export const useFormSettingsViewModel = (formId: string | undefined) => {
             toast({
                 title: 'Form Updated Successfully',
                 duration: 6000,
+                variant: 'success',
                 action: <ToastAction altText={"Go back to project"} onClick={() => {
                     // Redirect to the form
                     navigateToProject(formSettings?.projectId ?? '')

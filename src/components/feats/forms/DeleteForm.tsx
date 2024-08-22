@@ -42,7 +42,8 @@ const DeleteAction = () => {
                 await deleteFormMutation({ formId }).unwrap();
                 toast({
                     title: 'Project deleted successfully',
-                    duration: 5000
+                    duration: 5000,
+                    variant: 'success'
                 });
                 navigateToProject(projectId ?? '');
 
