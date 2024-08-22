@@ -2,6 +2,7 @@ import CreateProject from '@/components/projects/CreateProject'
 import ProjectListItem from '@/components/projects/ListItemProject'
 import { Input } from '@/components/ui/input'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { useSearchRef } from '@/hooks/useSearchRef'
 import { cn } from '@/lib/utils'
 import { Project, ProjectRole } from '@/models/projects'
 import { useProjectsViewModel } from '@/viewmodels/projects/list'
@@ -22,6 +23,8 @@ const PageDashboard = () => {
   const handleFilterChange = (value: string) => {
     setFilter(value || FILTERS.ALL);
   };
+
+  const searchRef = useSearchRef();
 
   const filteredProjects = () => {
     if (!projects) return [];
@@ -52,22 +55,25 @@ const PageDashboard = () => {
             {/* Search and Filter */}
             <div className='flex gap-3 items-center'>
               <Input
-                placeholder='Search Projects'
+                ref={searchRef}
+                placeholder="Type '/' to search projects"
                 onChange={(event) => setSearchTerm(event.target.value)}
               />
-              <div className="border border-slate-400 rounded-lg bg-slate-50 p-1">
+              <div className="rounded-lg bg-slate-50 p-1">
                 <ToggleGroup
-                  variant="outline"
+                  className='!border-none'
+                  variant="default"
                   type="single"
                   value={filter}
                   onValueChange={handleFilterChange}
                 >
                   {Object.entries(FILTERS).map(([key, value]) => (
                     <ToggleGroupItem
+                      size={"sm"}
                       key={value}
                       value={value}
                       aria-label={key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}
-                      className={cn(filter === value ? "!bg-slate-300" : "")}
+                      className={cn(filter === value ? "!bg-slate-200" : "")}
                     >
                       <span>{key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}</span>
                     </ToggleGroupItem>
@@ -98,9 +104,9 @@ const PageDashboard = () => {
               }
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2">
               {
-                filteredProjects().map((project:Project) => (
+                filteredProjects().map((project: Project) => (
                   <ProjectListItem key={project.id} project={project} />
                 ))
               }

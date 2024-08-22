@@ -1,9 +1,12 @@
+import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
+import useProjectNavigation from "@/hooks/useProjectNavigation";
 import { useGetProjectQuery, useGetProjectWithFormsQuery, useUpdateProjectMutation } from "@/state/apiSlices/projectsApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
 
 const useProjectViewModel = ({ projectId }: {
     projectId: string | undefined
@@ -74,6 +77,7 @@ export const useProjectInfoViewModel = ({ projectId }: {
     }, [projectRef.current !== project]);
 
     const { toast } = useToast();
+    const { navigateToProject } = useProjectNavigation();
 
     const handleProjectUpdate = async (values: z.infer<typeof projectSchema>) => {
         // Call the API to update the project
@@ -89,6 +93,11 @@ export const useProjectInfoViewModel = ({ projectId }: {
                 title: "Project Updated",
                 description: "Project settings have been updated successfully.",
                 duration: 5000,
+                variant: 'success',
+                action: <ToastAction altText={"Go back to project"} onClick={() => {
+                    // Redirect to the form
+                    navigateToProject(projectId ?? '')
+                }}>Back to Project</ToastAction>
             });
 
         } catch (e) {

@@ -18,6 +18,7 @@ import PageFormSettings from "./pages/PageFormSettings";
 
 const router = createBrowserRouter(createRoutesFromElements(
     <Route element={<RootLayout />} errorElement={<PageError />}>
+        <Route path="/" element={<PageLogin />} />
         <Route path={LOGIN_ROUTE} element={<PageLogin />} />
         <Route path={FORGOT_PASSWORD_ROUTE} element={<PageForgetPassword />} />
         <Route element={<AppLayout />}>

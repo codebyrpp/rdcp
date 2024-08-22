@@ -1,8 +1,13 @@
 import logo from '@/assets/logo.svg'
-import { FaGear } from 'react-icons/fa6'
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../ui/tooltip'
-import { FaSignOutAlt } from 'react-icons/fa'
 import useSession from '@/hooks/useSession'
+import {
+    DropdownMenu, DropdownMenuTrigger, DropdownMenuContent,
+    DropdownMenuSeparator, DropdownMenuGroup,
+    DropdownMenuItem
+} from '@/components/ui/dropdown-menu'
+import { Settings, LogOut } from 'lucide-react'
+import { Button } from '../ui/button'
+import { FaChevronDown, FaUser } from 'react-icons/fa6'
 
 const Header = () => {
 
@@ -11,28 +16,29 @@ const Header = () => {
     return (
         <div className='flex justify-between p-3 border-b bg-background'>
             <NavBrand />
-            <div className='flex items-center gap-4'>
-                <div className='text-sm text-slate-900'>Logged in as {user?.email}</div>
-                <TooltipProvider>
-                    <div className='flex gap-4'>
-                        {/* Settings Icon with tooltip*/}
-                        <Tooltip>
-                            <TooltipTrigger><FaGear className='text-slate-700 text-xl' /></TooltipTrigger>
-                            <TooltipContent>
-                                Settings
-                            </TooltipContent>
-                        </Tooltip>
-                        {/* Logout icon with tooltip */}
-                        <Tooltip>
-                            <TooltipTrigger onClick={logout}>
-                                <FaSignOutAlt className='text-slate-700 text-xl' />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                Logout
-                            </TooltipContent>
-                        </Tooltip>
-                    </div>
-                </TooltipProvider>
+            <div className=''>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className='flex gap-2'>
+                        <FaUser className='text-slate-900' />
+                        {user?.email}
+                        <FaChevronDown className='text-slate-900' />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56">
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem>
+                                <Settings className="mr-2 h-4 w-4" />
+                                <span>Settings</span>
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={logout}>
+                            <LogOut className="mr-2 h-4 w-4" />
+                            <span>Log out</span>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
 
         </div>

@@ -16,13 +16,13 @@ const BreadCrumbs = ({ links, pageName }: BreadCrumbsProps) => {
                 {links.map((link, index) => (
                     <React.Fragment key={index}>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href={link.url}>{link.name}</BreadcrumbLink>
+                            <BreadcrumbLink className='font-semibold' href={link.url}>{link.name}</BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                     </React.Fragment>
                 ))}
                 <BreadcrumbItem>
-                    <BreadcrumbPage>{pageName}</BreadcrumbPage>
+                    <BreadcrumbPage className='font-semibold'>{pageName}</BreadcrumbPage>
                 </BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>

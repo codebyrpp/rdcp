@@ -59,12 +59,12 @@ export default function LoginForm() {
             )}
           />
 
-          <Button type="submit" disabled={isLoading}>
+          <Button className="flex w-full" type="submit" disabled={isLoading}>
             {isLoading ? 'Logging in...' : 'Login'}
           </Button>
 
           {isError && (
-            <p className="text-red-500 mt-2">
+            <p className="text-red-500 mt-2 text-sm">
               {errorMessage || 'Failed to login. Please try again.'}
             </p>
           )}
