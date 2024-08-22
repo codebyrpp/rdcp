@@ -13,8 +13,8 @@ const DeleteProject = () => {
         <SectionWrapper>
             <div className='flex justify-between items-center'>
                 <div className="flex flex-col">
-                    <h5 className='text-lg font-bold mb-1'>Delete Project</h5>
-                    <p className='mb-2 text-muted-foreground text-sm'>
+                    <h5 className='text-lg font-bold'>Delete Project</h5>
+                    <p className='mb-1 text-muted-foreground text-sm'>
                         Delete this project and all its associated data.
                     </p>
                 </div>
@@ -37,6 +37,7 @@ const DeleteAction = () => {
                 await deleteProjectMutation({ projectId }).unwrap();
                 const t = toast({
                     title: 'Project deleted successfully',
+                    variant: 'success'
                 });
                 setTimeout(() => {
                     t.dismiss();

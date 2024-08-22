@@ -10,7 +10,7 @@ export const PageWrapper = ({children}: {children: React.ReactNode}) => {
 
 export const SectionWrapper = ({ children }: { children: React.ReactNode }) => {
     return (
-        <div className="bg-slate-50 px-5 py-3 rounded-xl">
+        <div className="bg-slate-50 px-4 py-2 rounded-lg">
             {children}
         </div>
     )

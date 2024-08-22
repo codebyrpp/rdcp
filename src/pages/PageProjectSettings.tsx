@@ -1,5 +1,6 @@
 import BreadCrumbs from "@/components/common/BreadCrumbs"
 import FormUpdateProjectSettings from "@/components/forms/FormUpdateProjectSettings";
+import AddCollaborator from "@/components/projects/AddCollaborator";
 import DeleteProject from "@/components/projects/DeleteProject";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDate } from "@/utils";
@@ -13,18 +14,18 @@ const PageProjectSettings = () => {
 
     return (
         <div>
-            <div className="flex">
+            <div className="flex mb-4">
                 <BreadCrumbs links={[
                     { name: 'Projects', url: '/projects' },
                     { name: `Project: ${project?.name}`, url: `/projects/${projectId}` },
                 ]} pageName={`Settings`} />
             </div>
 
-            <div className="grid grid-cols-2 mt-2">
-                <div className="flex flex-col gap-3 py-2">
-                    <div className="flex flex-col gap-1">
-                        <p className="text-muted-foreground text-sm">Project Id: {project?.id}</p>
-                        <p className="text-muted-foreground text-sm">Created At: {formatDate(project?.createdAt ?? "")}</p>
+            <div className="grid grid-cols-2 gap-2">
+                <div className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-1 bg-muted p-3 rounded-lg">
+                        <p className="text-sm">Project Id: {project?.id}</p>
+                        <p className="text-sm">Created At: {formatDate(project?.createdAt ?? "")}</p>
                     </div>
                     {
                         isLoading ? <Skeleton className="h-full w-full" /> :
@@ -33,6 +34,10 @@ const PageProjectSettings = () => {
                                 <DeleteProject />
                             </>)
                     }
+                </div>
+                <div className="flex flex-col gap-3">
+                    {/* Search and Add Collaborator */}
+                    <AddCollaborator/>
                 </div>
             </div>
 
