@@ -1,7 +1,7 @@
-//import { TitleFieldFormElement } from "../../fields/Titlefield";
+import { TitleFieldFormElement } from "../../fields/TitleField";
 import { TextFieldFormElement } from "../../fields/TextField";
 
-export type ElementsType = "TextField"; //| "TitleField";
+export type ElementsType = "TextField" | "TitleField";
 
 export type FormElement = {
     type: ElementsType;
@@ -37,5 +37,5 @@ type FormElementsType = {
 };
 export const FormElements: FormElementsType = {
     TextField: TextFieldFormElement,
-    //TitleField: TitleFieldFormElement,
+    TitleField: TitleFieldFormElement,
 };

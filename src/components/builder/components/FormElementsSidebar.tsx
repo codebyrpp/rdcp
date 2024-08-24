@@ -8,6 +8,7 @@ function FormElementsSidebar() {
          <div className="grid grid-cols-1 md:grid-cols-2 space-y-2 place-items-center">
           <p className="text-sm text-muted-foreground col-span-1 md:col-span-2 my-2 place-self-start">Layout Elements</p>
           <SidebarBtnElement formElement={FormElements.TextField} />
+          <SidebarBtnElement formElement={FormElements.TitleField} />
          </div>
     </div>
   );
