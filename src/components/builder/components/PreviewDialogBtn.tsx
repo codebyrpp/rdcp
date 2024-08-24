@@ -17,13 +17,13 @@ function PreviewDialogBtn() {
             {/* The Preview */}
             <DialogContent className="w-[80vw] max-w-full flex flex-col h-[90vh] bg-slate-200">
                 <div className="flex-1 max-h-full h-full flex-grow flex items-center justify-center overflow-y-auto">
-                    <div className="flex flex-col gap-1 flex-grow
-                        bg-slate-200 rounded-md px-24 pt-5 
+                    <div className="flex flex-col items-center gap-1 flex-grow
+                        bg-slate-200 rounded-md  pt-5 
                         h-full w-full overflow-y-auto">
                         {elements.map((element) => {
                             const FormComponent = FormElements[element.type].formComponent;
                             return (
-                                <div key={element.id} className="bg-white p-4 rounded-md">
+                                <div key={element.id} className="bg-white w-3/5 p-4 rounded-md">
                                     <FormComponent elementInstance={element} />
                                 </div>
                             );

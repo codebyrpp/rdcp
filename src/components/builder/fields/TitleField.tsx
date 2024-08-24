@@ -52,7 +52,7 @@ function DesignerComponent({
         <Label className="text-muted-foreground">
             Title Field
         </Label>
-        <p className="text-xl">{title}</p>
+        <p className="text-2xl font-bold">{title}</p>
     </div>
     );
 }
@@ -65,7 +65,7 @@ function FormComponent({
     const element = elementInstance as CustomInstance;
 
     const { title } = element.extraAttributes;
-    return <p className="text-xl">{title}</p>;
+    return <p className="text-2xl font-bold">{title}</p>;
 }
 
 type propertiesFormschemaType = z.infer<typeof propertiesSchema>;
