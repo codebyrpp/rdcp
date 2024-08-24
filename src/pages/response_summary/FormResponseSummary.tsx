@@ -16,8 +16,8 @@ import {
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { dummyData } from "./data";
-import logo from "@/assets/logo.svg";
 import { Button } from "@/components/ui/button";
+import { BackToProjectButton } from "../form_response/Page";
 
 ChartJS.register(
   CategoryScale,
@@ -106,22 +106,18 @@ const FormResponseSummary: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      {/* Full Width Heading */}
-      <div className="flex justify-center items-center bg-gray-100 p-4 w-full">
-        <img src={logo} alt="logo" className="w-16 h-16" />
-        <h1 className="text-4xl font-bold text-slate-900 ml-4">
-          Research Data Collector Platform
-        </h1>
-      </div>
+    <>
+      <BackToProjectButton />
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 gap-2 overflow-hidden h-[88vh]">
         {/* Main Content */}
-        <div className="flex-1 overflow-auto p-4">
+        <div className="flex-1 flex flex-col items-start gap-2 overflow-auto">
           {/* Overall Response Summary */}
-          <Card className="mb-8">
+          <Card className="w-full">
             <CardHeader>
-              <CardTitle>Overall Response Summary</CardTitle>
+              <h5 className="text-lg font-bold">
+                Overall Response Summary
+              </h5>
             </CardHeader>
             <CardContent>
               <p>Total Responses: {totalResponses}</p>
@@ -131,12 +127,12 @@ const FormResponseSummary: React.FC = () => {
           </Card>
 
           {/* Dashboard Section */}
-          <div className="mt-8">
+          <div className="w-full">
             <Card>
               <CardHeader>
-                <CardTitle className="text-center">
-                  Data Visualization Dashboard
-                </CardTitle>
+                <h5 className="text-lg font-bold">
+                  Chart Dashboard
+                </h5>
               </CardHeader>
               <CardContent>
                 {dashboardCharts.length === 0 ? (
@@ -146,7 +142,7 @@ const FormResponseSummary: React.FC = () => {
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {dashboardCharts.map((chart, index) => (
-                      <div key={index} className="w-full">
+                      <div key={index} className="w-full max-h-[400px] flex justify-center border rounded p-2">
                         {chart}
                       </div>
                     ))}
@@ -158,20 +154,22 @@ const FormResponseSummary: React.FC = () => {
 
           {/* Download/Export Options */}
           {isDownloadVisible && (
-            <div className="flex justify-end mt-8">
+            <div className="flex justify-end">
               <Button onClick={handleDownloadPDF}>Download as PDF</Button>
             </div>
           )}
         </div>
 
         {/* Chart Selection Section */}
-        <div className="w-80 bg-gray-100 border-l border-gray-300 h-full sticky top-0">
+        <div className="w-80 h-full sticky overflow-hidden">
           <Card className="h-full">
             <CardHeader>
-              <CardTitle>Chart Selection</CardTitle>
+              <h5 className="text-lg font-bold">
+                Chart Selection
+              </h5>
             </CardHeader>
-            <CardContent className="flex flex-col h-full">
-              <div className="mb-6">
+            <CardContent className="flex flex-col gap-3">
+              <div className="">
                 <label className="block mb-1">Select Question:</label>
                 <select
                   value={selectedQuestion}
@@ -188,7 +186,7 @@ const FormResponseSummary: React.FC = () => {
                   ))}
                 </select>
               </div>
-              <div className="mb-6">
+              <div className="">
                 <label className="block mb-1">Select Chart Type:</label>
                 <select
                   value={chartType}
@@ -203,14 +201,14 @@ const FormResponseSummary: React.FC = () => {
                   <option value="line">Line Chart</option>
                 </select>
               </div>
-              <Button onClick={handleAddToDashboard} className="mt-4">
+              <Button onClick={handleAddToDashboard} className="">
                 Add to Dashboard
               </Button>
             </CardContent>
           </Card>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

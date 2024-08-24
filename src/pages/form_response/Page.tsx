@@ -1,7 +1,10 @@
+import { Button } from "@/components/ui/button";
 import { User, columns } from "./columns";
 import { DataTable } from "./data-table";
-import logo from "@/assets/logo.svg";
 import { useEffect, useState } from "react";
+import { FaArrowLeft } from "react-icons/fa6";
+import useProjectNavigation from "@/hooks/useProjectNavigation";
+import { useParams } from "react-router-dom";
 
 export default function Page() {
   const [data, setData] = useState<User[]>([]);
@@ -22,17 +25,35 @@ export default function Page() {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <section className="py-24 pt-0">
-      <div className="flex justify-center items-center bg-gray-100 p-4 w-full">
-        <img src={logo} alt="logo" className="w-16 h-16" />
-        <h1 className="text-4xl font-bold text-slate-900 ml-4">
-          Research Data Collector Platform
-        </h1>
+    <section className="">
+      <div className="flex justify-between">
+        <BackToProjectButton/> 
+        <div className="flex gap-2">
+          <Button variant={"outline"}>
+            Export History
+          </Button>
+          <Button>
+            Export Data to CSV
+          </Button>
+        </div>
       </div>
-      <div className="container mx-auto pt-2 flex flex-col items-center justify-center">
-        <h1 className="text-3xl font-bold">Form Response</h1>
-        <DataTable columns={columns} data={data} />
-      </div>
+      <DataTable columns={columns} data={data} />
     </section>
   );
+}
+
+
+export const BackToProjectButton = () => {
+  const projectId = useParams<{ projectId: string }>().projectId;
+  const { navigateToProject } = useProjectNavigation();
+
+  return (<Button variant={"link"} className="flex gap-2"
+    onClick={() => {
+      if (projectId)
+        navigateToProject(projectId);
+    }}
+  >
+    <FaArrowLeft />
+    Back to Project
+  </Button>);
 }
