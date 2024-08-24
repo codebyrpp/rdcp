@@ -1,7 +1,4 @@
 "use client"
-
-
-
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -15,18 +12,23 @@ import {
 import { Input } from "@/components/ui/input"
 import FormWrapper from "@/components/forms/FormWrapper"
 import { useLoginFormViewModel } from "@/viewmodels/login"
-
+import { useNavigate } from "react-router-dom"
+import { FORGOT_PASSWORD_ROUTE } from "@/constants/routes"
 
 
 export default function LoginForm() {
 
-  const {form, handleSubmit} = useLoginFormViewModel()
+  const navigate = useNavigate()
+  const handleForgetPassword = () => {
+    navigate(FORGOT_PASSWORD_ROUTE)
+  }
+  const { form, handleLogin, isLoading, isError, errorMessage } = useLoginFormViewModel()
 
   return (
-    <FormWrapper title="Sign In" 
-    description="to access your projects and forms">
+    <FormWrapper title="Sign In"
+      description="to access your projects and forms">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-2 w-80">
+        <form onSubmit={form.handleSubmit(handleLogin)} className="space-y-2 w-80">
           <FormField
             control={form.control}
             name="email"
@@ -56,9 +58,24 @@ export default function LoginForm() {
               </FormItem>
             )}
           />
-          <Button type="submit">Login</Button>
+
+          <Button className="flex w-full" type="submit" disabled={isLoading}>
+            {isLoading ? 'Logging in...' : 'Login'}
+          </Button>
+
+          {isError && (
+            <p className="text-red-500 mt-2 text-sm">
+              {errorMessage || 'Failed to login. Please try again.'}
+            </p>
+          )}
         </form>
       </Form>
+      {/* TODO: Add forget password link */}
+      <div className="flex justify-center">
+        <Button onClick={handleForgetPassword} className="mt-3" variant={"link"}>
+          Forgot your password?
+        </Button>
+      </div>
     </FormWrapper>
   )
 }
