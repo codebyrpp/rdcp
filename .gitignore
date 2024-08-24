@@ -26,3 +26,6 @@ dist-ssr
 .env
 .env.*
 !.env.sample
+
+# Ignore the package-lock.json file as yarn.lock is used
+package-lock.json

@@ -16,14 +16,14 @@ const useSession = () => {
         navigate('/login');
     }
 
-    const login = (session: Session) => {
+    const sessionLogin = (session: Session) => {
         // Dispatch the setSession action
         dispatch(setSession(session));
         // Redirect to the dashboard or another page
         navigate("/projects");
     }
 
-    return { logout, login, user};
+    return { logout, sessionLogin, user};
 }
 
 export default useSession;

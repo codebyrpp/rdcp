@@ -1,30 +1,18 @@
-# React + TypeScript + Vite
+# Research Data Collector Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description
 
-Currently, two official plugins are available:
+This project is a web application that allows users to collect data from research participants. The application is designed to be used by researchers who are conducting studies that require data collection from participants. The application provides a platform for researchers to create surveys, distribute them to participants, and collect and analyze the data.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Installation
 
-## Expanding the ESLint configuration
+To install and start the application, follow these steps:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+1. Clone the repository to your local machine.
+2. Create a `.env.development` file in the root directory of the project. You can use the `.env.sample` file as a template.
+3. Install the required dependencies by running `yarn` in the root directory of the project.
+4. Start the application by running `yarn dev` in the root directory of the project.
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+**Note**: It is recommended to use Yarn as the package manager for this project. If you do not have Yarn installed, you can install it by running
+`npm install --global yarn`. If you accidentally use npm to install the dependencies, you may encounter issues when running the application. To fix this, delete the `node_modules` directory, 
+`package-lock.json` and run `yarn` to install the dependencies using Yarn.

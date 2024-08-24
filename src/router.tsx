@@ -8,18 +8,30 @@ import PageLogin from "./pages/PageLogin";
 import AppLayout from "./pages/response_summary/FormResponseSummary.tsx";
 import PageNotFound from "./pages/PageNotFound";
 import RootLayout from "./layouts/RootLayout";
-import Page from "./pages/form_response/Page.tsx";
-import FormResponseSummary from "./pages/response_summary/FormResponseSummary.tsx";
+import PageForgetPassword from "./pages/PageForgetPassword";
+import {
+    FORGOT_PASSWORD_ROUTE,
+    FORM_SETTINGS_ROUTE,
+    LOGIN_ROUTE, PROJECT_ROUTE,
+    PROJECT_SETTINGS_ROUTE, PROJECTS_ROUTE
+} from "./constants/routes";
+import PageProject from "./pages/PageProject";
+import PageProjectSettings from "./pages/PageProjectSettings";
+import PageError from "./pages/PageError";
+import PageFormSettings from "./pages/PageFormSettings";
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route element={<RootLayout />} errorElement={<PageNotFound />}>
-      <Route path="/login" element={<PageLogin />} />
-      <Route path="/response" element={<Page />} />
-      <Route path="/summary" element={<FormResponseSummary />} />
-      <Route element={<AppLayout />}>
-        <Route path="/projects" element={<PageDashboard />} />
-      </Route>
+const router = createBrowserRouter(createRoutesFromElements(
+    <Route element={<RootLayout />} errorElement={<PageError />}>
+        <Route path="/" element={<PageLogin />} />
+        <Route path={LOGIN_ROUTE} element={<PageLogin />} />
+        <Route path={FORGOT_PASSWORD_ROUTE} element={<PageForgetPassword />} />
+        <Route element={<AppLayout />}>
+            <Route path={PROJECTS_ROUTE} element={<PageDashboard />} />
+            <Route path={PROJECT_ROUTE} element={<PageProject />} />
+            <Route path={PROJECT_SETTINGS_ROUTE} element={<PageProjectSettings />} />
+            <Route path={FORM_SETTINGS_ROUTE} element={<PageFormSettings />} />
+        </Route>
+        <Route path="*" element={<PageNotFound />} />
     </Route>
   )
 );
