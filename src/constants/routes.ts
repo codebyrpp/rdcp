@@ -7,6 +7,8 @@ const PROJECT_SETTINGS_ROUTE = "/projects/:projectId/settings";
 const FORM_SETTINGS_ROUTE = "/projects/:projectId/forms/:formId/settings";
 const FORM_RESPONSES_ROUTE = "/projects/:projectId/forms/:formId/responses";
 const FORM_RESPONSES_SUMMARY_ROUTE = "/projects/:projectId/forms/:formId/summary";
+const FORM_EDIT_ROUTE = "/projects/:projectId/forms/:formId/edit";
+const FORM_VIEW_ROUTE = "/forms/:formId/view";
 
 export {
     LOGIN_ROUTE,
@@ -17,5 +19,7 @@ export {
     PROJECT_SETTINGS_ROUTE,
     FORM_SETTINGS_ROUTE,
     FORM_RESPONSES_ROUTE,
-    FORM_RESPONSES_SUMMARY_ROUTE
+    FORM_RESPONSES_SUMMARY_ROUTE,
+    FORM_EDIT_ROUTE,
+    FORM_VIEW_ROUTE
 }

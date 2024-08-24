@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ElementsType, FormElement, FormElementInstance } from "../builder/[id]/FormElements";
+import { ElementsType, FormElement, FormElementInstance } from "../builder/components/FormElements";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useEffect } from "react";
