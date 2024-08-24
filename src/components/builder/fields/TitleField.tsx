@@ -2,13 +2,13 @@
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ElementsType, FormElement, FormElementInstance } from "../builder/components/FormElements";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import { ElementsType, FormElement, FormElementInstance } from "../components/FormElements";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
 import { useEffect } from "react";
-import useDesigner from "../builder/hooks/useDesigner";
+import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
 
 const type: ElementsType = "TitleField";
 

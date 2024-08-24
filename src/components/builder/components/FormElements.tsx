@@ -1,5 +1,5 @@
-import { TitleFieldFormElement } from "../../fields/TitleField";
-import { TextFieldFormElement } from "../../fields/TextField";
+import { TitleFieldFormElement } from "../fields/TitleField";
+import { TextFieldFormElement } from "../fields/TextField";
 
 export type ElementsType = "TextField" | "TitleField";
 
