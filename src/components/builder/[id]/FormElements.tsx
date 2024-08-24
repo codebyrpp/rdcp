@@ -1,6 +1,7 @@
+//import { TitleFieldFormElement } from "../../fields/Titlefield";
 import { TextFeildFormElement } from "../../fields/TextField";
 
-export type ElementsType = "TextField";
+export type ElementsType = "TextField"; //| "TitleField";
 
 export type FormElement = {
     type: ElementsType;
@@ -11,9 +12,17 @@ export type FormElement = {
         label: string;
     };
 
-    designerComponent: React.FC;
-    formComponent: React.FC;
-    propertiesComponent: React.FC;
+    designerComponent: React.FC<{
+        elementInstance: FormElementInstance;
+    }>;
+    formComponent: React.FC<{
+        elementInstance: FormElementInstance;
+    }>;
+    propertiesComponent: React.FC<{
+        elementInstance: FormElementInstance;
+    }>;
+
+    //validate: (formElement: FormElementInstance, currentValue: string) => boolean;
 };
 
 export type FormElementInstance = {
@@ -28,4 +37,5 @@ type FormElementsType = {
 };
 export const FormElements: FormElementsType = {
     TextField: TextFeildFormElement,
+    //TitleField: TitleFieldFormElement,
 };
