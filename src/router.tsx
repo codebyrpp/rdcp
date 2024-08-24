@@ -9,13 +9,12 @@ import PageLogin from "./pages/PageLogin";
 import AppLayout from "./layouts/AppLayout";
 import PageNotFound from "./pages/PageNotFound";
 import RootLayout from "./layouts/RootLayout";
-import PageForgetPassword from "./pages/PageForgetPassword";
 import PageProject from "./pages/PageProject";
 import PageProjectSettings from "./pages/PageProjectSettings";
 import PageError from "./pages/PageError";
 import PageFormSettings from "./pages/PageFormSettings";
-import ForgetPasswordPage from "./pages/ForgetPassword/ForgetPassword";
-import OTPPage from "./pages/ForgetPassword/OTPPage";
+import PageForgetPassword from "./pages/ForgetPassword/ForgetPassword";
+import PageVerfiyOTP from "./pages/ForgetPassword/OTPPage";
 
 import {
   FORGOT_PASSWORD_ROUTE,
@@ -24,6 +23,7 @@ import {
   PROJECT_ROUTE,
   PROJECT_SETTINGS_ROUTE,
   PROJECTS_ROUTE,
+  VERIFY_OTP_ROUTE,
 } from "./constants/routes";
 
 const router = createBrowserRouter(
@@ -32,10 +32,8 @@ const router = createBrowserRouter(
       <Route path="/" element={<PageLogin />} />
       <Route path={LOGIN_ROUTE} element={<PageLogin />} />
 
-      <Route path="/forgot-password" element={<ForgetPasswordPage />} />
-      <Route path="/forgot-password/otp" element={<OTPPage />} />
-
-      {/* <Route path={FORGOT_PASSWORD_ROUTE} element={<PageForgetPassword />} /> */}
+      <Route path={FORGOT_PASSWORD_ROUTE} element={<PageForgetPassword />} />
+      <Route path={VERIFY_OTP_ROUTE} element={<PageVerfiyOTP />} />
 
       <Route element={<AppLayout />}>
         <Route path={PROJECTS_ROUTE} element={<PageDashboard />} />
