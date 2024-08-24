@@ -23,7 +23,7 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
         settings: false
     })
 
-    const { navigateToFormSettings } = useProjectNavigation()
+    const { navigateToFormSettings, navigateToFormResponses, navigateToFormSummary } = useProjectNavigation()
 
     const canDo = (roles: ProjectRole[], compareRoles: ProjectRole[]) => {
         return roles.some(role => compareRoles.includes(role))
@@ -43,6 +43,7 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
     const handleCheckResponses = (e: any) => {
         e.stopPropagation()
         // Check responses
+        navigateToFormResponses(form.projectId, form.id)
     }
 
     const canViewDashboard = (roles: ProjectRole[]) => {
@@ -50,7 +51,7 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
     }
     const handleViewDashboard = (e: any) => {
         e.stopPropagation()
-        // View dashboard
+        navigateToFormSummary(form.projectId, form.id)
     }
 
     const canEditSettings = (roles: ProjectRole[]) => {
