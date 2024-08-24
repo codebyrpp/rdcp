@@ -1,11 +1,10 @@
-// data.ts
-
 export interface QuestionData {
   question: string;
   options: string[];
   responses: number[];
 }
 
+//multiple choice questions are stored in an array
 export const dummyData: QuestionData[] = [
   {
     question: "Which is your favorite color?",

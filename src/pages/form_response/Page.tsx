@@ -1,5 +1,3 @@
-// Page.tsx
-
 import { User, columns } from "./columns";
 import { DataTable } from "./data-table";
 import logo from "@/assets/logo.svg";
