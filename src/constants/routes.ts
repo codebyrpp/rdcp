@@ -13,3 +13,6 @@ export {
     PROJECT_SETTINGS_ROUTE,
     FORM_SETTINGS_ROUTE
 }
+
+
+export const FORGOT_PASSWORD_OTP_ROUTE = '/forgot-password/otp'
