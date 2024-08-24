@@ -174,16 +174,16 @@ function DesignerElementWrapper({element}:{element:FormElementInstance}){
       {mouseIsOver && (
         <>
         <div className="absolute right-0 h-full group">
-          <Button className="flex justify-center h-full border rounded-md rounded-l-none bg-orange-400 group-hover:bg-red-500"
+          <Button className="flex justify-center h-full border rounded-md rounded-l-none bg-red-400 group-hover:bg-red-500"
             variant={"outline"}
             onClick={(e) => {
-              e.stopPropagation;
+              e.stopPropagation();
               removeElement(element.id);
             }}>
             <BiSolidTrash className="h-8 w-6"/>
           </Button>
         </div>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <p className="text-sm">Click for properties or drag to move</p>
           </div>
         </>
