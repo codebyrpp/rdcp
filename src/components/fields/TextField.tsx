@@ -27,7 +27,7 @@ const propertiesSchema = z.object({
     placeHolder: z.string().max(50),
 });
 
-export const TextFeildFormElement: FormElement = {
+export const TextFieldFormElement: FormElement = {
     type,
     construct: (id:string) => ({
         id,
