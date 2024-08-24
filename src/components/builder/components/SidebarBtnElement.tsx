@@ -5,7 +5,7 @@ import { FormElement } from "./FormElements";
 function SidebarBtnElement({formElement}:{formElement: FormElement}) {
     const {label} = formElement.designerBtnElement;
     const draggable = useDraggable({
-        id: 'designer-btn-${formElement.type}',
+        id: `designer-btn-${formElement.type}`,
         data:{
             type: formElement.type,
             isDesignerBtnElement: true,
