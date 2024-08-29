@@ -11,13 +11,13 @@ import { useForm } from "react-hook-form";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
 import { Switch } from "../../ui/switch";
 
-const type: ElementsType = "TextField";
+const type: ElementsType = "NumberField";
 
 const extraAttributes = {
-    label: "Text Field",
+    label: "Number Field",
     helperText: "Description",
     required: false,
-    placeHolder: "Value here...",
+    placeHolder: "0",
 };
 
 const propertiesSchema = z.object({
@@ -27,7 +27,7 @@ const propertiesSchema = z.object({
     placeHolder: z.string().max(50),
 });
 
-export const TextFieldFormElement: FormElement = {
+export const NumberFieldFormElement: FormElement = {
     type,
     construct: (id:string) => ({
         id,
@@ -35,7 +35,7 @@ export const TextFieldFormElement: FormElement = {
         extraAttributes,
     }),
     designerBtnElement: {
-        label: "Text Field",
+        label: "Number Field",
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,
@@ -60,7 +60,7 @@ function DesignerComponent({
             {required && "*"}
         </Label>
         {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
-        <Input readOnly disabled placeholder= {placeHolder}></Input> 
+        <Input readOnly disabled type = "number" placeholder= {placeHolder}></Input> 
     </div>
     );
 }

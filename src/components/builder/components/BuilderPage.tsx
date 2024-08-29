@@ -13,7 +13,7 @@ const BuilderPage: React.FC = () => {
         },
     });
     const sensors = useSensors(mouseSensor); 
-
+    
     return (
         <DndContext sensors = {sensors}>
             <div className="flex flex-col h-screen">

@@ -10,17 +10,17 @@ import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
 
-const type: ElementsType = "TitleField";
+const type: ElementsType = "SubTitleField";
 
 const extraAttributes = {
-    title: "Title Field",
+    title: " SubTitle Field",
 };
 
 const propertiesSchema = z.object({
     title: z.string().min(2).max(50),
 });
 
-export const TitleFieldFormElement: FormElement = {
+export const SubTitleFieldFormElement: FormElement = {
     type,
     construct: (id:string) => ({
         id,
@@ -28,7 +28,7 @@ export const TitleFieldFormElement: FormElement = {
         extraAttributes,
     }),
     designerBtnElement: {
-        label: "Title Field",
+        label: "SubTitle Field",
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,
@@ -49,9 +49,9 @@ function DesignerComponent({
     const { title} = element.extraAttributes;
     return (<div className="flex flex-col gap-2 w-full">
         <Label className="text-muted-foreground">
-            Title Field
+            SubTitle Field
         </Label>
-        <p className="text-xl font-bold">{title}</p>
+        <p className="text-lg font-bold">{title}</p>
     </div>
     );
 }
@@ -64,7 +64,7 @@ function FormComponent({
     const element = elementInstance as CustomInstance;
 
     const { title } = element.extraAttributes;
-    return <p className="text-xl font-bold">{title}</p>;
+    return <p className="font-bold">{title}</p>;
 }
 
 type propertiesFormschemaType = z.infer<typeof propertiesSchema>;
@@ -109,7 +109,7 @@ function PropertiesComponent({
                     name="title"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Title</FormLabel>
+                            <FormLabel>SubTitle</FormLabel>
                             <FormControl>
                                 <Input {...field}
                                 onKeyDown={(e) => {

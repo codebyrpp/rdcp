@@ -10,14 +10,18 @@ import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
 import { Switch } from "../../ui/switch";
+import { Button } from "@/components/ui/button";
+import { Calendar, CalendarIcon } from "lucide-react";
+import { Popover, PopoverContent } from "@/components/ui/popover";
+import { PopoverTrigger } from "@radix-ui/react-popover";
 
-const type: ElementsType = "TextField";
+
+const type: ElementsType = "DateField";
 
 const extraAttributes = {
-    label: "Text Field",
-    helperText: "Description",
+    label: "Date Field",
+    helperText: "Pick a date",
     required: false,
-    placeHolder: "Value here...",
 };
 
 const propertiesSchema = z.object({
@@ -27,7 +31,7 @@ const propertiesSchema = z.object({
     placeHolder: z.string().max(50),
 });
 
-export const TextFieldFormElement: FormElement = {
+export const DateFieldFormElement: FormElement = {
     type,
     construct: (id:string) => ({
         id,
@@ -35,7 +39,7 @@ export const TextFieldFormElement: FormElement = {
         extraAttributes,
     }),
     designerBtnElement: {
-        label: "Text Field",
+        label: "Date Field",
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,
@@ -53,32 +57,50 @@ function DesignerComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, placeHolder, helperText} = element.extraAttributes;
+    const { label, required,  helperText} = element.extraAttributes;
     return (<div className="flex flex-col gap-2 w-full">
         <Label className="font-semibold">
             {label}
             {required && "*"}
         </Label>
+        <Button
+            variant={"outline"}
+            className="w-full justify-start text-left font-normal">
+                <CalendarIcon className="mr-2 h-4 w-4"/>
+                <span>Pick a date</span>
+            </Button>
         {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
-        <Input readOnly disabled placeholder= {placeHolder}></Input> 
     </div>
     );
 }
-
+//have to add the validation to the date field/ calendar
 function FormComponent({
     elementInstance,
 }: {
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, placeHolder, helperText} = element.extraAttributes;
+    const { label, required, helperText} = element.extraAttributes;
     return (<div className="flex flex-col gap-2 w-full">
         <Label className="font-semibold">
             {label}
             {required && "*"}
         </Label>
+        <Popover>
+            <PopoverTrigger asChild>
+                <Button
+                    variant={"outline"}
+                    className="w-full justify-start text-left font-normal">
+                        <CalendarIcon className="mr-2 h-4 w-4"/>
+                        <span>Pick a date</span>
+                    </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                    mode="single"/>
+            </PopoverContent>
+        </Popover>
         {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
-        <Input placeholder= {placeHolder}></Input>
     </div>
     );
 }
@@ -98,7 +120,6 @@ function PropertiesComponent({
             label: element.extraAttributes.label,
             helperText: element.extraAttributes.helperText,
             required: element.extraAttributes.required,
-            placeHolder: element.extraAttributes.placeHolder,
         },
     });
 
@@ -163,28 +184,6 @@ function PropertiesComponent({
                             </FormControl>
                             <FormDescription>
                                 The decription of the field. <br/> It will be displayed below the label.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="placeHolder"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>PlaceHolder</FormLabel>
-                            <FormControl>
-                                <Input {...field}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        e.currentTarget.blur();
-                                    }
-                                }}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                The placeholder of the field.
                             </FormDescription>
                             <FormMessage/>
                         </FormItem>

@@ -10,14 +10,18 @@ import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
 import { Switch } from "../../ui/switch";
+import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { AiOutlinePlus } from "react-icons/ai";
 
-const type: ElementsType = "TextField";
+const type: ElementsType = "SelectField";
 
 const extraAttributes = {
-    label: "Text Field",
+    label: "Select Field",
     helperText: "Description",
     required: false,
     placeHolder: "Value here...",
+    options: [],
 };
 
 const propertiesSchema = z.object({
@@ -25,9 +29,10 @@ const propertiesSchema = z.object({
     helperText: z.string().max(200),
     required: z.boolean().default(false),
     placeHolder: z.string().max(50),
+    options:z.array(z.string()).default([]),
 });
 
-export const TextFieldFormElement: FormElement = {
+export const SelectFieldFormElement: FormElement = {
     type,
     construct: (id:string) => ({
         id,
@@ -35,7 +40,7 @@ export const TextFieldFormElement: FormElement = {
         extraAttributes,
     }),
     designerBtnElement: {
-        label: "Text Field",
+        label: "Select Field",
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,
@@ -60,7 +65,11 @@ function DesignerComponent({
             {required && "*"}
         </Label>
         {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
-        <Input readOnly disabled placeholder= {placeHolder}></Input> 
+        <Select>
+            <SelectTrigger className="w-full">
+                <SelectValue placeholder={placeHolder} />
+            </SelectTrigger>
+        </Select>
     </div>
     );
 }
@@ -78,7 +87,18 @@ function FormComponent({
             {required && "*"}
         </Label>
         {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
-        <Input placeholder= {placeHolder}></Input>
+        <Select>
+            <SelectTrigger className="w-full">
+                <SelectValue placeholder={placeHolder} />
+            </SelectTrigger>
+            {/*<SelectContent>
+                {setOptions.map((option) => (
+                    <SelectItem key={option} value={option}>
+                        {option}
+                    </SelectItem>
+                ))}
+            </SelectContent>*/}
+        </Select>
     </div>
     );
 }
@@ -99,6 +119,7 @@ function PropertiesComponent({
             helperText: element.extraAttributes.helperText,
             required: element.extraAttributes.required,
             placeHolder: element.extraAttributes.placeHolder,
+            options: element.extraAttributes.options,
         },
     });
 
@@ -107,7 +128,7 @@ function PropertiesComponent({
     }, [element, form]);
 
     function applyChanges(values:  propertiesFormschemaType) {
-        const { label, helperText, required, placeHolder } = values;
+        const { label, helperText, required, placeHolder, options } = values;
         updateElement(element.id,{
             ...element,
             extraAttributes: {
@@ -115,6 +136,7 @@ function PropertiesComponent({
                 helperText,
                 placeHolder,
                 required,
+                options,
             },
         });
     }
@@ -206,6 +228,46 @@ function PropertiesComponent({
                                     onCheckedChange={field.onChange}
                                 />
                             </FormControl>
+                            <FormMessage/>
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="options"
+                    render={({ field }) => (
+                        <FormItem>
+                            <div className="flex justify-between items-center"> 
+                                <FormLabel>Options</FormLabel>
+                                <Button
+                                    variant={"outline"}
+                                    className="gap-2"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        form.setValue("options", [...field.value, ""]); {/* Add the correct validation */}
+                                    }}
+                                >
+                                    <AiOutlinePlus/>
+                                    Add
+                                </Button>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                {form.watch("options").map((option, index) => (
+                                    <div key={index} className="flex items-center justify-between gap-1">
+                                        <Input
+                                            placeholder=""
+                                            value={option}
+                                            onChange={(e) => {
+                                                field.value[index] = e.target.value;
+                                                field.onChange(field.value);
+                                            }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                            <FormDescription>
+                                The decription of the field. <br/> It will be displayed below the label.
+                            </FormDescription>
                             <FormMessage/>
                         </FormItem>
                     )}

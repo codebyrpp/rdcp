@@ -10,24 +10,23 @@ import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
 import { Switch } from "../../ui/switch";
+import { Checkbox } from "@radix-ui/react-checkbox";
 
-const type: ElementsType = "TextField";
+const type: ElementsType = "CheckboxField";
 
 const extraAttributes = {
-    label: "Text Field",
+    label: "Checkbox Field",
     helperText: "Description",
     required: false,
-    placeHolder: "Value here...",
 };
 
 const propertiesSchema = z.object({
     label: z.string().min(2).max(50),
     helperText: z.string().max(200),
     required: z.boolean().default(false),
-    placeHolder: z.string().max(50),
 });
 
-export const TextFieldFormElement: FormElement = {
+export const CheckboxFieldFormElement: FormElement = {
     type,
     construct: (id:string) => ({
         id,
@@ -35,7 +34,7 @@ export const TextFieldFormElement: FormElement = {
         extraAttributes,
     }),
     designerBtnElement: {
-        label: "Text Field",
+        label: "Checkbox Field",
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,
@@ -53,14 +52,17 @@ function DesignerComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, placeHolder, helperText} = element.extraAttributes;
-    return (<div className="flex flex-col gap-2 w-full">
-        <Label className="font-semibold">
-            {label}
-            {required && "*"}
-        </Label>
+    const { label, required, helperText} = element.extraAttributes;
+    const id = `checkbox-${element.id}`;
+    return (<div className="flex items-top space-x-2">
+        <Checkbox id={id} defaultChecked={required} />
+        <div className="grid gap-1.5 leading-none">
+            <Label htmlFor={id}>
+                {label}
+                {required && "*"}
+            </Label>
+        </div>
         {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
-        <Input readOnly disabled placeholder= {placeHolder}></Input> 
     </div>
     );
 }
@@ -71,14 +73,17 @@ function FormComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, placeHolder, helperText} = element.extraAttributes;
-    return (<div className="flex flex-col gap-2 w-full">
-        <Label className="font-semibold">
-            {label}
-            {required && "*"}
-        </Label>
+    const { label, required, helperText} = element.extraAttributes;
+    const id = `checkbox-${element.id}`;
+    return (<div className="flex items-top space-x-2">
+        <Checkbox id={id} defaultChecked={required} />
+        <div className="grid gap-1.5 leading-none">
+            <Label htmlFor={id}>
+                {label}
+                {required && "*"}
+            </Label>
+        </div>
         {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
-        <Input placeholder= {placeHolder}></Input>
     </div>
     );
 }
@@ -98,7 +103,6 @@ function PropertiesComponent({
             label: element.extraAttributes.label,
             helperText: element.extraAttributes.helperText,
             required: element.extraAttributes.required,
-            placeHolder: element.extraAttributes.placeHolder,
         },
     });
 
@@ -107,13 +111,12 @@ function PropertiesComponent({
     }, [element, form]);
 
     function applyChanges(values:  propertiesFormschemaType) {
-        const { label, helperText, required, placeHolder } = values;
+        const { label, helperText, required} = values;
         updateElement(element.id,{
             ...element,
             extraAttributes: {
                 label,
                 helperText,
-                placeHolder,
                 required,
             },
         });
@@ -163,28 +166,6 @@ function PropertiesComponent({
                             </FormControl>
                             <FormDescription>
                                 The decription of the field. <br/> It will be displayed below the label.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="placeHolder"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>PlaceHolder</FormLabel>
-                            <FormControl>
-                                <Input {...field}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        e.currentTarget.blur();
-                                    }
-                                }}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                The placeholder of the field.
                             </FormDescription>
                             <FormMessage/>
                         </FormItem>
