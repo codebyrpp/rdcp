@@ -53,7 +53,7 @@ function DesignerComponent({
         <Label className="text-muted-foreground">
             Paragraph Field
         </Label>
-        <p>{text}</p>
+        <p className="text-sm">{text}</p>
     </div>
     );
 }
@@ -66,7 +66,7 @@ function FormComponent({
     const element = elementInstance as CustomInstance;
 
     const { text } = element.extraAttributes;
-    return <p>{text}</p>;
+    return <p className="text-sm">{text}</p>;
 }
 
 type propertiesFormschemaType = z.infer<typeof propertiesSchema>;
