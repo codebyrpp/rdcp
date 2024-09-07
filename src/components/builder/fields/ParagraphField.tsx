@@ -9,6 +9,7 @@ import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
 import { Textarea } from "@/components/ui/textarea";
+import { AlignJustify } from "lucide-react";
 
 const type: ElementsType = "ParagraphField";
 
@@ -29,6 +30,7 @@ export const ParagraphFieldFormElement: FormElement = {
     }),
     designerBtnElement: {
         label: "Paragraph Field",
+        icon: <AlignJustify />
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,

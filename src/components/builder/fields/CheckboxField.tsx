@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
 import { Switch } from "../../ui/switch";
 import { Checkbox } from "@radix-ui/react-checkbox";
+import { CheckCheck } from "lucide-react";
 
 const type: ElementsType = "CheckboxField";
 
@@ -35,6 +36,7 @@ export const CheckboxFieldFormElement: FormElement = {
     }),
     designerBtnElement: {
         label: "Checkbox Field",
+        icon: <CheckCheck/>
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,

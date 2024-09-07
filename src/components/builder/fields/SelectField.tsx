@@ -13,6 +13,7 @@ import { Switch } from "../../ui/switch";
 import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { AiOutlinePlus } from "react-icons/ai";
+import { ListCheck } from "lucide-react";
 
 const type: ElementsType = "SelectField";
 
@@ -41,6 +42,7 @@ export const SelectFieldFormElement: FormElement = {
     }),
     designerBtnElement: {
         label: "Select Field",
+        icon: <ListCheck />
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,

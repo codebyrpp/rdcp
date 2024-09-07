@@ -7,6 +7,7 @@ import { TextAreaFieldFormElement } from "../fields/TextAreaField";
 import { DateFieldFormElement } from "../fields/DateField";
 import { SelectFieldFormElement } from "../fields/SelectField";
 import { CheckboxFieldFormElement } from "../fields/CheckboxField";
+import { ReactNode } from "react";
 
 export type ElementsType = "TextField" | "TitleField" | "SubTitleField"  |  "ParagraphField" | "NumberField" | "TextAreaField" | "DateField" 
                             | "SelectField" | "CheckboxField";
@@ -18,6 +19,7 @@ export type FormElement = {
 
     designerBtnElement: {
         label: string;
+        icon?: ReactNode;
     };
 
     designerComponent: React.FC<{

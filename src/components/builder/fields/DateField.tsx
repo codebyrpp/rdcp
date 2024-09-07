@@ -40,6 +40,7 @@ export const DateFieldFormElement: FormElement = {
     }),
     designerBtnElement: {
         label: "Date Field",
+        icon: <CalendarIcon/>
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,

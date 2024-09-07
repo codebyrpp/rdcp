@@ -12,6 +12,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Switch } from "../../ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
+import { LetterText } from "lucide-react";
 
 const type: ElementsType = "TextAreaField";
 
@@ -40,6 +41,7 @@ export const TextAreaFieldFormElement: FormElement = {
     }),
     designerBtnElement: {
         label: "Text Area Field",
+        icon: <LetterText />,
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,

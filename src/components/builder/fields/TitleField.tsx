@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
+import { Heading1 } from "lucide-react";
 
 const type: ElementsType = "TitleField";
 
@@ -29,6 +30,7 @@ export const TitleFieldFormElement: FormElement = {
     }),
     designerBtnElement: {
         label: "Title Field",
+        icon: <Heading1/>
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,

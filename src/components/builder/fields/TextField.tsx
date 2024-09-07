@@ -10,6 +10,7 @@ import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
 import { Switch } from "../../ui/switch";
+import { Type } from "lucide-react";
 
 const type: ElementsType = "TextField";
 
@@ -36,6 +37,7 @@ export const TextFieldFormElement: FormElement = {
     }),
     designerBtnElement: {
         label: "Text Field",
+        icon: <Type />,
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,
