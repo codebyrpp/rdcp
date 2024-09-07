@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
-import useDesigner from "../hooks/useDesigner";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { FormElements } from "./FormElements";
+import { FormElements } from "../FormElements";
+import useDesigner from "../../hooks/useDesigner";
 
 function PreviewDialogBtn() {
     const { elements } = useDesigner();

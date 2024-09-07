@@ -2,12 +2,12 @@ import { DndContext, MouseSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { FormWithSchema } from "@/models/forms";
 import Designer from "./Designer";
 import DragOverlayWrapper from "./DragOverlayWrapper";
-import PreviewDialogBtn from "./PreviewDialogBtn";
-import PublishFormBtn from "./PublishFormBtn";
-import SaveFormBtn from "./SaveFormBtn";
+import SaveFormBtn from "./actions/SaveFormBtn";
 import useDesigner from "../hooks/useDesigner";
 import { useEffect, useState } from "react";
 import FormLoading from "./FormLoading";
+import PreviewDialogBtn from "./actions/PreviewDialogBtn";
+import DiscardChangesButton from "./actions/DiscardChangesBtn";
 
 const FormBuilder = ({ form }: { form: Partial<FormWithSchema> }) => {
 
@@ -44,7 +44,7 @@ const FormBuilder = ({ form }: { form: Partial<FormWithSchema> }) => {
                             <div className="flex justify-end space-x-2">
                                 <PreviewDialogBtn />
                                 <SaveFormBtn id={form.id!} />
-                                <PublishFormBtn />
+                                <DiscardChangesButton />
                             </div>
                         </div>
                     </div>

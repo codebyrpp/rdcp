@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { HiSaveAs } from "react-icons/hi";
-import useDesigner from "../hooks/useDesigner";
+import useDesigner from "../../hooks/useDesigner";
 import { useToast } from "@/components/ui/use-toast";
 import { useTransition } from "react";
 import { FaSpinner } from "react-icons/fa6";
+import { SaveAll } from "lucide-react";
 
 function SaveFormBtn({id}:{id:string}) {
 
@@ -39,9 +39,9 @@ function SaveFormBtn({id}:{id:string}) {
       startTransition(updateFormContext);
     }}
     disabled={loading}
-    variant={"outline"} className="gap-2">
-      <HiSaveAs className="h-4 w-4" />
+    className="gap-2">
       Save
+      <SaveAll className="h-4 w-4" />
       {loading && <FaSpinner className="animate-spin h-4 w-4" />}
     </Button>
   );
