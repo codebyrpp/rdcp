@@ -5,28 +5,46 @@ import DragOverlayWrapper from "./DragOverlayWrapper";
 import PreviewDialogBtn from "./PreviewDialogBtn";
 import PublishFormBtn from "./PublishFormBtn";
 import SaveFormBtn from "./SaveFormBtn";
+import useDesigner from "../hooks/useDesigner";
+import { useEffect, useState } from "react";
+import FormLoading from "./FormLoading";
 
-const FormBuilder = ({form}: {form: Partial<FormWithSchema>}) => {
+const FormBuilder = ({ form }: { form: Partial<FormWithSchema> }) => {
 
-    const mouseSensor = useSensor(MouseSensor,{
+    const mouseSensor = useSensor(MouseSensor, {
         activationConstraint: {
             distance: 10,
         },
     });
 
-    const sensors = useSensors(mouseSensor); 
-    
+    const sensors = useSensors(mouseSensor);
+
+    const { setElements } = useDesigner();
+    const [isReady, setIsReady] = useState(false);
+
+    useEffect(() => {
+        if (isReady) return;
+        setElements(form.elements || []);
+        const isReadyTimeout = setTimeout(() => {
+            setIsReady(true);
+        }, 500);
+        return () => clearTimeout(isReadyTimeout);
+    }, [form, setElements]);
+
+    if (!isReady)
+        return (<FormLoading />);
+
     return (
-        <DndContext sensors = {sensors}>
+        <DndContext sensors={sensors}>
             <div className="flex flex-col h-screen">
                 <div className="flex w-screen">
                     <div className="flex-1 py-2 px-4 bg-gray-50">
                         <div className="flex justify-between items-center">
                             <h1 className="text-lg font-semibold">Project Name / Form Name</h1>
                             <div className="flex justify-end space-x-2">
-                                <PreviewDialogBtn/>
+                                <PreviewDialogBtn />
                                 <SaveFormBtn id={form.id!} />
-                                <PublishFormBtn/>
+                                <PublishFormBtn />
                             </div>
                         </div>
                     </div>

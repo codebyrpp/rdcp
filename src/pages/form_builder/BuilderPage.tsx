@@ -3,6 +3,12 @@ import { FormWithSchema } from "@/models/forms";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+const defaultForm = {
+    id: '1',
+    name: "Form Name",
+    elements: [],
+};
+
 export default function BuilderPage() {
 
     const formId = useParams<{ formId: string }>().formId;
@@ -13,19 +19,22 @@ export default function BuilderPage() {
         // TODO: fetch form data from database
         
         if (!formId) {
-            setForm({
-                id: '1',
-                name: "Form Name",
-                elements: [],
-            });
+            setForm(defaultForm);
             return;
         }
         // get from local storage
-        const localform = localStorage.getItem(formId!);
-        if (localform) {
-            setForm(JSON.parse(localform));
+        const elements = localStorage.getItem(formId!);
+        
+        if (!elements) {
+            setForm(defaultForm);
             return;
         }
+
+        setForm({
+            id: formId,
+            name: "Form Name",
+            elements: JSON.parse(elements)
+        });
 
     }, [formId]);
 
