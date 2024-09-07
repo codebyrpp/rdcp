@@ -28,10 +28,10 @@ import PageForgetPassword from "./pages/ForgetPassword/ForgetPassword";
 import PageVerfiyOTP from "./pages/ForgetPassword/OTPPage";
 import PageFormResponses from "./pages/form_response/Page.tsx";
 import FormResponseSummary from "./pages/response_summary/FormResponseSummary.tsx";
-import BuilderLayout from "./components/builder/components/BuilderLayout.tsx";
-import BuilderPage from "./components/builder/components/BuilderPage.tsx";
-import BuilderError from "./components/builder/components/BuilderError.tsx";
-import BuilderLoading from "./components/builder/components/BuilderLoading.tsx";
+import BuilderLayout from "./pages/form_builder/BuilderLayout.tsx";
+import BuilderError from "./pages/form_builder/BuilderError.tsx";
+import BuilderLoading from "./pages/form_builder/BuilderLoading.tsx";
+import BuilderPage from "./pages/form_builder/BuilderPage.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

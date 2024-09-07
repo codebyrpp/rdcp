@@ -1,3 +1,5 @@
+import { FormElementInstance } from "@/components/builder/components/FormElements"
+
 export interface Form{
     id: string,
     projectId: string,
@@ -9,4 +11,8 @@ export interface Form{
     isPublished?: boolean,
     multipleResponses?: boolean,
     responseMessage?: string
+}
+
+export interface FormWithSchema extends Form{
+    elements: FormElementInstance[]
 }

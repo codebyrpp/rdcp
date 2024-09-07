@@ -1,17 +1,19 @@
 import { DndContext, MouseSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { FormWithSchema } from "@/models/forms";
 import Designer from "./Designer";
 import DragOverlayWrapper from "./DragOverlayWrapper";
-import SaveFormBtn from "./SaveFormBtn";
 import PreviewDialogBtn from "./PreviewDialogBtn";
 import PublishFormBtn from "./PublishFormBtn";
+import SaveFormBtn from "./SaveFormBtn";
 
-const BuilderPage: React.FC = () => {
+const FormBuilder = ({form}: {form: Partial<FormWithSchema>}) => {
 
     const mouseSensor = useSensor(MouseSensor,{
         activationConstraint: {
             distance: 10,
         },
     });
+
     const sensors = useSensors(mouseSensor); 
     
     return (
@@ -23,7 +25,7 @@ const BuilderPage: React.FC = () => {
                             <h1 className="text-lg font-semibold">Project Name / Form Name</h1>
                             <div className="flex justify-end space-x-2">
                                 <PreviewDialogBtn/>
-                                <SaveFormBtn />
+                                <SaveFormBtn id={form.id!} />
                                 <PublishFormBtn/>
                             </div>
                         </div>
@@ -40,5 +42,5 @@ const BuilderPage: React.FC = () => {
     );
 };
 
-export default BuilderPage;
+export default FormBuilder;
 

@@ -20,8 +20,6 @@ function Designer() {
     },
   });
 
-  console.log("ELEMENTS", elements);
-
   useDndMonitor({
     onDragEnd: (event: DragEndEvent) => {
       const {active, over} = event;
