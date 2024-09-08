@@ -18,9 +18,9 @@ const type: ElementsType = "TextField";
 
 const extraAttributes = {
     label: "Text Field",
-    helperText: "Description",
+    helperText: "",
     required: false,
-    placeHolder: "Value here...",
+    placeHolder: "Short Answer",
 };
 
 
