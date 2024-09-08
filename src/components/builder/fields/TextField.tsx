@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ElementsType, FormElement, FormElementInstance } from "../components/FormElements";
 import { Input } from "../../ui/input";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { Form } from "../../ui/form";
@@ -12,7 +12,11 @@ import { Type } from "lucide-react";
 import LabelProperty from "./common/LabelProperty";
 import DescriptionProperty from "./common/DescriptionProperty";
 import RequiredProperty from "./common/RequiredProperty";
-import {InputDescription, InputLabel} from "./common/Input";
+import { InputDescription, InputLabel } from "./common/Input";
+import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { TextFieldValidationInstance, textValidations } from "./validations/text/schemas";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 const type: ElementsType = "TextField";
 
@@ -49,7 +53,7 @@ export const TextFieldFormElement: FormElement = {
 };
 
 type CustomInstance = FormElementInstance & {
-    extraAttributes: typeof extraAttributes;
+    extraAttributes: typeof extraAttributes & TextFieldValidationInstance;
 };
 
 function DesignerComponent({
@@ -60,7 +64,7 @@ function DesignerComponent({
     const element = elementInstance as CustomInstance;
     const { label, required, placeHolder, helperText } = element.extraAttributes;
     return (<div className="flex flex-col gap-2 w-full">
-        <InputLabel label={label} required={required} />    
+        <InputLabel label={label} required={required} />
         {helperText && (<InputDescription description={helperText} />)}
         <Input readOnly disabled placeholder={placeHolder}></Input>
     </div>
@@ -118,6 +122,8 @@ function PropertiesComponent({
         });
     }
 
+    const [validationType, setValidationType] = useState<string | undefined>(undefined);
+
     return (
         <Form {...form}>
             <form onChange={form.handleSubmit(applyChanges)}
@@ -128,9 +134,70 @@ function PropertiesComponent({
                 <LabelProperty form={form} />
                 <DescriptionProperty form={form} />
                 <RequiredProperty form={form} />
+                {/* Select Validation */}
+                <hr />
+                <div className="text-muted-foreground text-sm">Response Validation</div>
+                <div className="mt-2 space-y-1">
+                    <ResponseValidationProperties
+                        validationType={validationType}
+                        setValidationType={setValidationType}
+                    />
+                </div>
             </form>
         </Form>
     );
 }
 
 
+const ResponseValidationProperties = (
+    {
+        validationType,
+        setValidationType
+    }: {
+        validationType: string | undefined,
+        setValidationType: (value: string | undefined) => void
+    }
+) => {
+
+    const [key, setKey] = useState(+new Date());
+
+    return (
+        <div key={key} className="flex flex-col gap-4">
+            <div className="space-y-3">
+                <Label>Validation Type</Label>
+                <Select value={validationType}
+                    onValueChange={(newValue) => {
+                        setValidationType(newValue);
+                        setKey(+new Date());
+                    }}>
+                    <SelectTrigger className="">
+                        <SelectValue placeholder="Select a Validation Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {
+                            Object.entries(textValidations).map(([key, value]) => {
+                                return (
+                                    <SelectItem key={key} value={key}>
+                                        {value.name}
+                                    </SelectItem>
+                                );
+                            })
+                        }
+                        <SelectSeparator />
+                        <Button
+                            className="w-full px-2"
+                            variant="secondary"
+                            size="sm"
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                setValidationType(undefined)
+                            }}
+                        >
+                            Clear
+                        </Button>
+                    </SelectContent>
+                </Select>
+            </div>
+        </div>
+    );
+}
