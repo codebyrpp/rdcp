@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { LetterText } from "lucide-react";
-import HelperTextProperty from "./common/HelperTextProperty";
+import DescriptionProperty from "./common/DescriptionProperty";
 import LabelProperty from "./common/LabelProperty";
 import RequiredProperty from "./common/RequiredProperty";
 
@@ -136,7 +136,7 @@ function PropertiesComponent({
                 }}
                 className="space-y-3">
                 <LabelProperty form={form} />
-                <HelperTextProperty form={form} />
+                <DescriptionProperty form={form} />
                 <RequiredProperty form={form} />
                 <FormField
                     control={form.control}

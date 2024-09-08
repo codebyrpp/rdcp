@@ -13,7 +13,7 @@ import { Calendar, CalendarIcon } from "lucide-react";
 import { Popover, PopoverContent } from "@/components/ui/popover";
 import { PopoverTrigger } from "@radix-ui/react-popover";
 import LabelProperty from "./common/LabelProperty";
-import HelperTextProperty from "./common/HelperTextProperty";
+import DescriptionProperty from "./common/DescriptionProperty";
 import RequiredProperty from "./common/RequiredProperty";
 
 
@@ -150,7 +150,7 @@ function PropertiesComponent({
                 }}
                 className="space-y-3">
                 <LabelProperty form={form} />
-                <HelperTextProperty form={form} />
+                <DescriptionProperty form={form} />
                 <RequiredProperty form={form}/>
             </form>
         </Form>

@@ -4,15 +4,15 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ElementsType, FormElement, FormElementInstance } from "../components/FormElements";
 import { Input } from "../../ui/input";
-import { Label } from "../../ui/label";
 import { useEffect } from "react";
 import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { Form } from "../../ui/form";
 import { Type } from "lucide-react";
 import LabelProperty from "./common/LabelProperty";
-import HelperTextProperty from "./common/HelperTextProperty";
+import DescriptionProperty from "./common/DescriptionProperty";
 import RequiredProperty from "./common/RequiredProperty";
+import {InputDescription, InputLabel} from "./common/Input";
 
 const type: ElementsType = "TextField";
 
@@ -26,7 +26,7 @@ const extraAttributes = {
 
 const propertiesSchema = z.object({
     label: z.string().min(2).max(50),
-    helperText: z.string().max(200),
+    helperText: z.string().max(1500),
     required: z.boolean().default(false),
     placeHolder: z.string().max(50),
 });
@@ -60,11 +60,8 @@ function DesignerComponent({
     const element = elementInstance as CustomInstance;
     const { label, required, placeHolder, helperText } = element.extraAttributes;
     return (<div className="flex flex-col gap-2 w-full">
-        <Label className="font-semibold">
-            {label}
-            {required && "*"}
-        </Label>
-        {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
+        <InputLabel label={label} required={required} />    
+        {helperText && (<InputDescription description={helperText} />)}
         <Input readOnly disabled placeholder={placeHolder}></Input>
     </div>
     );
@@ -78,11 +75,8 @@ function FormComponent({
     const element = elementInstance as CustomInstance;
     const { label, required, placeHolder, helperText } = element.extraAttributes;
     return (<div className="flex flex-col gap-2 w-full">
-        <Label className="font-semibold">
-            {label}
-            {required && "*"}
-        </Label>
-        {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
+        <InputLabel label={label} required={required} />
+        {helperText && (<InputDescription description={helperText} />)}
         <Input placeholder={placeHolder}></Input>
     </div>
     );
@@ -98,7 +92,7 @@ function PropertiesComponent({
     const { updateElement } = useDesigner();
     const form = useForm<propertiesFormSchemaType>({
         resolver: zodResolver(propertiesSchema),
-        mode: "onBlur",
+        mode: "onChange",
         defaultValues: {
             label: element.extraAttributes.label,
             helperText: element.extraAttributes.helperText,
@@ -126,13 +120,13 @@ function PropertiesComponent({
 
     return (
         <Form {...form}>
-            <form onBlur={form.handleSubmit(applyChanges)}
+            <form onChange={form.handleSubmit(applyChanges)}
                 onSubmit={(e) => {
                     e.preventDefault();
                 }}
                 className="space-y-3">
                 <LabelProperty form={form} />
-                <HelperTextProperty form={form} />
+                <DescriptionProperty form={form} />
                 <RequiredProperty form={form} />
             </form>
         </Form>

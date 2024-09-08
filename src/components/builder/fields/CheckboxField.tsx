@@ -11,7 +11,7 @@ import { Form } from "../../ui/form";
 import { Checkbox } from "@radix-ui/react-checkbox";
 import { CheckCheck } from "lucide-react";
 import LabelProperty from "./common/LabelProperty";
-import HelperTextProperty from "./common/HelperTextProperty";
+import DescriptionProperty from "./common/DescriptionProperty";
 import RequiredProperty from "./common/RequiredProperty";
 
 const type: ElementsType = "CheckboxField";
@@ -133,7 +133,7 @@ function PropertiesComponent({
                 }}
                 className="space-y-3">
                 <LabelProperty form={form}/>
-                <HelperTextProperty form={form}/>
+                <DescriptionProperty form={form}/>
                 <RequiredProperty form={form}/>
             </form>
         </Form>

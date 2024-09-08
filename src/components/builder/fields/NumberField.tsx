@@ -10,7 +10,7 @@ import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
 import { RiNumber1} from "react-icons/ri";
-import HelperTextProperty from "./common/HelperTextProperty";
+import DescriptionProperty from "./common/DescriptionProperty";
 import LabelProperty from "./common/LabelProperty";
 import RequiredProperty from "./common/RequiredProperty";
 
@@ -131,7 +131,7 @@ function PropertiesComponent({
                 }}
                 className="space-y-3">
                 <LabelProperty form={form} />
-                <HelperTextProperty form={form} />
+                <DescriptionProperty form={form} />
                 <RequiredProperty form={form} />
                 <FormField
                     control={form.control}

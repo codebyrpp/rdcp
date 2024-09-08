@@ -1,8 +1,8 @@
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import { PropertyProps } from './PropertyPropsType';
+import { Textarea } from '@/components/ui/textarea';
 
-const HelperTextProperty = ({ form }: PropertyProps) => {
+const DescriptionProperty = ({ form }: PropertyProps) => {
     return (
         <FormField
             control={form.control}
@@ -11,13 +11,7 @@ const HelperTextProperty = ({ form }: PropertyProps) => {
                 <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                        <Input {...field}
-                            onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                    e.currentTarget.blur();
-                                }
-                            }}
-                        />
+                        <Textarea {...field} className='min-h-24' />
                     </FormControl>
                     <FormDescription>
                         The description of the field. <br /> It will be displayed below the label.
@@ -29,4 +23,4 @@ const HelperTextProperty = ({ form }: PropertyProps) => {
     )
 }
 
-export default HelperTextProperty
+export default DescriptionProperty

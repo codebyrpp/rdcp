@@ -9,7 +9,7 @@ function PropertiesFormSidebar() {
 
     const PropertiesForm = FormElements[selectedElement?.type].propertiesComponent;
   return (
-    <div className='flex flex-col p-2'>
+    <div className='flex flex-col'>
         <div className='flex justify-between items-center'>
             <p className='text-sm text-foreground/70'>Element Properties</p>
             <Button 

@@ -52,10 +52,9 @@ function DesignerComponent({
     const element = elementInstance as CustomInstance;
     const { title, description } = element.extraAttributes;
     return (
-        <div className="flex flex-col gap-2 w-full">
-            <Label className="text-muted-foreground">Title & Description Field</Label>
-            <p className="text-xl font-bold">{title}</p>
-            <p className="text-base">{description}</p>
+        <div className="flex flex-col w-full">
+            <p className="text-lg font-bold">{title}</p>
+            <p className="text-sm">{description}</p>
         </div>
     );
 }
@@ -70,8 +69,8 @@ function FormComponent({
     const { title, description } = element.extraAttributes;
     return (
         <div>
-            <p className="text-xl font-bold">{title}</p>
-            <p className="text-base">{description}</p>
+            <p className="text-lg font-bold">{title}</p>
+            <p className="text-sm">{description}</p>
         </div>
     );
 }

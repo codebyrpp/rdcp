@@ -13,7 +13,7 @@ import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { AiOutlinePlus } from "react-icons/ai";
 import { ListCheck } from "lucide-react";
-import HelperTextProperty from "./common/HelperTextProperty";
+import DescriptionProperty from "./common/DescriptionProperty";
 import LabelProperty from "./common/LabelProperty";
 import RequiredProperty from "./common/RequiredProperty";
 
@@ -153,7 +153,7 @@ function PropertiesComponent({
                 }}
                 className="space-y-3">
                 <LabelProperty form={form} />
-                <HelperTextProperty form={form} />
+                <DescriptionProperty form={form} />
                 <RequiredProperty form={form} />
 
                 <FormField

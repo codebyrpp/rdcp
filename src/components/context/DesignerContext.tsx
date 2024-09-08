@@ -31,6 +31,7 @@ export default function DesignerContextProvider({
             newElements.splice(index, 0, element);
             return newElements;
         });
+        setSelectedElement(element);
     };
 
     const removeElement = (id: string) => {
