@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, Sele
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { TextFieldValidation, TextFieldValidationInstance, TextFieldValidationType, TextValidations } from "./validations/text/Validations";
+import { InfoCircledIcon } from "@radix-ui/react-icons";
 
 const type: ElementsType = "TextField";
 
@@ -25,6 +26,7 @@ const extraAttributes = {
     helperText: "",
     required: false,
     placeHolder: "Short Answer",
+    validation: undefined
 };
 
 
@@ -53,7 +55,9 @@ export const TextFieldFormElement: FormElement = {
 };
 
 type CustomInstance = FormElementInstance & {
-    extraAttributes: typeof extraAttributes & TextFieldValidationInstance;
+    extraAttributes: typeof extraAttributes & {
+        validation?: TextFieldValidationInstance;
+    };
 };
 
 function DesignerComponent({
@@ -63,10 +67,20 @@ function DesignerComponent({
 }) {
     const element = elementInstance as CustomInstance;
     const { label, required, placeHolder, helperText } = element.extraAttributes;
+    const validation = element.extraAttributes.validation as TextFieldValidationInstance | undefined;
+
     return (<div className="flex flex-col gap-2 w-full">
         <InputLabel label={label} required={required} />
         {helperText && (<InputDescription description={helperText} />)}
         <Input readOnly disabled placeholder={placeHolder}></Input>
+        {validation && (
+            <div className="text-muted-foreground text-xs flex items-center">
+                <InfoCircledIcon className="w-4 h-4 inline-block mr-1" />
+                <span>
+                    {TextValidations[validation.type].name} Validation Applied
+                </span>
+            </div>
+        )}
     </div>
     );
 }
@@ -109,6 +123,16 @@ function PropertiesComponent({
         form.reset(element.extraAttributes);
     }, [element, form]);
 
+    function updateValidationInstance(validtion: TextFieldValidationInstance | undefined) {
+        updateElement(element.id, {
+            ...element,
+            extraAttributes: {
+                ...element.extraAttributes,
+                validation,
+            }
+        });
+    }
+
     function applyChanges(values: propertiesFormSchemaType) {
         const { label, helperText, required, placeHolder } = values;
         updateElement(element.id, {
@@ -128,35 +152,43 @@ function PropertiesComponent({
     useEffect(() => {
         if (validationType) {
             setValidation(TextValidations[validationType as TextFieldValidationType]);
+            updateValidationInstance({
+                type: validationType as TextFieldValidationType,
+                schema: validation?.schema
+            });
         } else {
             setValidation(undefined);
+            updateValidationInstance(undefined);
         }
-    }, [validationType]);
+    }, [validationType, updateValidationInstance]);
 
     return (
-        <Form {...form}>
-            <form onChange={form.handleSubmit(applyChanges)}
-                onSubmit={(e) => {
-                    e.preventDefault();
-                }}
-                className="space-y-3">
-                <LabelProperty form={form} />
-                <DescriptionProperty form={form} />
-                <RequiredProperty form={form} />
-                {/* Select Validation */}
-                <hr />
-                <div className="text-muted-foreground text-sm">Response Validation</div>
-                <div className="mt-2 flex flex-col gap-4">
-                    <ResponseValidationProperties
-                        validationType={validationType}
-                        setValidationType={setValidationType}
-                    />
-                    {validation && (
-                        <validation.propertiesComponent validationInstance={validation} />
-                    )}
-                </div>
-            </form>
-        </Form>
+        <div className="flex flex-col gap-4">
+            <Form {...form}>
+                <form onChange={form.handleSubmit(applyChanges)}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                    }}
+                    className="space-y-3">
+                    <LabelProperty form={form} />
+                    <DescriptionProperty form={form} />
+                    <RequiredProperty form={form} />
+                    {/* Select Validation */}
+                </form>
+            </Form>
+            <hr />
+            <div className="text-muted-foreground text-sm">Response Validation</div>
+            <ResponseValidationProperties
+                validationType={validationType}
+                setValidationType={setValidationType}
+            />
+            {validation && (
+                <validation.propertiesComponent
+                    validationInstance={validation}
+                    update={updateValidationInstance}
+                />
+            )}
+        </div>
     );
 }
 

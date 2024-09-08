@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormField } from '@/components/ui/form';
 import { TextFieldValidation, TextFieldValidationInstance } from './Validations';
+import useDesigner from '@/components/builder/hooks/useDesigner';
 
 
 const emailSchema = {
@@ -24,7 +25,10 @@ const propertiesSchema = z.object({
     error: z.string().max(50, { message: "Error should be less than 50 characters" }),
 });
 
-function PropertiesComponent({ validationInstance }: { validationInstance: TextFieldValidationInstance }) {
+function PropertiesComponent({ validationInstance, update }: { 
+    validationInstance: TextFieldValidationInstance,
+    update: (validation: TextFieldValidationInstance) => void
+ }) {
     const { schema } = validationInstance as CustomValidationInstance;
     const form = useForm({
         resolver: zodResolver(propertiesSchema),
@@ -35,7 +39,18 @@ function PropertiesComponent({ validationInstance }: { validationInstance: TextF
     });
 
     function applyChanges(values: z.infer<typeof propertiesSchema>) {
-        console.log(values);
+        const newSchema = {
+            ...schema,
+            errorMessage: {
+                ...schema.errorMessage,
+                format: values.error,
+            }
+        };
+
+        update({
+            ...validationInstance,
+            schema: newSchema,
+        });
     }
 
     return (

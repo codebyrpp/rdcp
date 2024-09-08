@@ -15,6 +15,7 @@ export type TextFieldValidation = {
     schema: unknown;
     propertiesComponent: React.FC<{
         validationInstance: TextFieldValidationInstance;
+        update: (validation: TextFieldValidationInstance) => void;
     }>;
 };
 
