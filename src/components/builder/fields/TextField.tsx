@@ -14,10 +14,9 @@ import DescriptionProperty from "./common/DescriptionProperty";
 import RequiredProperty from "./common/RequiredProperty";
 import { InputDescription, InputLabel } from "./common/Input";
 import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TextFieldValidation, TextFieldValidationInstance, TextFieldValidationType, textValidations } from "./validations/text/schemas";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { TextValidations } from "./validations/text/Validations";
+import { TextFieldValidation, TextFieldValidationInstance, TextFieldValidationType, TextValidations } from "./validations/text/Validations";
 
 const type: ElementsType = "TextField";
 
@@ -188,7 +187,7 @@ const ResponseValidationProperties = (
                     </SelectTrigger>
                     <SelectContent>
                         {
-                            Object.entries(textValidations).map(([key, value]) => {
+                            Object.entries(TextValidations).map(([key, value]) => {
                                 return (
                                     <SelectItem key={key} value={key}>
                                         {value.name}

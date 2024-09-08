@@ -4,24 +4,26 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormField } from '@/components/ui/form';
-import { TextFieldValidation, TextFieldValidationInstance } from './Validations';
+import { TextFieldValidationInstance, TextFieldValidation } from './Validations';
 
-
-const emailSchema = {
+const lengthSchema = {
     "type": "string",
-    "format": "email",
+    "minLength": 1,
+    "maxLength": 50,
     "errorMessage": {
-        "required": "A valid email is required",
-        "format": "Email is not valid"
+        "type": "Length must be a string",
+        "minLength": "Length is too short",
+        "maxLength": "Length is too long"
     }
 };
 
 type CustomValidationInstance = TextFieldValidationInstance & {
-    schema: typeof emailSchema;
+    schema: typeof lengthSchema;
 }
 
 const propertiesSchema = z.object({
-    error: z.string().max(50, { message: "Error should be less than 50 characters" }),
+    min: z.number(),
+    max: z.number(),
 });
 
 function PropertiesComponent({ validationInstance }: { validationInstance: TextFieldValidationInstance }) {
@@ -30,7 +32,8 @@ function PropertiesComponent({ validationInstance }: { validationInstance: TextF
         resolver: zodResolver(propertiesSchema),
         mode: "onBlur",
         defaultValues: {
-            error: schema.errorMessage.format,
+            min: schema.minLength,
+            max: schema.maxLength,
         },
     });
 
@@ -43,12 +46,22 @@ function PropertiesComponent({ validationInstance }: { validationInstance: TextF
             <form onBlur={form.handleSubmit(applyChanges)}>
                 <div className='flex flex-col gap-4'>
                     <FormField control={form.control}
-                        name="error"
+                        name="min"
                         render={({ field }) => (
                             <div className="flex flex-col gap-2">
-                                <Label>Error Message</Label>
+                                <Label>Minimum Length</Label>
                                 <Input {...field}
-                                    placeholder="Error Message" />
+                                    placeholder="Number" />
+                            </div>
+                        )}
+                    />
+                    <FormField control={form.control}
+                        name="max"
+                        render={({ field }) => (
+                            <div className="flex flex-col gap-2">
+                                <Label>Maximum Length</Label>
+                                <Input {...field}
+                                    placeholder="Number" />
                             </div>
                         )}
                     />
@@ -58,11 +71,9 @@ function PropertiesComponent({ validationInstance }: { validationInstance: TextF
     )
 }
 
-
-
-export const EmailValidation: TextFieldValidation = {
-    type: "email",
-    name: "Email",
-    schema: emailSchema,
+export const LengthValidation: TextFieldValidation = {
+    type: "length",
+    name: "Length",
+    schema: lengthSchema,
     propertiesComponent: PropertiesComponent,
 }

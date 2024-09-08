@@ -4,20 +4,20 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormField } from '@/components/ui/form';
-import { TextFieldValidation, TextFieldValidationInstance } from './Validations';
+import { TextFieldValidationInstance, TextFieldValidation } from './Validations';
 
 
-const emailSchema = {
+const phoneNumberSchema = {
     "type": "string",
-    "format": "email",
+    "pattern": "^[+]?[0-9]{1,4}?[-.\\s]?([0-9]{1,3})?[-.\\s]?([0-9]{1,4})[-.\\s]?([0-9]{1,9})$",
     "errorMessage": {
-        "required": "A valid email is required",
-        "format": "Email is not valid"
+        "required": "Phone number is required",
+        "pattern": "Phone number format is invalid"
     }
 };
 
 type CustomValidationInstance = TextFieldValidationInstance & {
-    schema: typeof emailSchema;
+    schema: typeof phoneNumberSchema;
 }
 
 const propertiesSchema = z.object({
@@ -30,7 +30,7 @@ function PropertiesComponent({ validationInstance }: { validationInstance: TextF
         resolver: zodResolver(propertiesSchema),
         mode: "onBlur",
         defaultValues: {
-            error: schema.errorMessage.format,
+            error: schema.errorMessage.pattern,
         },
     });
 
@@ -58,11 +58,9 @@ function PropertiesComponent({ validationInstance }: { validationInstance: TextF
     )
 }
 
-
-
-export const EmailValidation: TextFieldValidation = {
-    type: "email",
-    name: "Email",
-    schema: emailSchema,
+export const PhoneNumberValidation: TextFieldValidation = {
+    type: "phoneNumber",
+    name: "Phone Number",
+    schema: phoneNumberSchema,
     propertiesComponent: PropertiesComponent,
 }
