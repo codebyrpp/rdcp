@@ -21,6 +21,7 @@ const extraAttributes = {
     placeHolder: "Value here...",
 };
 
+
 const propertiesSchema = z.object({
     label: z.string().min(2).max(50),
     helperText: z.string().max(200),
@@ -85,7 +86,7 @@ function FormComponent({
     );
 }
 
-type propertiesFormschemaType = z.infer<typeof propertiesSchema>;
+type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 function PropertiesComponent({
     elementInstance,
 }:{
@@ -93,7 +94,7 @@ function PropertiesComponent({
 }) {
     const element = elementInstance as CustomInstance;
     const { updateElement } = useDesigner();
-    const form = useForm<propertiesFormschemaType>({
+    const form = useForm<propertiesFormSchemaType>({
         resolver: zodResolver(propertiesSchema),
         mode: "onBlur",
         defaultValues: {
@@ -108,7 +109,7 @@ function PropertiesComponent({
         form.reset(element.extraAttributes);
     }, [element, form]);
 
-    function applyChanges(values:  propertiesFormschemaType) {
+    function applyChanges(values:  propertiesFormSchemaType) {
         const { label, helperText, required, placeHolder } = values;
         updateElement(element.id,{
             ...element,
