@@ -2,26 +2,26 @@
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ElementsType, FormElement, FormElementInstance } from "../components/FormElements";
-import { Label } from "../../ui/label";
+import { ElementsType, FormElement, FormElementInstance } from "../../components/FormElements";
+import { Input } from "../../../ui/input";
+import { Label } from "../../../ui/label";
 import { useEffect } from "react";
-import useDesigner from "../hooks/useDesigner";
+import useDesigner from "../../hooks/useDesigner";
 import { useForm } from "react-hook-form";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { AlignJustify } from "lucide-react";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../../ui/form";
+import { Heading2 } from "lucide-react";
 
-const type: ElementsType = "ParagraphField";
+const type: ElementsType = "SubTitleField";
 
 const extraAttributes = {
-    text: "Text here",
+    title: " SubTitle Field",
 };
 
 const propertiesSchema = z.object({
-    text: z.string().min(2).max(500),
+    title: z.string().min(2).max(50),
 });
 
-export const ParagraphFieldFormElement: FormElement = {
+export const SubTitleFieldFormElement: FormElement = {
     type,
     construct: (id:string) => ({
         id,
@@ -29,8 +29,8 @@ export const ParagraphFieldFormElement: FormElement = {
         extraAttributes,
     }),
     designerBtnElement: {
-        label: "Paragraph Field",
-        icon: <AlignJustify />
+        label: "SubTitle Field",
+        icon: <Heading2/>
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,
@@ -48,12 +48,12 @@ function DesignerComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { text } = element.extraAttributes;
+    const { title} = element.extraAttributes;
     return (<div className="flex flex-col gap-2 w-full">
         <Label className="text-muted-foreground">
-            Paragraph Field
+            SubTitle Field
         </Label>
-        <p className="text-sm">{text}</p>
+        <p className="text-lg font-bold">{title}</p>
     </div>
     );
 }
@@ -65,8 +65,8 @@ function FormComponent({
 }) {
     const element = elementInstance as CustomInstance;
 
-    const { text } = element.extraAttributes;
-    return <p className="text-sm">{text}</p>;
+    const { title } = element.extraAttributes;
+    return <p className="font-bold">{title}</p>;
 }
 
 type propertiesFormschemaType = z.infer<typeof propertiesSchema>;
@@ -81,7 +81,7 @@ function PropertiesComponent({
         resolver: zodResolver(propertiesSchema),
         mode: "onBlur",
         defaultValues: {
-            text: element.extraAttributes.text,
+            title: element.extraAttributes.title,
         },
     });
 
@@ -90,11 +90,11 @@ function PropertiesComponent({
     }, [element, form]);
 
     function applyChanges(values:  propertiesFormschemaType) {
-        const { text } = values;
+        const { title } = values;
         updateElement(element.id,{
             ...element,
             extraAttributes: {
-                text,
+                title,
             },
         });
     }
@@ -108,14 +108,12 @@ function PropertiesComponent({
                 className="space-y-3">
                 <FormField
                     control={form.control}
-                    name="text"
+                    name="title"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Text</FormLabel>
+                            <FormLabel>SubTitle</FormLabel>
                             <FormControl>
-                                <Textarea 
-                                rows = {5}
-                                {...field}
+                                <Input {...field}
                                 onKeyDown={(e) => {
                                     if (e.key === "Enter") {
                                         e.currentTarget.blur();

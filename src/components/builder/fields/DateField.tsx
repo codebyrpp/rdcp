@@ -14,6 +14,9 @@ import { Button } from "@/components/ui/button";
 import { Calendar, CalendarIcon } from "lucide-react";
 import { Popover, PopoverContent } from "@/components/ui/popover";
 import { PopoverTrigger } from "@radix-ui/react-popover";
+import LabelProperty from "./common/LabelProperty";
+import HelperTextProperty from "./common/HelperTextProperty";
+import RequiredProperty from "./common/RequiredProperty";
 
 
 const type: ElementsType = "DateField";
@@ -148,68 +151,9 @@ function PropertiesComponent({
                     e.preventDefault();
                 }}
                 className="space-y-3">
-                <FormField
-                    control={form.control}
-                    name="label"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Label</FormLabel>
-                            <FormControl>
-                                <Input {...field}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") e.currentTarget.blur(); 
-                                }}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                The label of the field. <br/> It will be displayed above the field.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="helperText"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Decription</FormLabel>
-                            <FormControl>
-                                <Input {...field}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        e.currentTarget.blur();
-                                    }
-                                }}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                The decription of the field. <br/> It will be displayed below the label.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="required"
-                    render={({ field }) => (
-                        <FormItem>
-                            <div>
-                                <FormLabel>Required</FormLabel>
-                                <FormDescription>
-                                </FormDescription>
-                                </div>
-                            <FormControl>
-                                <Switch
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                />
-                            </FormControl>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
+                <LabelProperty form={form} />
+                <HelperTextProperty form={form} />
+                <RequiredProperty form={form}/>
             </form>
         </Form>
     );

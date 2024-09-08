@@ -14,6 +14,9 @@ import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { AiOutlinePlus } from "react-icons/ai";
 import { ListCheck } from "lucide-react";
+import HelperTextProperty from "./common/HelperTextProperty";
+import LabelProperty from "./common/LabelProperty";
+import RequiredProperty from "./common/RequiredProperty";
 
 const type: ElementsType = "SelectField";
 
@@ -30,12 +33,12 @@ const propertiesSchema = z.object({
     helperText: z.string().max(200),
     required: z.boolean().default(false),
     placeHolder: z.string().max(50),
-    options:z.array(z.string()).default([]),
+    options: z.array(z.string()).default([]),
 });
 
 export const SelectFieldFormElement: FormElement = {
     type,
-    construct: (id:string) => ({
+    construct: (id: string) => ({
         id,
         type,
         extraAttributes,
@@ -60,7 +63,7 @@ function DesignerComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, placeHolder, helperText} = element.extraAttributes;
+    const { label, required, placeHolder, helperText } = element.extraAttributes;
     return (<div className="flex flex-col gap-2 w-full">
         <Label className="font-semibold">
             {label}
@@ -82,7 +85,7 @@ function FormComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, placeHolder, helperText} = element.extraAttributes;
+    const { label, required, placeHolder, helperText } = element.extraAttributes;
     return (<div className="flex flex-col gap-2 w-full">
         <Label className="font-semibold">
             {label}
@@ -108,7 +111,7 @@ function FormComponent({
 type propertiesFormschemaType = z.infer<typeof propertiesSchema>;
 function PropertiesComponent({
     elementInstance,
-}:{
+}: {
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
@@ -129,9 +132,9 @@ function PropertiesComponent({
         form.reset(element.extraAttributes);
     }, [element, form]);
 
-    function applyChanges(values:  propertiesFormschemaType) {
+    function applyChanges(values: propertiesFormschemaType) {
         const { label, helperText, required, placeHolder, options } = values;
-        updateElement(element.id,{
+        updateElement(element.id, {
             ...element,
             extraAttributes: {
                 label,
@@ -143,113 +146,33 @@ function PropertiesComponent({
         });
     }
 
-    return(
+    return (
         <Form {...form}>
-            <form onBlur={form.handleSubmit(applyChanges)} 
+            <form onBlur={form.handleSubmit(applyChanges)}
                 onSubmit={(e) => {
                     e.preventDefault();
                 }}
                 className="space-y-3">
-                <FormField
-                    control={form.control}
-                    name="label"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Label</FormLabel>
-                            <FormControl>
-                                <Input {...field}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") e.currentTarget.blur(); 
-                                }}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                The label of the field. <br/> It will be displayed above the field.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="helperText"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Decription</FormLabel>
-                            <FormControl>
-                                <Input {...field}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        e.currentTarget.blur();
-                                    }
-                                }}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                The decription of the field. <br/> It will be displayed below the label.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="placeHolder"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>PlaceHolder</FormLabel>
-                            <FormControl>
-                                <Input {...field}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        e.currentTarget.blur();
-                                    }
-                                }}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                The placeholder of the field.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="required"
-                    render={({ field }) => (
-                        <FormItem>
-                            <div>
-                                <FormLabel>Required</FormLabel>
-                                <FormDescription>
-                                </FormDescription>
-                                </div>
-                            <FormControl>
-                                <Switch
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                />
-                            </FormControl>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
+                <LabelProperty form={form} />
+                <HelperTextProperty form={form} />
+                <RequiredProperty form={form} />
+
                 <FormField
                     control={form.control}
                     name="options"
                     render={({ field }) => (
                         <FormItem>
-                            <div className="flex justify-between items-center"> 
+                            <div className="flex justify-between items-center">
                                 <FormLabel>Options</FormLabel>
                                 <Button
                                     variant={"outline"}
                                     className="gap-2"
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        form.setValue("options", [...field.value, ""]); {/* Add the correct validation */}
+                                        form.setValue("options", [...field.value, ""]); {/* Add the correct validation */ }
                                     }}
                                 >
-                                    <AiOutlinePlus/>
+                                    <AiOutlinePlus />
                                     Add
                                 </Button>
                             </div>
@@ -268,9 +191,9 @@ function PropertiesComponent({
                                 ))}
                             </div>
                             <FormDescription>
-                                The decription of the field. <br/> It will be displayed below the label.
+                                The decription of the field. <br /> It will be displayed below the label.
                             </FormDescription>
-                            <FormMessage/>
+                            <FormMessage />
                         </FormItem>
                     )}
                 />

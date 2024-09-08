@@ -11,6 +11,9 @@ import { useForm } from "react-hook-form";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
 import { Switch } from "../../ui/switch";
 import { Type } from "lucide-react";
+import LabelProperty from "./common/LabelProperty";
+import HelperTextProperty from "./common/HelperTextProperty";
+import RequiredProperty from "./common/RequiredProperty";
 
 const type: ElementsType = "TextField";
 
@@ -31,7 +34,7 @@ const propertiesSchema = z.object({
 
 export const TextFieldFormElement: FormElement = {
     type,
-    construct: (id:string) => ({
+    construct: (id: string) => ({
         id,
         type,
         extraAttributes,
@@ -56,14 +59,14 @@ function DesignerComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, placeHolder, helperText} = element.extraAttributes;
+    const { label, required, placeHolder, helperText } = element.extraAttributes;
     return (<div className="flex flex-col gap-2 w-full">
         <Label className="font-semibold">
             {label}
             {required && "*"}
         </Label>
         {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
-        <Input readOnly disabled placeholder= {placeHolder}></Input> 
+        <Input readOnly disabled placeholder={placeHolder}></Input>
     </div>
     );
 }
@@ -74,14 +77,14 @@ function FormComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, placeHolder, helperText} = element.extraAttributes;
+    const { label, required, placeHolder, helperText } = element.extraAttributes;
     return (<div className="flex flex-col gap-2 w-full">
         <Label className="font-semibold">
             {label}
             {required && "*"}
         </Label>
         {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
-        <Input placeholder= {placeHolder}></Input>
+        <Input placeholder={placeHolder}></Input>
     </div>
     );
 }
@@ -89,7 +92,7 @@ function FormComponent({
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 function PropertiesComponent({
     elementInstance,
-}:{
+}: {
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
@@ -109,9 +112,9 @@ function PropertiesComponent({
         form.reset(element.extraAttributes);
     }, [element, form]);
 
-    function applyChanges(values:  propertiesFormSchemaType) {
+    function applyChanges(values: propertiesFormSchemaType) {
         const { label, helperText, required, placeHolder } = values;
-        updateElement(element.id,{
+        updateElement(element.id, {
             ...element,
             extraAttributes: {
                 label,
@@ -122,99 +125,19 @@ function PropertiesComponent({
         });
     }
 
-    return(
+    return (
         <Form {...form}>
-            <form onBlur={form.handleSubmit(applyChanges)} 
+            <form onBlur={form.handleSubmit(applyChanges)}
                 onSubmit={(e) => {
                     e.preventDefault();
                 }}
                 className="space-y-3">
-                <FormField
-                    control={form.control}
-                    name="label"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Label</FormLabel>
-                            <FormControl>
-                                <Input {...field}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") e.currentTarget.blur(); 
-                                }}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                The label of the field. <br/> It will be displayed above the field.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="helperText"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Decription</FormLabel>
-                            <FormControl>
-                                <Input {...field}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        e.currentTarget.blur();
-                                    }
-                                }}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                The decription of the field. <br/> It will be displayed below the label.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="placeHolder"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>PlaceHolder</FormLabel>
-                            <FormControl>
-                                <Input {...field}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        e.currentTarget.blur();
-                                    }
-                                }}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                The placeholder of the field.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="required"
-                    render={({ field }) => (
-                        <FormItem>
-                            <div>
-                                <FormLabel>Required</FormLabel>
-                                <FormDescription>
-                                </FormDescription>
-                                </div>
-                            <FormControl>
-                                <Switch
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                />
-                            </FormControl>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
+                <LabelProperty form={form} />
+                <HelperTextProperty form={form} />
+                <RequiredProperty form={form} />
             </form>
         </Form>
     );
 }
+
 
