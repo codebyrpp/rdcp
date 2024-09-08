@@ -9,7 +9,6 @@ import { useEffect } from "react";
 import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
-import { Switch } from "../../ui/switch";
 import { RiNumber1} from "react-icons/ri";
 import HelperTextProperty from "./common/HelperTextProperty";
 import LabelProperty from "./common/LabelProperty";

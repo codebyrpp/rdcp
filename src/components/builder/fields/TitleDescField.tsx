@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
-import { CaseSensitive, Heading1 } from "lucide-react";
+import { CaseSensitive } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 
 const type: ElementsType = "TitleDescField";

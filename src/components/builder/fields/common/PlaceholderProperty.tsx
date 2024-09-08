@@ -1,4 +1,3 @@
-import React from 'react'
 import { PropertyProps } from './PropertyPropsType';
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
