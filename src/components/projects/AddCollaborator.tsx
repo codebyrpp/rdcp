@@ -17,6 +17,7 @@ import { DataTable } from './collaborators/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { FaEllipsisH as MoreHorizontal } from 'react-icons/fa';
+//import { set } from 'react-hook-form';
 
 const dummyCollaborators = [
     { email: "user1@rdcp.com", id: "1" , roles: ['owner'] },
@@ -36,6 +37,7 @@ const AddCollaborator = () => {
     const [selectedCollaborators, setSelectedCollaborators] = useState<Collaborator[]>([]);
     const [updatingCollaborator, setUpdatingCollaborator] = useState<Collaborator | null>(null);
     const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+    const [showRolesDropdown, setShowRolesDropdown] = useState(true);
 
     useEffect(() => {
         if (search.length > 0) {
@@ -84,15 +86,6 @@ const AddCollaborator = () => {
         },
     ];
 
-    /*const handleRoleChange = (role: string) => {
-        if (updatingCollaborator) {
-            const updatedRoles = updatingCollaborator.roles.includes(role)
-                ? updatingCollaborator.roles.filter((r) => r !== role)
-                : [...updatingCollaborator.roles, role];
-            setUpdatingCollaborator({ ...updatingCollaborator, roles: updatedRoles });
-        }
-    };*/
-
     const handleRoleChange = (role: string) => {
         if (selectedRoles.includes(role)) {
             setSelectedRoles(selectedRoles.filter((r) => r !== role));
@@ -106,6 +99,7 @@ const AddCollaborator = () => {
             setSelectedCollaborators([...selectedCollaborators, { ...collaborator, roles: selectedRoles }]);
             setSearch("");
             setSelectedRoles([]);
+            setShowRolesDropdown(false); 
         }
     };
 
@@ -153,7 +147,28 @@ const AddCollaborator = () => {
                                     )}
                                 </CommandList>
                             </Command>
-                            <Button className="btn btn-secondary" onClick={() => setSelectedRoles([])}>Select Roles</Button>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button className="btn btn-secondary" onClick={() => setShowRolesDropdown(!showRolesDropdown)}>Select Roles</Button>
+                                </DropdownMenuTrigger>
+                                {showRolesDropdown && (
+                                    <DropdownMenuContent align="start">
+                                        <DropdownMenuLabel>Select Roles</DropdownMenuLabel>
+                                        {Object.values(ProjectRole).map((role) => (
+                                            <DropdownMenuItem key={role} onClick={() => handleRoleChange(role)}>
+                                                <Checkbox
+                                                    id={role}
+                                                    checked={selectedRoles.includes(role)}
+                                                    onChange={() => handleRoleChange(role)}
+                                                />
+                                                <label htmlFor={role} className="ml-2">
+                                                    {getRoleName(role)}
+                                                </label>
+                                            </DropdownMenuItem>
+                                        ))}
+                                    </DropdownMenuContent>
+                                )}
+                            </DropdownMenu>
                             <Button className="btn btn-primary" onClick={() => handleAddCollaborator(collaborators[0])}>Add</Button>
                         </div>
                     </div>
