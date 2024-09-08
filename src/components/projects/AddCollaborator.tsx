@@ -8,12 +8,13 @@ import {
     CommandItem,
     CommandList,
 } from "@/components/ui/command"
-import { set } from 'react-hook-form';
-import { Button } from '../ui/button';
-import { FaCross } from 'react-icons/fa6';
+//import { set } from 'react-hook-form';
+//import { Button } from '../ui/button';
+//import { FaCross } from 'react-icons/fa6';
 import { FaTimesCircle } from 'react-icons/fa';
 import { Checkbox } from '../ui/checkbox';
 import { getRoleName, getRolePermissions, ProjectRole } from '@/models/projects';
+import { Button } from '../ui/button';
 
 const dummyCollaborators = [
     { email: "user1@rdcp.com", id: "1" },
@@ -26,11 +27,10 @@ interface Collaborator {
 }
 
 const AddCollaborator = () => {
-    const [search, setSearch] = useState<string>("")
-
-    const [collaborators, setCollaborators] = useState<Collaborator[]>([])
-
-    const [selectedCollaborators, setSelectedCollaborators] = useState<Collaborator[]>([])
+    const [search, setSearch] = useState<string>("");
+    const [showSearchBar, setShowSearchBar] = useState(false);
+    const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
+    const [selectedCollaborators, setSelectedCollaborators] = useState<Collaborator[]>([]);
 
 
     useEffect(() => {
@@ -45,40 +45,44 @@ const AddCollaborator = () => {
         <div>
             <SectionWrapper>
                 <h4 className="text-lg font-semibold">Collaborators</h4>
-                <p className="text-muted-foreground text-sm">Add  collaborators</p>
-                <Command>
-                    <CommandInput
-                        value={search}
-                        onValueChange={(value) => setSearch(value)}
-                        placeholder="Search user by email..." />
-                    <CommandList>
-                        {
-                            search.length > 0 && collaborators.length === 0 && <CommandEmpty>
-                                No collaborators found.
-                            </CommandEmpty>
-                        }
-                        {
-                            collaborators.length > 0 && <CommandGroup heading="Suggestions">
+                <p className="text-muted-foreground text-sm">Add  collaborators to the project.</p>
+                <Button className="btn btn-primary mt-4" onClick={() => setShowSearchBar(!showSearchBar)}>+  Add Collaborators</Button>
+                { showSearchBar && (
+                    <div className='mt-4'>
+                        <Command>
+                            <CommandInput
+                                value={search}
+                                onValueChange={(value) => setSearch(value)}
+                                placeholder="Search user by email..." />
+                            <CommandList>
                                 {
-                                    collaborators.map((collaborator) => (
-                                        <CommandItem
-                                            key={collaborator.id}
-                                            onSelect={() => {
-                                                if (!selectedCollaborators.find((c) => c.id === collaborator.id)) {
-                                                    setSelectedCollaborators([...selectedCollaborators, collaborator])
-                                                }
-                                                setSearch("")
-                                            }}
-                                        >
-                                            {collaborator.email}
-                                        </CommandItem>
-                                    ))
+                                    search.length > 0 && collaborators.length === 0 && <CommandEmpty>
+                                        No collaborators found.
+                                    </CommandEmpty>
                                 }
-                            </CommandGroup>
-                        }
-                    </CommandList>
-                </Command>
-
+                                {
+                                    collaborators.length > 0 && <CommandGroup heading="Suggestions">
+                                        {
+                                            collaborators.map((collaborator) => (
+                                                <CommandItem
+                                                    key={collaborator.id}
+                                                    onSelect={() => {
+                                                        if (!selectedCollaborators.find((c) => c.id === collaborator.id)) {
+                                                            setSelectedCollaborators([...selectedCollaborators, collaborator])
+                                                        }
+                                                        setSearch("")
+                                                    }}
+                                                >
+                                                    {collaborator.email}
+                                                </CommandItem>
+                                            ))
+                                        }
+                                    </CommandGroup>
+                                }
+                            </CommandList>
+                        </Command>
+                    </div> 
+                )}  
                 <div className="flex flex-wrap gap-2 mt-2">
                     {
                         selectedCollaborators.map((collaborator) => (
@@ -104,7 +108,7 @@ const AddCollaborator = () => {
                             Object.values(ProjectRole).map((role) => (
                                 <div
                                     key={role}
-                                    className="flex space-x-2">
+                                    className="flex space-x-2 mb-4">
                                     <Checkbox id={role} />
                                     <label
                                         htmlFor={role}
@@ -115,13 +119,11 @@ const AddCollaborator = () => {
                                             {getRolePermissions(role)}
                                         </p>
                                     </label>
-
                                 </div>
                             ))
                         }
                     </div>
                 </div>
-
             </SectionWrapper>
         </div>
     )
