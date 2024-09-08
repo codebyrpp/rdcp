@@ -36,7 +36,7 @@ export const CheckboxFieldFormElement: FormElement = {
         extraAttributes,
     }),
     designerBtnElement: {
-        label: "Checkbox Field",
+        label: "Checkboxes",
         icon: <CheckCheck/>
     },
     designerComponent: DesignerComponent,

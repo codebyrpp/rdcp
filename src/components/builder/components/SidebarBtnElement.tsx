@@ -15,7 +15,7 @@ function SidebarBtnElement({ formElement }: { formElement: FormElement }) {
   return (
     <TooltipProvider delayDuration={100}>
       <Tooltip>
-        <TooltipTrigger>
+        <TooltipTrigger asChild>
           <Button ref={draggable.setNodeRef}
             variant={"outline"} className="cursor-grab 
     flex flex-col h-15 aspect-square" {...draggable.listeners} {...draggable.attributes}>
