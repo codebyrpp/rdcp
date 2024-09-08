@@ -11,10 +11,15 @@ function PropertiesComponent({ validationInstance }: { validationInstance: TextF
     const { schema } = validationInstance as CustomValidationInstance;
 
     return (
-        <div>
+        <div className='flex flex-col gap-4'>
             <div className="flex flex-col gap-2">
                 <Label>Pattern</Label>
-                <Input value={schema.pattern} placeholder="Regex Pattern" />
+                <Input value={schema.pattern}
+                onChange={(e) => {
+                    // update the schema
+                    schema.pattern = e.target.value;
+                }}
+                 placeholder="Regex Pattern" />
             </div>
             <div className="flex flex-col gap-2">
                 <Label>Custom Error</Label>

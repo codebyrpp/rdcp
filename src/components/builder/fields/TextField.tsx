@@ -14,9 +14,10 @@ import DescriptionProperty from "./common/DescriptionProperty";
 import RequiredProperty from "./common/RequiredProperty";
 import { InputDescription, InputLabel } from "./common/Input";
 import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TextFieldValidationInstance, textValidations } from "./validations/text/schemas";
+import { TextFieldValidation, TextFieldValidationInstance, TextFieldValidationType, textValidations } from "./validations/text/schemas";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { TextValidations } from "./validations/text/Validations";
 
 const type: ElementsType = "TextField";
 
@@ -123,6 +124,15 @@ function PropertiesComponent({
     }
 
     const [validationType, setValidationType] = useState<string | undefined>(undefined);
+    const [validation, setValidation] = useState<TextFieldValidation | undefined>(undefined);
+
+    useEffect(() => {
+        if (validationType) {
+            setValidation(TextValidations[validationType as TextFieldValidationType]);
+        } else {
+            setValidation(undefined);
+        }
+    }, [validationType]);
 
     return (
         <Form {...form}>
@@ -137,11 +147,14 @@ function PropertiesComponent({
                 {/* Select Validation */}
                 <hr />
                 <div className="text-muted-foreground text-sm">Response Validation</div>
-                <div className="mt-2 space-y-1">
+                <div className="mt-2 flex flex-col gap-4">
                     <ResponseValidationProperties
                         validationType={validationType}
                         setValidationType={setValidationType}
                     />
+                    {validation && (
+                        <validation.propertiesComponent validationInstance={validation} />
+                    )}
                 </div>
             </form>
         </Form>
@@ -167,7 +180,7 @@ const ResponseValidationProperties = (
                 <Label>Validation Type</Label>
                 <Select value={validationType}
                     onValueChange={(newValue) => {
-                        setValidationType(newValue);
+                        setValidationType(newValue.toString());
                         setKey(+new Date());
                     }}>
                     <SelectTrigger className="">
