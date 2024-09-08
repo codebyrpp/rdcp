@@ -26,7 +26,6 @@ const extraAttributes = {
     helperText: "",
     required: false,
     placeHolder: "Short Answer",
-    validation: undefined
 };
 
 
@@ -123,7 +122,7 @@ function PropertiesComponent({
         form.reset(element.extraAttributes);
     }, [element, form]);
 
-    function updateValidationInstance(validtion: TextFieldValidationInstance | undefined) {
+    function updateValidationInstance(validation: TextFieldValidationInstance | undefined) {
         updateElement(element.id, {
             ...element,
             extraAttributes: {
@@ -138,6 +137,7 @@ function PropertiesComponent({
         updateElement(element.id, {
             ...element,
             extraAttributes: {
+                ...element.extraAttributes,
                 label,
                 helperText,
                 placeHolder,
@@ -148,6 +148,12 @@ function PropertiesComponent({
 
     const [validationType, setValidationType] = useState<string | undefined>(undefined);
     const [validation, setValidation] = useState<TextFieldValidation | undefined>(undefined);
+
+    useEffect(() => {
+        if (element.extraAttributes.validation) {
+            setValidationType(element.extraAttributes.validation!.type!);
+        }
+    },[element]);
 
     useEffect(() => {
         if (validationType) {
@@ -184,7 +190,9 @@ function PropertiesComponent({
             />
             {validation && (
                 <validation.propertiesComponent
-                    validationInstance={validation}
+                    validationInstance={{
+                        ...validation
+                    }}
                     update={updateValidationInstance}
                 />
             )}
