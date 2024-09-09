@@ -163,27 +163,41 @@ function PropertiesComponent({
         });
     }
 
+    function applyChanges(values: propertiesFormSchemaType) {
+        const { label, helperText, required, placeHolder } = values;
+        updateElement(element.id, {
+            ...element,
+            extraAttributes: {
+                label,
+                helperText,
+                placeHolder,
+                required,
+                validation: element.extraAttributes.validation,
+            },
+        });
+    }
+
     const [validationType, setValidationType] = useState<string | undefined>(undefined);
-    const [validation, setValidation] = useState<TextFieldValidation | undefined>(undefined);
+    // const [validation, setValidation] = useState<TextFieldValidation | undefined>(undefined);
 
-    useEffect(() => {
-        if (element.extraAttributes.validation) {
-            setValidationType(element.extraAttributes.validation!.type!);
-        }
-    }, [element]);
+    // useEffect(() => {
+    //     if (element.extraAttributes.validation) {
+    //         setValidationType(element.extraAttributes.validation!.type!);
+    //     }
+    // },[element]);
 
-    useEffect(() => {
-        if (validationType) {
-            setValidation(TextValidations[validationType as TextFieldValidationType]);
-            updateValidationInstance({
-                type: validationType as TextFieldValidationType,
-                schema: validation?.schema
-            });
-        } else {
-            setValidation(undefined);
-            updateValidationInstance(undefined);
-        }
-    }, [validationType, updateValidationInstance]);
+    // useEffect(() => {
+    //     if (validationType) {
+    //         setValidation(TextValidations[validationType as TextFieldValidationType]);
+    //         updateValidationInstance({
+    //             type: validationType as TextFieldValidationType,
+    //             schema: validation?.schema
+    //         });
+    //     } else {
+    //         setValidation(undefined);
+    //         updateValidationInstance(undefined);
+    //     }
+    // }, [validationType, updateValidationInstance]);
 
     return (
         <div className="flex flex-col gap-4">
