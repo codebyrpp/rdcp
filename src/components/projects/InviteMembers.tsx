@@ -46,17 +46,19 @@ const InviteMembers: React.FC = () => {
 
   const handleAddToTable = () => {
     if (validateEmail(email) && selectedRoles.length > 0) {
-      setTableData([...tableData, { email, roles: selectedRoles }]);
-      setEmail(''); // Clear the email input
-      setSelectedRoles([]); // Clear the selected roles
-      setEmailError(null); // Clear any error
-    } else {
-      // Set the error message based on what's wrong (email or roles)
-      if (!validateEmail(email)) {
-        setEmailError('Please enter a valid email address.');
-      } else if (selectedRoles.length === 0) {
-        setEmailError('Please select at least one role.');
-      }
+        const newCollaborator = { email, roles: selectedRoles };
+        setTableData([...tableData, newCollaborator]);
+        console.log('New Collaborator Added:', newCollaborator); // Log the new collaborator data
+        setEmail(''); // Clear the email input
+        setSelectedRoles([]); // Clear the selected roles
+        setEmailError(null); // Clear any error
+        } else {
+        // Set the error message based on what's wrong (email or roles)
+        if (!validateEmail(email)) {
+            setEmailError('Please enter a valid email address.');
+        } else if (selectedRoles.length === 0) {
+            setEmailError('Please select at least one role.');
+        }
     }
   };
 
@@ -139,122 +141,125 @@ const InviteMembers: React.FC = () => {
   ];
 
   return (
-    <Card className="p-4">
-      <CardHeader>
-        <CardTitle>Invite Collaborators</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {/* Invite Collaborators Section */}
-        <div className="mb-4">
-          <Label htmlFor="email" className="text-lg">1. Invite Collaborators</Label>
-          <p className="text-muted-foreground text-sm">
-            Invite collaborators to access all or specific forms in this project.
-          </p>
-          <div className="flex items-center gap-2 mt-2">
-            <Input
-              id="email"
-              placeholder="Enter email address"
-              value={tempEmail}
-              onChange={(e) => setTempEmail(e.target.value)} // Update tempEmail on input
-              className="mt-2"
-            />
-            <Button onClick={handleAddEmail} className="mt-2">
-              + Add Email
-            </Button>
-          </div>
-          {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
-        </div>
-
-        {/* Display invited members */}
-        <div className="flex flex-wrap gap-2 mt-2">
-          {invitedMembers.map((member) => (
-            <div key={member} className="flex items-center gap-2 bg-gray-200 px-2 py-1 rounded">
-              <span className="text-sm">{member}</span>
-              <FaTimesCircle
-                className="cursor-pointer text-sm"
-                onClick={() => handleRemoveEmail(member)}
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Collaborator Roles Section */}
-        <div className={`mt-6 ${invitedMembers.length === 0 ? 'opacity-50 pointer-events-none' : ''}`}>
-          <Label className="text-lg mb-4">2. Collaborator Roles</Label>
-          <p className="text-muted-foreground text-sm mb-6">
-            Select the roles to be assigned for the collaborator /collaborators.
-          </p>
-          <div className="grid grid-cols-2 gap-2 mt-2">
-            {Object.values(ProjectRole).map((role) => (
-              <div key={role} className="flex space-x-2">
-                <Checkbox
-                  checked={selectedRoles.includes(role)}
-                  onCheckedChange={() => handleRoleChange(role)}
+        <Card className="p-2 bg-slate-50 px-2 py-2 rounded-lg">
+        <CardHeader>
+            <CardTitle>Invite Collaborators</CardTitle>
+        </CardHeader>
+        <CardContent>
+            {/* Invite Collaborators Section */}
+            <div className="mb-4">
+            <Label htmlFor="email" className="text-lg">1. Invite Collaborators</Label>
+            <p className="text-muted-foreground text-sm">
+                Invite collaborators to access all or specific forms in this project.
+            </p>
+            <div className="flex items-center gap-2 mt-2">
+                <Input
+                id="email"
+                placeholder="Enter email address"
+                value={tempEmail}
+                onChange={(e) => setTempEmail(e.target.value)} // Update tempEmail on input
+                className="mt-2"
                 />
-                <div>
-                  <span className="text-sm">{getRoleName(role)}</span>
-                  <p className="text-xs font-medium text-muted-foreground">
-                    {getRolePermissions(role)}
-                  </p>
+                <Button onClick={handleAddEmail} className="mt-2">
+                + Add Email
+                </Button>
+            </div>
+            {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
+            </div>
+
+            {/* Display invited members */}
+            <div className="flex flex-wrap gap-2 mt-2">
+            {invitedMembers.map((member) => (
+                <div key={member} className="flex items-center gap-2 bg-gray-200 px-2 py-1 rounded">
+                <span className="text-sm">{member}</span>
+                <FaTimesCircle
+                    className="cursor-pointer text-sm"
+                    onClick={() => handleRemoveEmail(member)}
+                />
                 </div>
-              </div>
             ))}
-          </div>
-        </div>
+            </div>
 
-        {/* Add to Table Button */}
-        <div className="mt-4">
-          <Button
-            onClick={handleAddToTable}
-            disabled={ selectedRoles.length === 0}
-            className="mt-2"
-          >
-             + Add Collaborator
-          </Button>
-        </div>
-
-        {/* Collaborators List Table */}
-        <div className="mt-4">
-          <p className="text-sm font-semibold">Invited Collaborators List</p>
-          <DataTable columns={columns} data={tableData} />
-        </div>
-      </CardContent>
-
-      {/* Edit Roles Dialog */}
-      {isEditing && (
-        <Dialog open={isEditing} onOpenChange={setIsEditing}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Edit Roles for {editingEmail}</DialogTitle>
-            </DialogHeader>
+            {/* Collaborator Roles Section */}
+            <div className={`mt-6 ${invitedMembers.length === 0 ? 'opacity-50 pointer-events-none' : ''}`}>
+            <Label className="text-lg mb-4">2. Collaborator Roles</Label>
+            <p className="text-muted-foreground text-sm mb-6">
+                Select the roles to be assigned for the collaborator /collaborators.
+            </p>
             <div className="grid grid-cols-2 gap-2 mt-2">
-              {Object.values(ProjectRole).map((role) => (
+                {Object.values(ProjectRole).map((role) => (
                 <div key={role} className="flex space-x-2">
-                  <Checkbox
+                    <Checkbox
                     checked={selectedRoles.includes(role)}
                     onCheckedChange={() => handleRoleChange(role)}
-                  />
-                  <div>
+                    />
+                    <div>
                     <span className="text-sm">{getRoleName(role)}</span>
                     <p className="text-xs font-medium text-muted-foreground">
-                      {getRolePermissions(role)}
+                        {getRolePermissions(role)}
                     </p>
-                  </div>
+                    </div>
                 </div>
-              ))}
+                ))}
             </div>
-            <DialogFooter>
-              <Button onClick={() => setIsEditing(false)} variant="ghost">
-                Cancel
-              </Button>
-              <Button onClick={handleSaveRoles}>
-                Save
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
-    </Card>
+            </div>
+
+            {/* Add to Table Button */}
+            <div className="mt-4">
+            <Button
+                onClick={handleAddToTable}
+                disabled={ selectedRoles.length === 0}
+                className="mt-2"
+            >
+                + Add Collaborator
+            </Button>
+            </div>
+
+            {/* Collaborators List Table */}
+            <div className="mt-4">
+            <p className="text-sm font-semibold">Invited Collaborators List</p>
+            <DataTable columns={columns} data={tableData} />
+            </div>
+        </CardContent>
+
+        {/* Edit Roles Dialog */}
+        {isEditing && (
+            <Dialog open={isEditing} onOpenChange={setIsEditing}>
+            <DialogContent aria-describedby="edit-roles-description">
+                <DialogHeader>
+                <DialogTitle>Edit Roles for {editingEmail}</DialogTitle>
+                <p id="edit-roles-description" className="text-sm text-muted-foreground">
+                    Select the roles you want to assign to the collaborator.
+                </p>
+                </DialogHeader>
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                {Object.values(ProjectRole).map((role) => (
+                    <div key={role} className="flex space-x-2">
+                    <Checkbox
+                        checked={selectedRoles.includes(role)}
+                        onCheckedChange={() => handleRoleChange(role)}
+                    />
+                    <div>
+                        <span className="text-sm">{getRoleName(role)}</span>
+                        <p className="text-xs font-medium text-muted-foreground">
+                        {getRolePermissions(role)}
+                        </p>
+                    </div>
+                    </div>
+                ))}
+                </div>
+                <DialogFooter>
+                    <Button onClick={() => setIsEditing(false)} variant="ghost">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleSaveRoles}>
+                        Save
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+            </Dialog>
+        )}
+        </Card>
   );
 };
 
