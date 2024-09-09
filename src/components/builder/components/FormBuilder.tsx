@@ -9,7 +9,7 @@ import FormLoading from "./FormLoading";
 import PreviewDialogBtn from "./actions/PreviewDialogBtn";
 import DiscardChangesButton from "./actions/DiscardChangesBtn";
 
-const FormBuilder = ({ form }: { form: Partial<FormWithSchema> }) => {
+const FormBuilder = ({ form }: { form: FormWithSchema }) => {
 
     const mouseSensor = useSensor(MouseSensor, {
         activationConstraint: {

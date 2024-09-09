@@ -2,11 +2,9 @@ import { FormWithSchema } from "@/models/forms"
 import { FormElements } from "./FormElements";
 import { Button } from "@/components/ui/button";
 
-const FormView = ({ form }: { form: Partial<FormWithSchema> }) => {
+const FormView = ({ form }: { form: FormWithSchema }) => {
 
-    if (!form) return null;
-
-    if (!form.elements) return null;
+    if (!form || !form.elements) return null;
 
     const elements = form.elements;
 

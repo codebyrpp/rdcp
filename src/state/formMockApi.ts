@@ -1,32 +1,22 @@
 import { FormWithSchema } from "@/models/forms";
 
-const defaultForm = {
-    id: '1',
-    name: "Form Name",
-    elements: [],
-};
-
-function useGetFormMutation(): { getForm: (formId: string) => Promise<Partial<FormWithSchema>>; } {
+function useGetFormMutation(): { getForm: (formId: string) => Promise<FormWithSchema>; } {
     const getForm = async (formId: string) => {
         console.log('getForm', formId)
+
         if (!formId) {
-            return defaultForm;
+            throw new Error("Form ID is required");
         }
 
         // get from local storage
-        const elements = localStorage.getItem(formId!);
+        let _elements = localStorage.getItem(formId!);
+        const elements = _elements ? JSON.parse(_elements) : [];
 
-        if (!elements) {
-            return {
-                id: formId,
-                name: "Form Name",
-                elements: []
-            };
-        }
         return {
             id: formId,
             name: "Form Name",
-            elements: JSON.parse(elements)
+            description: "Form Description",
+            elements: elements
         }
 
     }

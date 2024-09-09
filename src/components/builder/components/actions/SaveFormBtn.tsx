@@ -5,17 +5,18 @@ import { useTransition } from "react";
 import { FaSpinner } from "react-icons/fa6";
 import { SaveAll } from "lucide-react";
 
-function SaveFormBtn({id}:{id:string}) {
+function SaveFormBtn({ id }: { id: string }) {
 
   const { elements } = useDesigner();
-  const {toast} = useToast();
+  const { toast } = useToast();
   const [loading, startTransition] = useTransition();
 
   const updateFormContext = () => {
-    try{
+    try {
       const jsonElements = JSON.stringify(elements);
       // save in local storage TODO: save in database
       localStorage.setItem(id, jsonElements);
+      console.log("Saving form...", id);
 
       // toast success
       toast({
@@ -24,7 +25,7 @@ function SaveFormBtn({id}:{id:string}) {
         duration: 5000,
       });
     }
-    catch(e){
+    catch (e) {
       toast({
         title: "Error",
         description: "An error occured while saving the form",
@@ -34,14 +35,13 @@ function SaveFormBtn({id}:{id:string}) {
   }
 
   return (
-    <Button 
-    onClick={()=>{
-      console.log("Saving form...", id);
-      startTransition(updateFormContext);
-    }}
-    disabled={loading}
-    className="gap-2">
-      Save
+    <Button
+      onClick={() => {
+        startTransition(updateFormContext);
+      }}
+      disabled={loading}
+      className="gap-2">
+      Save Changes
       <SaveAll className="h-4 w-4" />
       {loading && <FaSpinner className="animate-spin h-4 w-4" />}
     </Button>
