@@ -47,7 +47,6 @@ const InviteMembers: React.FC = () => {
   const handleAddToTable = () => {
     if (validateEmail(email) && selectedRoles.length > 0) {
       setTableData([...tableData, { email, roles: selectedRoles }]);
-      setInvitedMembers([...invitedMembers, email]); // Add to invited members
       setEmail(''); // Clear the email input
       setSelectedRoles([]); // Clear the selected roles
       setEmailError(null); // Clear any error
