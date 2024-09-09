@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { SectionWrapper } from '../common/wrapper'
+import { useEffect, useState } from 'react';
+import { SectionWrapper } from '../common/wrapper';
 import {
     Command,
     CommandEmpty,
@@ -7,19 +7,18 @@ import {
     CommandInput,
     CommandItem,
     CommandList,
-} from "@/components/ui/command"
-
-//import { FaTimesCircle } from 'react-icons/fa';
+} from "@/components/ui/command";
 import { Button } from '../ui/button';
 import { DataTable } from './collaborators/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import { FaEllipsisH as MoreHorizontal } from 'react-icons/fa';
-//import { set } from 'react-hook-form';
+import { FaTimesCircle, FaEllipsisH as MoreHorizontal } from 'react-icons/fa';
 
 const dummyParticipants = [
     { email: "participant1@rdcp.com", id: "1" },
     { email: "participant2@rdcp.com", id: "2" },
+    { email: "participant3@rdcp.com", id: "3" },
+    { email: "participant4@rdcp.com", id: "4" },
 ];
 
 interface Participant {
@@ -29,17 +28,18 @@ interface Participant {
 
 const ViewParticipant = () => {
     const [search, setSearch] = useState<string>("");
-    const [showSearchBar, setShowSearchBar] = useState(false);
+    //const [showSearchBar, setShowSearchBar] = useState(false);
     const [participants, setParticipants] = useState<Participant[]>([]);
     const [selectedParticipants, setSelectedParticipants] = useState<Participant[]>([]);
-    
+    const [tableData, setTableData] = useState<Participant[]>([]);
+
     useEffect(() => {
         if (search.length > 0) {
-            setParticipants(dummyParticipants.filter((participant) => participant.email.includes(search)))
+            setParticipants(dummyParticipants.filter((participant) => participant.email.includes(search)));
         } else {
-            setParticipants([])
+            setParticipants([]);
         }
-    }, [search])
+    }, [search]);
 
     const columns: ColumnDef<Participant>[] = [
         {
@@ -61,7 +61,7 @@ const ViewParticipant = () => {
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem
                             onClick={() => {
-                                setSelectedParticipants(selectedParticipants.filter((c) => c.id !== row.original.id));
+                                setTableData(tableData.filter((c) => c.id !== row.original.id));
                             }}
                         >
                             Remove
@@ -73,10 +73,19 @@ const ViewParticipant = () => {
         },
     ];
 
-    const handleAddCollaborator = (participant: Participant) => {
+    const handleAddParticipant = () => {
+        const newParticipants = selectedParticipants.filter(
+            (participant) => !tableData.find((p) => p.id === participant.id)
+        );
+        setTableData([...tableData, ...newParticipants]);
+        console.log('New Participants Added:', newParticipants.map(p => p.email)); // Log the new participants' emails
+        setSelectedParticipants([]);
+        setSearch("");
+    };
+
+    const handleSelectParticipant = (participant: Participant) => {
         if (!selectedParticipants.find((c) => c.id === participant.id)) {
-            setSelectedParticipants([...selectedParticipants, { ...participant}]);
-            setSearch("");
+            setSelectedParticipants([...selectedParticipants, participant]);
         }
     };
 
@@ -85,8 +94,8 @@ const ViewParticipant = () => {
             <SectionWrapper>
                 <h4 className="text-lg font-semibold">Participants</h4>
                 <p className="text-muted-foreground text-sm">Add participants to the form.</p>
-                <Button className="btn btn-primary mt-4" onClick={() => setShowSearchBar(!showSearchBar)}>+  Add Participants</Button>
-                {showSearchBar && (
+                
+                
                     <div className='mt-4'>
                         <div className="flex items-center gap-2">
                             <Command>
@@ -101,12 +110,12 @@ const ViewParticipant = () => {
                                     )}
                                     {participants.length > 0 && (
                                         <CommandGroup heading="Suggestions">
-                                            {participants.map((participants) => (
+                                            {participants.map((participant) => (
                                                 <CommandItem
-                                                    key={participants.id}
-                                                    onSelect={() => handleAddCollaborator(participants)}
+                                                    key={participant.id}
+                                                    onSelect={() => handleSelectParticipant(participant)}
                                                 >
-                                                    {participants.email}
+                                                    {participant.email}
                                                 </CommandItem>
                                             ))}
                                         </CommandGroup>
@@ -114,23 +123,33 @@ const ViewParticipant = () => {
                                 </CommandList>
                             </Command>
                         </div>
+                        {/* Display selected participants */}
+                        <div className="flex flex-wrap gap-2 mt-2">
+                            {selectedParticipants.map((participant) => (
+                                <div key={participant.id} className="flex items-center gap-2 bg-gray-200 px-2 py-1 rounded">
+                                    <span className="text-sm">{participant.email}</span>
+                                    <FaTimesCircle
+                                        className="cursor-pointer text-sm"
+                                        onClick={() => setSelectedParticipants(selectedParticipants.filter((p) => p.id !== participant.id))}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                        <Button className="mt-4" onClick={handleAddParticipant}> + Add Participants</Button>
                     </div>
-                )}
+                
 
-                {/* Collaborator List Table */}
+                {/* Participants List Table */}
                 <div className="mt-4">
-                    <p className="text-sm font-semibold"> Collaborators List</p>
+                    <p className="text-sm font-semibold">Participants List</p>
                     <DataTable
                         columns={columns}
-                        data={selectedParticipants}
+                        data={tableData}
                     />
                 </div>
-
-                
-                
             </SectionWrapper>
         </div>
-    )
-}
+    );
+};
 
-export default ViewParticipant
+export default ViewParticipant;
