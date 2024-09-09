@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ElementsType, FormElement, FormElementInstance } from "../components/FormElements";
+import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from "../components/FormElements";
 import { Input } from "../../ui/input";
 import { useEffect, useState } from "react";
 import useDesigner from "../hooks/useDesigner";
@@ -27,7 +27,6 @@ const extraAttributes = {
     required: false,
     placeHolder: "Short Answer",
 };
-
 
 const propertiesSchema = z.object({
     label: z.string().min(2).max(50),
@@ -86,15 +85,28 @@ function DesignerComponent({
 
 function FormComponent({
     elementInstance,
+    submitValue,
 }: {
     elementInstance: FormElementInstance;
+    submitValue?: SubmitFunction;
 }) {
     const element = elementInstance as CustomInstance;
     const { label, required, placeHolder, helperText } = element.extraAttributes;
+
+    const [value, setValue] = useState("");
+
     return (<div className="flex flex-col gap-2 w-full">
         <InputLabel label={label} required={required} />
         {helperText && (<InputDescription description={helperText} />)}
-        <Input placeholder={placeHolder}></Input>
+        <Input
+            placeholder={placeHolder}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onBlur={(e) => {
+                if (!submitValue) return;
+                submitValue(element.id, e.target.value);
+            }} />
+
     </div>
     );
 }
@@ -119,9 +131,28 @@ function PropertiesComponent({
     });
 
     useEffect(() => {
+        console.log("Resetting Form...", element.extraAttributes);
         form.reset(element.extraAttributes);
     }, [element, form]);
 
+
+    function applyChanges(values: propertiesFormSchemaType) {
+        const { label, helperText, required, placeHolder } = values;
+        console.log("Applying Changes...", values);
+        updateElement(element.id, {
+            id:element.id,
+            type: element.type,
+            extraAttributes: {
+                label,
+                helperText,
+                placeHolder,
+                required,
+                validation: element.extraAttributes.validation
+            },
+        });
+    }
+
+    
     function updateValidationInstance(validation: TextFieldValidationInstance | undefined) {
         updateElement(element.id, {
             ...element,
@@ -132,20 +163,6 @@ function PropertiesComponent({
         });
     }
 
-    function applyChanges(values: propertiesFormSchemaType) {
-        const { label, helperText, required, placeHolder } = values;
-        updateElement(element.id, {
-            ...element,
-            extraAttributes: {
-                ...element.extraAttributes,
-                label,
-                helperText,
-                placeHolder,
-                required,
-            },
-        });
-    }
-
     const [validationType, setValidationType] = useState<string | undefined>(undefined);
     const [validation, setValidation] = useState<TextFieldValidation | undefined>(undefined);
 
@@ -153,7 +170,7 @@ function PropertiesComponent({
         if (element.extraAttributes.validation) {
             setValidationType(element.extraAttributes.validation!.type!);
         }
-    },[element]);
+    }, [element]);
 
     useEffect(() => {
         if (validationType) {
@@ -172,14 +189,11 @@ function PropertiesComponent({
         <div className="flex flex-col gap-4">
             <Form {...form}>
                 <form onChange={form.handleSubmit(applyChanges)}
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                    }}
+                    onSubmit={(e) => { e.preventDefault(); }}
                     className="space-y-3">
                     <LabelProperty form={form} />
                     <DescriptionProperty form={form} />
                     <RequiredProperty form={form} />
-                    {/* Select Validation */}
                 </form>
             </Form>
             <hr />

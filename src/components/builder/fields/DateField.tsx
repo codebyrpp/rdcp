@@ -80,7 +80,7 @@ function FormComponent({
 }) {
     const element = elementInstance as CustomInstance;
     const { label, required, helperText } = element.extraAttributes;
-    const [date, setDate] = useState<Date|undefined>(undefined);
+    const [date, setDate] = useState<Date | undefined>(undefined);
 
     return (<div className="flex flex-col gap-2 w-full">
         <InputLabel label={label} required={required} />
@@ -128,6 +128,7 @@ function PropertiesComponent({
     });
 
     useEffect(() => {
+        console.log("Resetting Date Form Extra Attributes", element.extraAttributes);
         form.reset(element.extraAttributes);
     }, [element, form]);
 
@@ -146,9 +147,7 @@ function PropertiesComponent({
     return (
         <Form {...form}>
             <form onChange={form.handleSubmit(applyChanges)}
-                onSubmit={(e) => {
-                    e.preventDefault();
-                }}
+                onSubmit={(e) => { e.preventDefault(); }}
                 className="space-y-3">
                 <LabelProperty form={form} />
                 <DescriptionProperty form={form} />

@@ -10,6 +10,8 @@ import { TitleDescFieldFormElement } from "../fields/TitleDescField";
 export type ElementsType = "TextField" | "TitleDescField" | "NumberField" | "TextAreaField" | "DateField" 
                             | "SelectField" | "CheckboxField";
 
+export type SubmitFunction = (key: string, value: string) => void;
+
 export type FormElement = {
     type: ElementsType;
 
@@ -25,6 +27,7 @@ export type FormElement = {
     }>;
     formComponent: React.FC<{
         elementInstance: FormElementInstance;
+        submitValue?: SubmitFunction;
     }>;
     propertiesComponent: React.FC<{
         elementInstance: FormElementInstance;

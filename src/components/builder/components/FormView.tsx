@@ -1,6 +1,7 @@
 import { FormWithSchema } from "@/models/forms"
 import { FormElements } from "./FormElements";
 import { Button } from "@/components/ui/button";
+import { useRef } from "react";
 
 const FormView = ({ form }: { form: FormWithSchema }) => {
 
@@ -8,8 +9,16 @@ const FormView = ({ form }: { form: FormWithSchema }) => {
 
     const elements = form.elements;
 
+    const formValues = useRef<{ [key: string]: string }>({});
+
+    const submitValue = (key: string, value: string) => {
+        formValues.current[key] = value;
+        console.log("Form Values...", formValues.current);
+    };
+
     const submitForm = () => {
-        console.log("Submitting form...", form);
+        console.log("Submitting form...");
+        console.log("Form Values...", formValues.current);
     }
 
     return (
@@ -28,14 +37,16 @@ const FormView = ({ form }: { form: FormWithSchema }) => {
                     return (
                         <div key={element.id}
                             className="bg-white w-full p-4 rounded-md focus-within:border-l-4 focus-within:border-l-slate-500">
-                            <FormComponent elementInstance={element} />
+                            <FormComponent
+                                submitValue={submitValue}
+                                elementInstance={element} />
                         </div>
                     );
                 })}
                 <div className="flex mt-2 justify-end w-full">
-                    <Button 
-                    onClick={submitForm}
-                    className='flex gap-2'>
+                    <Button
+                        onClick={submitForm}
+                        className='flex gap-2'>
                         Submit Form
                     </Button>
                 </div>
