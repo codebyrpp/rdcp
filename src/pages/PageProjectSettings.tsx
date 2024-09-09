@@ -1,6 +1,6 @@
 import BreadCrumbs from "@/components/common/BreadCrumbs"
 import FormUpdateProjectSettings from "@/components/forms/FormUpdateProjectSettings";
-import AddCollaborator from "@/components/projects/AddCollaborator";
+//import AddCollaborator from "@/components/projects/AddCollaborator";
 import DeleteProject from "@/components/projects/DeleteProject";
 import InviteMembers from "@/components/projects/InviteMembers";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -39,9 +39,11 @@ const PageProjectSettings = () => {
                 
                 <div className="flex flex-col gap-3">
                     {/* Search and Add Collaborator */}
+                    {/*}
                     <div>
                         <AddCollaborator />
                     </div>
+                    */}
                     {/* Invite Members */}
                     <div>
                         <InviteMembers />

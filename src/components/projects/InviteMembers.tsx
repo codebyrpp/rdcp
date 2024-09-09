@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
@@ -12,6 +12,13 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLab
 import { FaEllipsisH as MoreHorizontal } from 'react-icons/fa';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../ui/dialog';
 
+const dummyCollaborators = [
+    { email: "user1@rdcp.com", id: "1", roles: ['owner'] },
+    { email: "user2@rdcp.com", id: "2", roles: ['editor'] },
+    { email: "user3@rdcp.com", id: "3", roles: ['viewer'] },
+    { email: "user4@rdcp.com", id: "4", roles: ['editor'] },
+  ];
+
 const InviteMembers: React.FC = () => {
   const [email, setEmail] = useState<string>('');  // Main email state
   const [tempEmail, setTempEmail] = useState<string>(''); // Temporary email for input field
@@ -21,6 +28,7 @@ const InviteMembers: React.FC = () => {
   const [tableData, setTableData] = useState<{ email: string, roles: string[] }[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editingEmail, setEditingEmail] = useState<string | null>(null);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
 
   // Validate the email format
   const validateEmail = (email: string) => {
@@ -99,6 +107,18 @@ const InviteMembers: React.FC = () => {
     setSelectedRoles([]);
   };
 
+  // Handle search input change
+  useEffect(() => {
+    if (tempEmail.length > 0) {
+      const filteredSuggestions = dummyCollaborators
+        .filter(collaborator => collaborator.email.includes(tempEmail))
+        .map(collaborator => collaborator.email);
+      setSuggestions(filteredSuggestions);
+    } else {
+      setSuggestions([]);
+    }
+  }, [tempEmail]);
+
   // Define columns for DataTable
   const columns: ColumnDef<{ email: string; roles: string[] }>[] = [
     {
@@ -148,23 +168,37 @@ const InviteMembers: React.FC = () => {
         <CardContent>
             {/* Invite Collaborators Section */}
             <div className="mb-4">
-            <Label htmlFor="email" className="text-lg">1. Invite Collaborators</Label>
-            <p className="text-muted-foreground text-sm">
-                Invite collaborators to access all or specific forms in this project.
-            </p>
-            <div className="flex items-center gap-2 mt-2">
-                <Input
-                id="email"
-                placeholder="Enter email address"
-                value={tempEmail}
-                onChange={(e) => setTempEmail(e.target.value)} // Update tempEmail on input
-                className="mt-2"
-                />
-                <Button onClick={handleAddEmail} className="mt-2">
-                + Add Email
-                </Button>
-            </div>
-            {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
+                <Label htmlFor="email" className="text-lg">1. Invite Collaborators</Label>
+                    <p className="text-muted-foreground text-sm">
+                        Invite collaborators to access all or specific forms in this project.
+                    </p>
+                    <div className="flex items-center gap-2 mt-2">
+                        <Input
+                            id="email"
+                            placeholder="Enter email address"
+                            value={tempEmail}
+                            onChange={(e) => setTempEmail(e.target.value)} // Update tempEmail on input
+                            className="mt-2"
+                            />
+                        <Button onClick={handleAddEmail} className="mt-2">
+                            + Add Email
+                        </Button>
+                    </div>
+                {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
+                {/* Display suggestions */}
+                {suggestions.length > 0 && (
+                    <div className="mt-2 bg-white text-sm border border-gray-300 rounded shadow-lg">
+                    {suggestions.map((suggestion, index) => (
+                        <div
+                        key={index}
+                        className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+                        onClick={() => setTempEmail(suggestion)}
+                        >
+                        {suggestion}
+                        </div>
+                    ))}
+                    </div>
+                )}
             </div>
 
             {/* Display invited members */}
