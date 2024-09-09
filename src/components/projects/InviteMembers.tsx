@@ -20,8 +20,7 @@ const dummyCollaborators = [
   ];
 
 const InviteMembers: React.FC = () => {
-  const [email, setEmail] = useState<string>('');  // Main email state
-  const [tempEmail, setTempEmail] = useState<string>(''); // Temporary email for input field
+  const [emails, setEmails] = useState<string>('');  // Main email state for multiple emails
   const [invitedMembers, setInvitedMembers] = useState<string[]>([]);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
@@ -36,37 +35,37 @@ const InviteMembers: React.FC = () => {
     return regex.test(email);
   };
 
-  // Handle adding email after validation
-  const handleAddEmail = () => {
-    if (tempEmail && validateEmail(tempEmail)) {
-      if (!invitedMembers.includes(tempEmail)) {
-        setInvitedMembers([...invitedMembers, tempEmail]);
-        setEmail(tempEmail); // Set the main email when the button is clicked
-        setTempEmail(''); // Clear the input after adding
-        setEmailError(null); // Clear any previous error
-      } else {
-        setEmailError('This email is already invited.');
-      }
-    } else {
-      setEmailError('Please enter a valid email address.');
+  // Handle adding emails after validation
+  const handleAddEmails = () => {
+    const emailList = emails.split(',').map(email => email.trim());
+    const invalidEmails = emailList.filter(email => !validateEmail(email));
+    if (invalidEmails.length > 0) {
+      setEmailError(`Invalid email(s): ${invalidEmails.join(', ')}`);
+      return;
     }
+
+    const newInvitedMembers = emailList.filter(email => !invitedMembers.includes(email));
+    setInvitedMembers([...invitedMembers, ...newInvitedMembers]);
+    setEmails(''); // Clear the input after adding
+    setEmailError(null); // Clear any previous error
   };
 
   const handleAddToTable = () => {
-    if (validateEmail(email) && selectedRoles.length > 0) {
-        const newCollaborator = { email, roles: selectedRoles };
-        setTableData([...tableData, newCollaborator]);
-        console.log('New Collaborator Added:', newCollaborator); // Log the new collaborator data
-        setEmail(''); // Clear the email input
-        setSelectedRoles([]); // Clear the selected roles
-        setEmailError(null); // Clear any error
-        } else {
-        // Set the error message based on what's wrong (email or roles)
-        if (!validateEmail(email)) {
-            setEmailError('Please enter a valid email address.');
-        } else if (selectedRoles.length === 0) {
-            setEmailError('Please select at least one role.');
-        }
+    const emailList = invitedMembers.filter(email => validateEmail(email));
+    if (emailList.length > 0 && selectedRoles.length > 0) {
+      const newCollaborators = emailList.map(email => ({ email, roles: selectedRoles }));
+      setTableData([...tableData, ...newCollaborators]);
+      console.log('New Collaborators Added:', newCollaborators); // Log the new collaborator data
+      setInvitedMembers([]); // Clear the invited members
+      setSelectedRoles([]); // Clear the selected roles
+      setEmailError(null); // Clear any error
+    } else {
+      // Set the error message based on what's wrong (email or roles)
+      if (emailList.length === 0) {
+        setEmailError('Please enter valid email addresses.');
+      } else if (selectedRoles.length === 0) {
+        setEmailError('Please select at least one role.');
+      }
     }
   };
 
@@ -109,15 +108,15 @@ const InviteMembers: React.FC = () => {
 
   // Handle search input change
   useEffect(() => {
-    if (tempEmail.length > 0) {
+    if (emails.length > 0) {
       const filteredSuggestions = dummyCollaborators
-        .filter(collaborator => collaborator.email.includes(tempEmail))
+        .filter(collaborator => collaborator.email.includes(emails))
         .map(collaborator => collaborator.email);
       setSuggestions(filteredSuggestions);
     } else {
       setSuggestions([]);
     }
-  }, [tempEmail]);
+  }, [emails]);
 
   // Define columns for DataTable
   const columns: ColumnDef<{ email: string; roles: string[] }>[] = [
@@ -168,20 +167,20 @@ const InviteMembers: React.FC = () => {
         <CardContent>
             {/* Invite Collaborators Section */}
             <div className="mb-4">
-                <Label htmlFor="email" className="text-lg">1. Invite Collaborators</Label>
+                <Label htmlFor="emails" className="text-lg">1. Invite Collaborators</Label>
                     <p className="text-muted-foreground text-sm">
                         Invite collaborators to access all or specific forms in this project.
                     </p>
                     <div className="flex items-center gap-2 mt-2">
                         <Input
-                            id="email"
-                            placeholder="Enter email address"
-                            value={tempEmail}
-                            onChange={(e) => setTempEmail(e.target.value)} // Update tempEmail on input
+                            id="emails"
+                            placeholder="Enter email addresses separated by commas"
+                            value={emails}
+                            onChange={(e) => setEmails(e.target.value)} // Update emails on input
                             className="mt-2"
                             />
-                        <Button onClick={handleAddEmail} className="mt-2">
-                            + Add Email
+                        <Button onClick={handleAddEmails} className="mt-2">
+                            + Add Emails
                         </Button>
                     </div>
                 {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
@@ -192,11 +191,11 @@ const InviteMembers: React.FC = () => {
                         <div
                         key={index}
                         className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-                        onClick={() => setTempEmail(suggestion)}
+                        onClick={() => setEmails(suggestion)}
                         >
                         {suggestion}
                         </div>
-                    ))}
+                    ))} 
                     </div>
                 )}
             </div>
@@ -245,7 +244,7 @@ const InviteMembers: React.FC = () => {
                 disabled={ selectedRoles.length === 0}
                 className="mt-2"
             >
-                + Add Collaborator
+                + Add Collaborators
             </Button>
             </div>
 
