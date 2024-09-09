@@ -137,36 +137,17 @@ function PropertiesComponent({
         updateElement(element.id, {
             ...element,
             extraAttributes: {
-                ...element.extraAttributes,
                 label,
                 helperText,
                 placeHolder,
                 required,
+                validation: element.extraAttributes.validation,
             },
         });
     }
 
     const [validationType, setValidationType] = useState<string | undefined>(undefined);
-    const [validation, setValidation] = useState<TextFieldValidation | undefined>(undefined);
 
-    useEffect(() => {
-        if (element.extraAttributes.validation) {
-            setValidationType(element.extraAttributes.validation!.type!);
-        }
-    },[element]);
-
-    useEffect(() => {
-        if (validationType) {
-            setValidation(TextValidations[validationType as TextFieldValidationType]);
-            updateValidationInstance({
-                type: validationType as TextFieldValidationType,
-                schema: validation?.schema
-            });
-        } else {
-            setValidation(undefined);
-            updateValidationInstance(undefined);
-        }
-    }, [validationType, updateValidationInstance]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -179,7 +160,6 @@ function PropertiesComponent({
                     <LabelProperty form={form} />
                     <DescriptionProperty form={form} />
                     <RequiredProperty form={form} />
-                    {/* Select Validation */}
                 </form>
             </Form>
             <hr />
@@ -188,14 +168,14 @@ function PropertiesComponent({
                 validationType={validationType}
                 setValidationType={setValidationType}
             />
-            {validation && (
-                <validation.propertiesComponent
+            {/* {element.extraAttributes.validation && (
+                <TextValidations[element.extraAttributes.validation.type].propertiesComponent
                     validationInstance={{
                         ...validation
                     }}
                     update={updateValidationInstance}
                 />
-            )}
+            )} */}
         </div>
     );
 }
