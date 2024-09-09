@@ -36,6 +36,7 @@ function SaveFormBtn({id}:{id:string}) {
   return (
     <Button 
     onClick={()=>{
+      console.log("Saving form...", id);
       startTransition(updateFormContext);
     }}
     disabled={loading}

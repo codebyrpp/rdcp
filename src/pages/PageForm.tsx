@@ -1,3 +1,4 @@
+import FormView from '@/components/builder/components/FormView';
 import { useGetFormMutation } from '@/state/formMockApi';
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
@@ -12,6 +13,7 @@ const PageForm = () => {
   useEffect(() => {
     if(formId){
         getForm(formId).then((data: any) => {
+            console.log('data', data)
             setForm(data)
         })
     }
@@ -19,7 +21,7 @@ const PageForm = () => {
 }, [formId])
 
   return (
-    <div>PageForm</div>
+    <FormView form={form} />
   )
 }
 

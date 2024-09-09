@@ -14,7 +14,9 @@ export default function BuilderPage() {
 
     useEffect(() => {
         if(formId){
+            console.log('formId', formId)
             getForm(formId).then((data: any) => {
+                console.log('data', data)
                 setForm(data)
             })
         }

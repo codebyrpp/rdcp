@@ -8,16 +8,20 @@ const defaultForm = {
 
 function useGetFormMutation(): { getForm: (formId: string) => Promise<Partial<FormWithSchema>>; } {
     const getForm = async (formId: string) => {
-
+        console.log('getForm', formId)
         if (!formId) {
             return defaultForm;
         }
-        
+
         // get from local storage
         const elements = localStorage.getItem(formId!);
 
         if (!elements) {
-            return defaultForm;
+            return {
+                id: formId,
+                name: "Form Name",
+                elements: []
+            };
         }
         return {
             id: formId,
