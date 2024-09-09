@@ -118,6 +118,7 @@ function PropertiesComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
+    const validationInstance = element.extraAttributes.validation as TextFieldValidationInstance | undefined;
     const { updateElement } = useDesigner();
     const form = useForm<propertiesFormSchemaType>({
         resolver: zodResolver(propertiesSchema),
@@ -140,7 +141,7 @@ function PropertiesComponent({
         const { label, helperText, required, placeHolder } = values;
         console.log("Applying Changes...", values);
         updateElement(element.id, {
-            id:element.id,
+            id: element.id,
             type: element.type,
             extraAttributes: {
                 label,
@@ -152,52 +153,32 @@ function PropertiesComponent({
         });
     }
 
-    
+
     function updateValidationInstance(validation: TextFieldValidationInstance | undefined) {
         updateElement(element.id, {
             ...element,
             extraAttributes: {
-                ...element.extraAttributes,
+                ...form.getValues(),
                 validation,
             }
         });
     }
 
-    function applyChanges(values: propertiesFormSchemaType) {
-        const { label, helperText, required, placeHolder } = values;
-        updateElement(element.id, {
-            ...element,
-            extraAttributes: {
-                label,
-                helperText,
-                placeHolder,
-                required,
-                validation: element.extraAttributes.validation,
-            },
-        });
+    const [validation, setValidation] = useState<TextFieldValidation | undefined>(undefined);
+
+    const setValidationType = (validationType: string | undefined) => {
+        if (validationType) {
+            setValidation(TextValidations[validationType as TextFieldValidationType]);
+            updateValidationInstance({
+                type: validationType as TextFieldValidationType,
+                schema: validationInstance?.schema
+            });
+        } else {
+            setValidation(undefined);
+            updateValidationInstance(undefined);
+        }
     }
 
-    const [validationType, setValidationType] = useState<string | undefined>(undefined);
-    // const [validation, setValidation] = useState<TextFieldValidation | undefined>(undefined);
-
-    // useEffect(() => {
-    //     if (element.extraAttributes.validation) {
-    //         setValidationType(element.extraAttributes.validation!.type!);
-    //     }
-    // },[element]);
-
-    // useEffect(() => {
-    //     if (validationType) {
-    //         setValidation(TextValidations[validationType as TextFieldValidationType]);
-    //         updateValidationInstance({
-    //             type: validationType as TextFieldValidationType,
-    //             schema: validation?.schema
-    //         });
-    //     } else {
-    //         setValidation(undefined);
-    //         updateValidationInstance(undefined);
-    //     }
-    // }, [validationType, updateValidationInstance]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -213,17 +194,17 @@ function PropertiesComponent({
             <hr />
             <div className="text-muted-foreground text-sm">Response Validation</div>
             <ResponseValidationProperties
-                validationType={validationType}
+                validationType={validationInstance?.type}
                 setValidationType={setValidationType}
             />
-            {validation && (
+            {/* {validation && (
                 <validation.propertiesComponent
                     validationInstance={{
                         ...validation
                     }}
                     update={updateValidationInstance}
                 />
-            )}
+            )} */}
         </div>
     );
 }
@@ -238,15 +219,16 @@ const ResponseValidationProperties = (
         setValidationType: (value: string | undefined) => void
     }
 ) => {
-
+    const [value, setValue] = useState<string | undefined>(validationType);
     const [key, setKey] = useState(+new Date());
 
     return (
         <div key={key} className="flex flex-col gap-4">
             <div className="space-y-3">
                 <Label>Validation Type</Label>
-                <Select value={validationType}
+                <Select value={value}
                     onValueChange={(newValue) => {
+                        setValue(newValue.toString());
                         setValidationType(newValue.toString());
                         setKey(+new Date());
                     }}>
@@ -270,6 +252,7 @@ const ResponseValidationProperties = (
                             size="sm"
                             onClick={(e) => {
                                 e.stopPropagation()
+                                setValue(undefined)
                                 setValidationType(undefined)
                             }}
                         >
