@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-//import { Select } from '../ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Label } from '../ui/label';
 import { Checkbox } from '../ui/checkbox'; // For the Domain Scoped Roles
@@ -13,46 +12,65 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLab
 import { FaEllipsisH as MoreHorizontal } from 'react-icons/fa';
 
 const InviteMembers: React.FC = () => {
-
-  const [email, setEmail] = useState<string>('');
+  const [email, setEmail] = useState<string>('');  // Main email state
+  const [tempEmail, setTempEmail] = useState<string>(''); // Temporary email for input field
   const [invitedMembers, setInvitedMembers] = useState<string[]>([]);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
   const [tableData, setTableData] = useState<{ email: string, roles: string[] }[]>([]);
 
-  // Function to validate email
+  // Validate the email format
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   };
 
-  // Function to handle adding a new email
+  // Handle adding email after validation
   const handleAddEmail = () => {
-    if (email && validateEmail(email)) {
-      if (!invitedMembers.includes(email)) {
-        setInvitedMembers([...invitedMembers, email]);
-        setTableData([...tableData, { email, roles: selectedRoles }]);
-        setEmail(''); // Clear the input after adding
+    if (tempEmail && validateEmail(tempEmail)) {
+      if (!invitedMembers.includes(tempEmail)) {
+        setInvitedMembers([...invitedMembers, tempEmail]);
+        setEmail(tempEmail); // Set the main email when the button is clicked
+        setTempEmail(''); // Clear the input after adding
         setEmailError(null); // Clear any previous error
+      } else {
+        setEmailError('This email is already invited.');
       }
     } else {
       setEmailError('Please enter a valid email address.');
     }
   };
 
-  // Function to handle removing an email
+  const handleAddToTable = () => {
+    if (validateEmail(email) && selectedRoles.length > 0) {
+      setTableData([...tableData, { email, roles: selectedRoles }]);
+      setInvitedMembers([...invitedMembers, email]); // Add to invited members
+      setEmail(''); // Clear the email input
+      setSelectedRoles([]); // Clear the selected roles
+      setEmailError(null); // Clear any error
+    } else {
+      // Set the error message based on what's wrong (email or roles)
+      if (!validateEmail(email)) {
+        setEmailError('Please enter a valid email address.');
+      } else if (selectedRoles.length === 0) {
+        setEmailError('Please select at least one role.');
+      }
+    }
+  };
+
+  // Remove email from invited list and table
   const handleRemoveEmail = (emailToRemove: string) => {
     setInvitedMembers(invitedMembers.filter((email) => email !== emailToRemove));
     setTableData(tableData.filter((data) => data.email !== emailToRemove));
   };
 
-  // Function to handle role selection
+  // Handle role selection (checkbox changes)
   const handleRoleChange = (role: string) => {
-    if (selectedRoles.includes(role)) {
-      setSelectedRoles(selectedRoles.filter((r) => r !== role));
-    } else {
-      setSelectedRoles([...selectedRoles, role]);
-    }
+    setSelectedRoles((prevSelectedRoles) =>
+      prevSelectedRoles.includes(role)
+        ? prevSelectedRoles.filter((r) => r !== role)
+        : [...prevSelectedRoles, role]
+    );
   };
 
   // Define columns for DataTable
@@ -60,6 +78,11 @@ const InviteMembers: React.FC = () => {
     {
       accessorKey: 'email',
       header: 'Email',
+    },
+    {
+      accessorKey: 'roles',
+      header: 'Roles',
+      cell: ({ row }) => <span>{row.original.roles.map(role => getRoleName(role as ProjectRole)).join(', ')}</span>,
     },
     {
       accessorKey: 'actions',
@@ -80,11 +103,7 @@ const InviteMembers: React.FC = () => {
               Remove
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-                // Optionally handle updating collaborators' roles here
-              }}
-            >
+            <DropdownMenuItem>
               Update
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -93,36 +112,37 @@ const InviteMembers: React.FC = () => {
     },
   ];
 
-
   return (
     <Card className="p-4">
       <CardHeader>
-        <CardTitle> Invite Members</CardTitle>
+        <CardTitle>Invite Members</CardTitle>
       </CardHeader>
       <CardContent>
         {/* Invite Members Section */}
         <div className="mb-4">
-          <Label htmlFor="email" className='text-lg'> 1. Invite members</Label>
-          <p  className="text-muted-foreground text-sm">Invite members to access all or spacific forms in this project.</p>
+          <Label htmlFor="email" className="text-lg">1. Invite members</Label>
+          <p className="text-muted-foreground text-sm">
+            Invite members to access all or specific forms in this project.
+          </p>
           <div className="flex items-center gap-2 mt-2">
             <Input
-                id="email"
-                placeholder="Enter email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-2"
+              id="email"
+              placeholder="Enter email address"
+              value={tempEmail}
+              onChange={(e) => setTempEmail(e.target.value)} // Update tempEmail on input
+              className="mt-2"
             />
             <Button onClick={handleAddEmail} className="mt-2">
-                Add
+              Add Email
             </Button>
-            </div>
-            {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
+          </div>
+          {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
         </div>
 
         {/* Display invited members */}
-         <div className="flex flex-wrap gap-2 mt-2">
+        <div className="flex flex-wrap gap-2 mt-2">
           {invitedMembers.map((member) => (
-            <div key={member} className="flex items-center gap-2 bg-gray-200 px-2 py-1 rounded mb-4">
+            <div key={member} className="flex items-center gap-2 bg-gray-200 px-2 py-1 rounded">
               <span className="text-sm">{member}</span>
               <FaTimesCircle
                 className="cursor-pointer text-sm"
@@ -133,24 +153,38 @@ const InviteMembers: React.FC = () => {
         </div>
 
         {/* Collaborator Roles Section */}
-        <div className="mt-6">
-          <Label className='text-lg mb-4'> 2. Collaborator Roles</Label>
+        <div className={`mt-6 ${invitedMembers.length === 0 ? 'opacity-50 pointer-events-none' : ''}`}>
+          <Label className="text-lg mb-4">2. Collaborator Roles</Label>
+          <p className="text-muted-foreground text-sm mb-6">
+            Select the roles to be assigned for the collaborator /collaborators.
+          </p>
           <div className="grid grid-cols-2 gap-2 mt-2">
             {Object.values(ProjectRole).map((role) => (
-              <div key={role} className="flex  space-x-2">
+              <div key={role} className="flex space-x-2">
                 <Checkbox
                   checked={selectedRoles.includes(role)}
                   onCheckedChange={() => handleRoleChange(role)}
                 />
                 <div>
-                    <span className='text-sm'>{getRoleName(role)}</span>
-                    <p className='text-xs font-medium text-muted-foreground'>
+                  <span className="text-sm">{getRoleName(role)}</span>
+                  <p className="text-xs font-medium text-muted-foreground">
                     {getRolePermissions(role)}
-                    </p>
+                  </p>
                 </div>
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Add to Table Button */}
+        <div className="mt-4">
+          <Button
+            onClick={handleAddToTable}
+            disabled={ selectedRoles.length === 0}
+            className="mt-2"
+          >
+            Add Collaborator
+          </Button>
         </div>
 
         {/* Collaborators List Table */}
@@ -158,7 +192,6 @@ const InviteMembers: React.FC = () => {
           <p className="text-sm font-semibold">Invited Members List</p>
           <DataTable columns={columns} data={tableData} />
         </div>
-        
       </CardContent>
     </Card>
   );
