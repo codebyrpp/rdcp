@@ -7,24 +7,18 @@ import { Label } from '../ui/label';
 import { Checkbox } from '../ui/checkbox'; // For the Domain Scoped Roles
 import { FaTimesCircle } from 'react-icons/fa';
 import { getRoleName, getRolePermissions, ProjectRole } from '@/models/projects'; // Import the roles
-
+import { DataTable } from './collaborators/data-table';
+import { ColumnDef } from '@tanstack/react-table';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { FaEllipsisH as MoreHorizontal } from 'react-icons/fa';
 
 const InviteMembers: React.FC = () => {
-  // State for the email input
+
   const [email, setEmail] = useState<string>('');
-  // State for the list of invited members
   const [invitedMembers, setInvitedMembers] = useState<string[]>([]);
   const [emailError, setEmailError] = useState<string | null>(null);
-
-  // State for scope and selected domain
-  //const [scope, setScope] = useState<string>('All domains');
-  //const [selectedDomain, setSelectedDomain] = useState<string>('');
-
-  // State for the selected roles (Domain Scoped Roles)
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
-
-  // Dummy list of available domains
-  //const availableDomains = ['example.com', 'mywebsite.org', 'designpage.com'];
+  const [tableData, setTableData] = useState<{ email: string, roles: string[] }[]>([]);
 
   // Function to validate email
   const validateEmail = (email: string) => {
@@ -37,6 +31,7 @@ const InviteMembers: React.FC = () => {
     if (email && validateEmail(email)) {
       if (!invitedMembers.includes(email)) {
         setInvitedMembers([...invitedMembers, email]);
+        setTableData([...tableData, { email, roles: selectedRoles }]);
         setEmail(''); // Clear the input after adding
         setEmailError(null); // Clear any previous error
       }
@@ -48,6 +43,7 @@ const InviteMembers: React.FC = () => {
   // Function to handle removing an email
   const handleRemoveEmail = (emailToRemove: string) => {
     setInvitedMembers(invitedMembers.filter((email) => email !== emailToRemove));
+    setTableData(tableData.filter((data) => data.email !== emailToRemove));
   };
 
   // Function to handle role selection
@@ -58,6 +54,45 @@ const InviteMembers: React.FC = () => {
       setSelectedRoles([...selectedRoles, role]);
     }
   };
+
+  // Define columns for DataTable
+  const columns: ColumnDef<{ email: string; roles: string[] }>[] = [
+    {
+      accessorKey: 'email',
+      header: 'Email',
+    },
+    {
+      accessorKey: 'actions',
+      header: 'Actions',
+      cell: ({ row }) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => handleRemoveEmail(row.original.email)}
+            >
+              Remove
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                // Optionally handle updating collaborators' roles here
+              }}
+            >
+              Update
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
+  ];
+
 
   return (
     <Card className="p-4">
@@ -97,42 +132,6 @@ const InviteMembers: React.FC = () => {
           ))}
         </div>
 
-        {/* Scope Section */}
-        {/*<div className="mb-4">
-          <Label htmlFor="scope" className='text-lg'> 2. Select Scope of Permissions</Label>
-          <Select
-            onValueChange={setScope}
-            defaultValue="All domains"
-          >
-            <option value="All domains">All domains</option>
-            <option value="A specific domain">A specific domain</option>
-          </Select>
-        */}
-          {/* If "A specific domain" is selected, show domain selector */}
-          {/*
-          {scope === 'A specific domain' && (
-            <div className="mt-4">
-              <Label htmlFor="domain">Select Domain</Label>
-              <Select
-                onValueChange={setSelectedDomain}
-                defaultValue=""
-                //className="mt-2"
-              >
-                <option value="" disabled>
-                  Select domain
-                </option>
-                {availableDomains.map((domain) => (
-                  <option key={domain} value={domain}>
-                    {domain}
-                  </option>
-                ))}
-              </Select>
-            </div>
-          )}
-        </div>
-        */}
-        
-
         {/* Collaborator Roles Section */}
         <div className="mt-6">
           <Label className='text-lg mb-4'> 2. Collaborator Roles</Label>
@@ -153,6 +152,13 @@ const InviteMembers: React.FC = () => {
             ))}
           </div>
         </div>
+
+        {/* Collaborators List Table */}
+        <div className="mt-4">
+          <p className="text-sm font-semibold">Invited Members List</p>
+          <DataTable columns={columns} data={tableData} />
+        </div>
+        
       </CardContent>
     </Card>
   );
