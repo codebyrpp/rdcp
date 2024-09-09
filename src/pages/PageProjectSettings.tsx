@@ -42,6 +42,7 @@ const PageProjectSettings = () => {
                     <div>
                         <AddCollaborator />
                     </div>
+                    {/* Invite Members */}
                     <div>
                         <InviteMembers />
                     </div>

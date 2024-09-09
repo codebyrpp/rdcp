@@ -10,6 +10,7 @@ import { DataTable } from './collaborators/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { FaEllipsisH as MoreHorizontal } from 'react-icons/fa';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../ui/dialog';
 
 const InviteMembers: React.FC = () => {
   const [email, setEmail] = useState<string>('');  // Main email state
@@ -18,10 +19,12 @@ const InviteMembers: React.FC = () => {
   const [emailError, setEmailError] = useState<string | null>(null);
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
   const [tableData, setTableData] = useState<{ email: string, roles: string[] }[]>([]);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [editingEmail, setEditingEmail] = useState<string | null>(null);
 
   // Validate the email format
   const validateEmail = (email: string) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const regex =  /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     return regex.test(email);
   };
 
@@ -73,6 +76,28 @@ const InviteMembers: React.FC = () => {
     );
   };
 
+  // Handle opening the edit dialog
+  const handleEditRoles = (email: string) => {
+    const collaborator = tableData.find((data) => data.email === email);
+    if (collaborator) {
+      setSelectedRoles(collaborator.roles);
+      setEditingEmail(email);
+      setIsEditing(true);
+    }
+  };
+
+  // Handle saving the edited roles
+  const handleSaveRoles = () => {
+    setTableData((prevTableData) =>
+      prevTableData.map((data) =>
+        data.email === editingEmail ? { ...data, roles: selectedRoles } : data
+      )
+    );
+    setIsEditing(false);
+    setEditingEmail(null);
+    setSelectedRoles([]);
+  };
+
   // Define columns for DataTable
   const columns: ColumnDef<{ email: string; roles: string[] }>[] = [
     {
@@ -103,7 +128,9 @@ const InviteMembers: React.FC = () => {
               Remove
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleEditRoles(row.original.email)}
+            >
               Update
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -115,14 +142,14 @@ const InviteMembers: React.FC = () => {
   return (
     <Card className="p-4">
       <CardHeader>
-        <CardTitle>Invite Members</CardTitle>
+        <CardTitle>Invite Collaborators</CardTitle>
       </CardHeader>
       <CardContent>
-        {/* Invite Members Section */}
+        {/* Invite Collaborators Section */}
         <div className="mb-4">
-          <Label htmlFor="email" className="text-lg">1. Invite members</Label>
+          <Label htmlFor="email" className="text-lg">1. Invite Collaborators</Label>
           <p className="text-muted-foreground text-sm">
-            Invite members to access all or specific forms in this project.
+            Invite collaborators to access all or specific forms in this project.
           </p>
           <div className="flex items-center gap-2 mt-2">
             <Input
@@ -133,7 +160,7 @@ const InviteMembers: React.FC = () => {
               className="mt-2"
             />
             <Button onClick={handleAddEmail} className="mt-2">
-              Add Email
+              + Add Email
             </Button>
           </div>
           {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
@@ -183,16 +210,51 @@ const InviteMembers: React.FC = () => {
             disabled={ selectedRoles.length === 0}
             className="mt-2"
           >
-            Add Collaborator
+             + Add Collaborator
           </Button>
         </div>
 
         {/* Collaborators List Table */}
         <div className="mt-4">
-          <p className="text-sm font-semibold">Invited Members List</p>
+          <p className="text-sm font-semibold">Invited Collaborators List</p>
           <DataTable columns={columns} data={tableData} />
         </div>
       </CardContent>
+
+      {/* Edit Roles Dialog */}
+      {isEditing && (
+        <Dialog open={isEditing} onOpenChange={setIsEditing}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Roles for {editingEmail}</DialogTitle>
+            </DialogHeader>
+            <div className="grid grid-cols-2 gap-2 mt-2">
+              {Object.values(ProjectRole).map((role) => (
+                <div key={role} className="flex space-x-2">
+                  <Checkbox
+                    checked={selectedRoles.includes(role)}
+                    onCheckedChange={() => handleRoleChange(role)}
+                  />
+                  <div>
+                    <span className="text-sm">{getRoleName(role)}</span>
+                    <p className="text-xs font-medium text-muted-foreground">
+                      {getRolePermissions(role)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <DialogFooter>
+              <Button onClick={() => setIsEditing(false)} variant="ghost">
+                Cancel
+              </Button>
+              <Button onClick={handleSaveRoles}>
+                Save
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </Card>
   );
 };
