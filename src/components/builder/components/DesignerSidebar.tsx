@@ -33,7 +33,7 @@ function DesignerPropertiesPanel() {
 
 function DesignerFormElementsPanel() {
   return (
-    <aside className="p-1 bg-slate-300 overflow-y-auto h-full">
+    <aside className="p-2 bg-slate-300 overflow-y-auto h-full">
       <FormElementsSidebar />
     </aside>);
 }

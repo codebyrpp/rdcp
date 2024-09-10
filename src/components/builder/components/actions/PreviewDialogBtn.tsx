@@ -22,7 +22,7 @@ function PreviewDialogBtn({ form }: { form: FormWithSchema }) {
                     This is a <span className="font-bold">preview </span>
                     of the form. You can interact with the form elements here.
                 </DialogDescription>
-                <div className="flex justify-center">
+                <div className="flex justify-center min-w-full overflow-y-auto">
                     <FormView form={form} />
                 </div>
             </DialogContent>

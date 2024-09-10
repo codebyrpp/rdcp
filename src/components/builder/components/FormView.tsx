@@ -24,10 +24,10 @@ const FormView = ({ form }: { form: FormWithSchema }) => {
     return (
         <div className="flex-1 max-h-full h-full 
         flex-grow 
-        w-screen flex items-center justify-center overflow-y-auto">
-            <div className="flex flex-col items-center gap-1 w-1/2
+        w-screen flex items-center justify-center">
+            <div className="flex flex-col items-center gap-2 w-1/2
             bg-slate-200 rounded-md  pt-5 
-            h-full overflow-y-auto">
+            h-full">
                 <div className="bg-white w-full p-4 rounded-md border-t-[6px] border-t-slate-500">
                     <p className="text-xl font-bold">{form.name}</p>
                     <p className="text-sm text-gray-500">{form.description}</p>
@@ -43,10 +43,8 @@ const FormView = ({ form }: { form: FormWithSchema }) => {
                         </div>
                     );
                 })}
-                <div className="flex mt-2 justify-end w-full">
-                    <Button
-                        onClick={submitForm}
-                        className='flex gap-2'>
+                <div className="flex mt-2 justify-start w-full">
+                    <Button onClick={submitForm}>
                         Submit Form
                     </Button>
                 </div>

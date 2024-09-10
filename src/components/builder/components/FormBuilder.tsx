@@ -20,7 +20,7 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
 
     const sensors = useSensors(mouseSensor);
 
-    const { setElements, saveFormChanges } = useDesigner();
+    const { setElements, saveFormChanges, elements } = useDesigner();
     const [isReady, setIsReady] = useState(false);
     const saveAction = () => {
         saveFormChanges(form.id!);
@@ -48,7 +48,10 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
                         <div className="flex justify-between items-center">
                             <h1 className="text-lg font-semibold">{form.name}</h1>
                             <div className="flex justify-end space-x-2">
-                                <PreviewDialogBtn form={form} />
+                                <PreviewDialogBtn form={{
+                                    ...form,
+                                    elements: elements || []
+                                }} />
                                 <SaveFormBtn action={saveAction} />
                                 <DiscardChangesButton />
                             </div>
