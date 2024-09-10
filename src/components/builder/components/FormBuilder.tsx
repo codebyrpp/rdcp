@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import FormLoading from "./FormLoading";
 import PreviewDialogBtn from "./actions/PreviewDialogBtn";
 import DiscardChangesButton from "./actions/DiscardChangesBtn";
+import useSaveShortcut from "../hooks/useSaveShortcut";
 
 const FormBuilder = ({ form }: { form: FormWithSchema }) => {
 
@@ -19,8 +20,13 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
 
     const sensors = useSensors(mouseSensor);
 
-    const { setElements } = useDesigner();
+    const { setElements, saveFormChanges } = useDesigner();
     const [isReady, setIsReady] = useState(false);
+    const saveAction = () => {
+        saveFormChanges(form.id!);
+    };
+
+    useSaveShortcut(saveAction);
 
     useEffect(() => {
         if (isReady) return;
@@ -43,7 +49,7 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
                             <h1 className="text-lg font-semibold">Project Name / Form Name</h1>
                             <div className="flex justify-end space-x-2">
                                 <PreviewDialogBtn />
-                                <SaveFormBtn id={form.id!} />
+                                <SaveFormBtn action={saveAction} />
                                 <DiscardChangesButton />
                             </div>
                         </div>
