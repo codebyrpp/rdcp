@@ -1,5 +1,5 @@
 import { FormWithSchema } from "@/models/forms"
-import { FormElements } from "./FormElements";
+import { FormElements, SubmitFunction } from "./FormElements";
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 
@@ -11,7 +11,7 @@ const FormView = ({ form }: { form: FormWithSchema }) => {
 
     const formValues = useRef<{ [key: string]: string }>({});
 
-    const submitValue = (key: string, value: string) => {
+    const submitValue: SubmitFunction = (key: string, value: string) => {
         formValues.current[key] = value;
         console.log("Form Values...", formValues.current);
     };

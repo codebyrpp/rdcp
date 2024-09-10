@@ -46,9 +46,9 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
                 <div className="flex w-screen">
                     <div className="flex-1 py-2 px-4 bg-gray-50">
                         <div className="flex justify-between items-center">
-                            <h1 className="text-lg font-semibold">Project Name / Form Name</h1>
+                            <h1 className="text-lg font-semibold">{form.name}</h1>
                             <div className="flex justify-end space-x-2">
-                                <PreviewDialogBtn />
+                                <PreviewDialogBtn form={form} />
                                 <SaveFormBtn action={saveAction} />
                                 <DiscardChangesButton />
                             </div>

@@ -56,8 +56,8 @@ function PropertiesComponent({ validationInstance, update }: {
             maxLength: values.max,
             errorMessage: {
                 ...schema.errorMessage,
-                minLength: `Length should be greater than ${values.min}`,
-                maxLength: `Length should be less than ${values.max}`,
+                minLength: `Length should be greater than ${values.min} characters.`,
+                maxLength: `Length should be less than ${values.max} characters.`,
             }
         };
         console.log(newSchema);

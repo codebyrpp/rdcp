@@ -16,7 +16,7 @@ export function useAjvValidation() {
     errors: null,
   });
 
-  const validate = useCallback((value: any, schema: JSONSchemaType<any>) => {
+  const validate = useCallback((value: any, schema: any) => {
     const validateFn = ajv.compile(schema);
     const isValid = validateFn(value);
 

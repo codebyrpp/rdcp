@@ -18,6 +18,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { TextFieldValidation, TextFieldValidationInstance, TextFieldValidationType, TextValidations } from "./validations/text/Validations";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
+import { useAjvValidation } from "../hooks/useAjvValidation";
+import { ErrorObject } from "ajv";
 
 const type: ElementsType = "TextField";
 
@@ -92,7 +94,8 @@ function FormComponent({
 }) {
     const element = elementInstance as CustomInstance;
     const { label, required, placeHolder, helperText } = element.extraAttributes;
-
+    const [errors, setErrors] = useState<ErrorObject[] | null>([]);
+    const { validate } = useAjvValidation();
     const [value, setValue] = useState("");
 
     return (<div className="flex flex-col gap-2 w-full">
@@ -104,9 +107,23 @@ function FormComponent({
             onChange={(e) => setValue(e.target.value)}
             onBlur={(e) => {
                 if (!submitValue) return;
-                submitValue(element.id, e.target.value);
+                const schema = element.extraAttributes.validation?.schema;
+                if (!schema) return;
+                const result = validate(e.target.value, schema);
+                if (!result.isValid) {
+                    setErrors(result.errors);
+                } else {
+                    setErrors(null);
+                    submitValue(element.id, e.target.value);
+                }
             }} />
-
+        {errors && (
+            <div className="text-red-500 text-xs">
+                {errors.map((error, index) => (
+                    <div key={index}>{error.message}</div>
+                ))}
+            </div>
+        )}
     </div>
     );
 }

@@ -8,10 +8,10 @@ import { TextFieldValidation, TextFieldValidationInstance } from './Validations'
 
 const emailSchema = {
     "type": "string",
-    "format": "email",
+    "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
     "errorMessage": {
         "required": "A valid email is required",
-        "format": "Email is not valid"
+        "pattern": "Email is not valid"
     }
 };
 
@@ -32,7 +32,7 @@ function PropertiesComponent({ validationInstance, update }: {
         resolver: zodResolver(propertiesSchema),
         mode: "onBlur",
         defaultValues: {
-            error: schema.errorMessage.format,
+            error: schema.errorMessage.pattern,
         },
     });
 
@@ -41,7 +41,7 @@ function PropertiesComponent({ validationInstance, update }: {
             ...schema,
             errorMessage: {
                 ...schema.errorMessage,
-                format: values.error,
+                pattern: values.error,
             }
         };
 
