@@ -139,7 +139,6 @@ function PropertiesComponent({
 
     function applyChanges(values: propertiesFormSchemaType) {
         const { label, helperText, required, placeHolder } = values;
-        console.log("Applying Changes...", values);
         updateElement(element.id, {
             id: element.id,
             type: element.type,
