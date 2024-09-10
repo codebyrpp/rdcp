@@ -166,7 +166,9 @@ function PropertiesComponent({
 
     }
 
-    const [validation, setValidation] = useState<TextFieldValidation | undefined>(undefined);
+    const [validation, setValidation] = useState<TextFieldValidation | undefined>(
+        validationInstance ? TextValidations[validationInstance.type] : undefined
+    );
 
     const setValidationType = (validationType: string | undefined) => {
         if (validationType) {
