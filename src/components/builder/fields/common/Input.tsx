@@ -15,7 +15,7 @@ const InputLabel = ({ label, required }: InputLabelProps) => {
 }
 
 const InputDescription = ({ description }: { description: string }) => {
-    return <p className="text-muted-foreground text-[0.8rem] text-wrap">{description}</p>
+    return <p className="text-muted-foreground text-[0.8rem] text-wrap whitespace-pre-wrap">{description}</p>
 }
 
 export {InputLabel, InputDescription};

@@ -1,4 +1,4 @@
-import { FORM_RESPONSES_ROUTE, FORM_RESPONSES_SUMMARY_ROUTE, FORM_SETTINGS_ROUTE, PROJECT_ROUTE, PROJECT_SETTINGS_ROUTE, PROJECTS_ROUTE } from "@/constants/routes"
+import { FORM_EDIT_ROUTE, FORM_RESPONSES_ROUTE, FORM_RESPONSES_SUMMARY_ROUTE, FORM_SETTINGS_ROUTE, FORM_VIEW_ROUTE, PROJECT_ROUTE, PROJECT_SETTINGS_ROUTE, PROJECTS_ROUTE } from "@/constants/routes"
 import { useNavigate } from "react-router-dom"
 
 const useProjectNavigation = () => {
@@ -39,13 +39,27 @@ const useProjectNavigation = () => {
         navigate(route);
     }
 
+    const navigateToForm = (formId: string) => {
+        // Open the form
+        const route = FORM_VIEW_ROUTE.replace(':formId', formId)
+        navigate(route);
+    }
+
+    const navigateToFormDesigner = (projectId: string, formId: string) => {
+        // Open the form designer
+        const route = FORM_EDIT_ROUTE.replace(':projectId', projectId).replace(':formId', formId)
+        navigate(route);
+    }
+
     return {
         navigateToProject,
         navigateToProjectSettings,
         navigateToAllProjects,
         navigateToFormSettings,
         navigateToFormResponses,
-        navigateToFormSummary
+        navigateToFormSummary,
+        navigateToForm,
+        navigateToFormDesigner
     }
 }
 

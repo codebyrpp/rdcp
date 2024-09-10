@@ -96,7 +96,7 @@ function Designer() {
       <DesignerFormElementsPanel />
       <div className="flex flex-col p-4 gap-1 w-screen overflow-y-auto" >
         <div className="flex justify-center" style={{
-          width: "calc(100vw - 300px)",
+          width: "calc(100vw - 400px)",
         }}>
           <div className="max-w-[800px] flex-1 px-4">
             <div className="w-full bg-background p-4 rounded-md border-t-slate-500 border-t-[6px]">
@@ -106,7 +106,7 @@ function Designer() {
           </div>
         </div>
         <div style={{
-          width: "calc(100vw - 300px)",
+          width: "calc(100vw - 400px)",
         }}
           className="h-full flex-1"
           onClick={() => {
@@ -137,7 +137,7 @@ function Designer() {
           </div>
         </div>
       </div>
-      <div className="absolute right-0 top-0 h-full w-[300px] max-w-[300px] ">
+      <div className="absolute right-0 top-0 h-full w-[400px] max-w-[400px] ">
         <DesignerPropertiesPanel />
       </div>
     </div>

@@ -4,7 +4,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ElementsType, FormElement, FormElementInstance } from "../components/FormElements";
 import { Input } from "../../ui/input";
-import { Label } from "../../ui/label";
 import { useEffect } from "react";
 import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";

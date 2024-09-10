@@ -1,6 +1,6 @@
 import { FormElementInstance } from "@/components/builder/components/FormElements"
 
-export interface Form{
+export type Form = {
     id: string,
     projectId: string,
     name: string,
@@ -13,6 +13,6 @@ export interface Form{
     responseMessage?: string
 }
 
-export interface FormWithSchema extends Form{
+export type FormWithSchema = Pick<Form, 'id' | 'name' | 'description'> & {
     elements: FormElementInstance[]
 }
