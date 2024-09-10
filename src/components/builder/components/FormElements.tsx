@@ -1,15 +1,16 @@
-import { TitleFieldFormElement } from "../fields/TitleField";
 import { TextFieldFormElement } from "../fields/TextField";
-import { SubTitleFieldFormElement } from "../fields/SubTitleField";
-import { ParagraphFieldFormElement } from "../fields/ParagraphField";
 import { NumberFieldFormElement } from "../fields/NumberField";
 import { TextAreaFieldFormElement } from "../fields/TextAreaField";
 import { DateFieldFormElement } from "../fields/DateField";
 import { SelectFieldFormElement } from "../fields/SelectField";
 import { CheckboxFieldFormElement } from "../fields/CheckboxField";
+import { ReactNode } from "react";
+import { TitleDescFieldFormElement } from "../fields/TitleDescField";
 
-export type ElementsType = "TextField" | "TitleField" | "SubTitleField"  |  "ParagraphField" | "NumberField" | "TextAreaField" | "DateField" 
+export type ElementsType = "TextField" | "TitleDescField" | "NumberField" | "TextAreaField" | "DateField" 
                             | "SelectField" | "CheckboxField";
+
+export type SubmitFunction = (key: string, value: string) => void;
 
 export type FormElement = {
     type: ElementsType;
@@ -18,6 +19,7 @@ export type FormElement = {
 
     designerBtnElement: {
         label: string;
+        icon?: ReactNode;
     };
 
     designerComponent: React.FC<{
@@ -25,6 +27,7 @@ export type FormElement = {
     }>;
     formComponent: React.FC<{
         elementInstance: FormElementInstance;
+        submitValue?: SubmitFunction;
     }>;
     propertiesComponent: React.FC<{
         elementInstance: FormElementInstance;
@@ -43,10 +46,8 @@ type FormElementsType = {
 
 };
 export const FormElements: FormElementsType = {
+    TitleDescField: TitleDescFieldFormElement,
     TextField: TextFieldFormElement,
-    TitleField: TitleFieldFormElement,
-    SubTitleField: SubTitleFieldFormElement,
-    ParagraphField: ParagraphFieldFormElement,
     NumberField: NumberFieldFormElement,
     TextAreaField: TextAreaFieldFormElement,
     DateField: DateFieldFormElement,

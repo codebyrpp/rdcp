@@ -3,14 +3,16 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ElementsType, FormElement, FormElementInstance } from "../components/FormElements";
-import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
 import { useEffect } from "react";
 import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
-import { Switch } from "../../ui/switch";
+import { Form } from "../../ui/form";
 import { Checkbox } from "@radix-ui/react-checkbox";
+import { CheckCheck } from "lucide-react";
+import LabelProperty from "./common/LabelProperty";
+import DescriptionProperty from "./common/DescriptionProperty";
+import RequiredProperty from "./common/RequiredProperty";
 
 const type: ElementsType = "CheckboxField";
 
@@ -34,7 +36,8 @@ export const CheckboxFieldFormElement: FormElement = {
         extraAttributes,
     }),
     designerBtnElement: {
-        label: "Checkbox Field",
+        label: "Checkboxes",
+        icon: <CheckCheck/>
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,
@@ -129,68 +132,9 @@ function PropertiesComponent({
                     e.preventDefault();
                 }}
                 className="space-y-3">
-                <FormField
-                    control={form.control}
-                    name="label"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Label</FormLabel>
-                            <FormControl>
-                                <Input {...field}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") e.currentTarget.blur(); 
-                                }}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                The label of the field. <br/> It will be displayed above the field.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="helperText"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Decription</FormLabel>
-                            <FormControl>
-                                <Input {...field}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        e.currentTarget.blur();
-                                    }
-                                }}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                The decription of the field. <br/> It will be displayed below the label.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="required"
-                    render={({ field }) => (
-                        <FormItem>
-                            <div>
-                                <FormLabel>Required</FormLabel>
-                                <FormDescription>
-                                </FormDescription>
-                                </div>
-                            <FormControl>
-                                <Switch
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                />
-                            </FormControl>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
+                <LabelProperty form={form}/>
+                <DescriptionProperty form={form}/>
+                <RequiredProperty form={form}/>
             </form>
         </Form>
     );

@@ -2,35 +2,26 @@
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ElementsType, FormElement, FormElementInstance } from "../components/FormElements";
-import { Input } from "../../ui/input";
-import { Label } from "../../ui/label";
+import { ElementsType, FormElement, FormElementInstance } from "../../components/FormElements";
+import { Input } from "../../../ui/input";
+import { Label } from "../../../ui/label";
 import { useEffect } from "react";
-import useDesigner from "../hooks/useDesigner";
+import useDesigner from "../../hooks/useDesigner";
 import { useForm } from "react-hook-form";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
-import { RiNumber1} from "react-icons/ri";
-import DescriptionProperty from "./common/DescriptionProperty";
-import LabelProperty from "./common/LabelProperty";
-import RequiredProperty from "./common/RequiredProperty";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../../ui/form";
+import { Heading1 } from "lucide-react";
 
-const type: ElementsType = "NumberField";
+const type: ElementsType = "TitleField";
 
 const extraAttributes = {
-    label: "Number Field",
-    helperText: "Description",
-    required: false,
-    placeHolder: "0",
+    title: "Title Field",
 };
 
 const propertiesSchema = z.object({
-    label: z.string().min(2).max(50),
-    helperText: z.string().max(200),
-    required: z.boolean().default(false),
-    placeHolder: z.string().max(50),
+    title: z.string().min(2).max(50),
 });
 
-export const NumberFieldFormElement: FormElement = {
+export const TitleFieldFormElement: FormElement = {
     type,
     construct: (id:string) => ({
         id,
@@ -38,8 +29,8 @@ export const NumberFieldFormElement: FormElement = {
         extraAttributes,
     }),
     designerBtnElement: {
-        label: "Number Field",
-        icon: <RiNumber1 className="text-2xl"/>
+        label: "Title Field",
+        icon: <Heading1/>
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,
@@ -57,14 +48,12 @@ function DesignerComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, placeHolder, helperText} = element.extraAttributes;
+    const { title} = element.extraAttributes;
     return (<div className="flex flex-col gap-2 w-full">
-        <Label className="font-semibold">
-            {label}
-            {required && "*"}
+        <Label className="text-muted-foreground">
+            Title Field
         </Label>
-        {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
-        <Input readOnly disabled type = "number" placeholder= {placeHolder}></Input> 
+        <p className="text-xl font-bold">{title}</p>
     </div>
     );
 }
@@ -75,16 +64,9 @@ function FormComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, placeHolder, helperText} = element.extraAttributes;
-    return (<div className="flex flex-col gap-2 w-full">
-        <Label className="font-semibold">
-            {label}
-            {required && "*"}
-        </Label>
-        {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
-        <Input placeholder= {placeHolder}></Input>
-    </div>
-    );
+
+    const { title } = element.extraAttributes;
+    return <p className="text-xl font-bold">{title}</p>;
 }
 
 type propertiesFormschemaType = z.infer<typeof propertiesSchema>;
@@ -99,10 +81,7 @@ function PropertiesComponent({
         resolver: zodResolver(propertiesSchema),
         mode: "onBlur",
         defaultValues: {
-            label: element.extraAttributes.label,
-            helperText: element.extraAttributes.helperText,
-            required: element.extraAttributes.required,
-            placeHolder: element.extraAttributes.placeHolder,
+            title: element.extraAttributes.title,
         },
     });
 
@@ -111,14 +90,11 @@ function PropertiesComponent({
     }, [element, form]);
 
     function applyChanges(values:  propertiesFormschemaType) {
-        const { label, helperText, required, placeHolder } = values;
+        const { title } = values;
         updateElement(element.id,{
             ...element,
             extraAttributes: {
-                label,
-                helperText,
-                placeHolder,
-                required,
+                title,
             },
         });
     }
@@ -130,15 +106,12 @@ function PropertiesComponent({
                     e.preventDefault();
                 }}
                 className="space-y-3">
-                <LabelProperty form={form} />
-                <DescriptionProperty form={form} />
-                <RequiredProperty form={form} />
                 <FormField
                     control={form.control}
-                    name="placeHolder"
+                    name="title"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>PlaceHolder</FormLabel>
+                            <FormLabel>Title</FormLabel>
                             <FormControl>
                                 <Input {...field}
                                 onKeyDown={(e) => {
@@ -148,9 +121,6 @@ function PropertiesComponent({
                                 }}
                                 />
                             </FormControl>
-                            <FormDescription>
-                                The placeholder of the field.
-                            </FormDescription>
                             <FormMessage/>
                         </FormItem>
                     )}

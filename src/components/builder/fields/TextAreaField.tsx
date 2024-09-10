@@ -3,15 +3,17 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ElementsType, FormElement, FormElementInstance } from "../components/FormElements";
-import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
 import { useEffect } from "react";
 import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
-import { Switch } from "../../ui/switch";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
+import { LetterText } from "lucide-react";
+import DescriptionProperty from "./common/DescriptionProperty";
+import LabelProperty from "./common/LabelProperty";
+import RequiredProperty from "./common/RequiredProperty";
 
 const type: ElementsType = "TextAreaField";
 
@@ -40,6 +42,7 @@ export const TextAreaFieldFormElement: FormElement = {
     }),
     designerBtnElement: {
         label: "Text Area Field",
+        icon: <LetterText />,
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,
@@ -132,54 +135,15 @@ function PropertiesComponent({
                     e.preventDefault();
                 }}
                 className="space-y-3">
-                <FormField
-                    control={form.control}
-                    name="label"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Label</FormLabel>
-                            <FormControl>
-                                <Input {...field}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") e.currentTarget.blur(); 
-                                }}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                The label of the field. <br/> It will be displayed above the field.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="helperText"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Decription</FormLabel>
-                            <FormControl>
-                                <Input {...field}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        e.currentTarget.blur();
-                                    }
-                                }}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                The decription of the field. <br/> It will be displayed below the label.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
+                <LabelProperty form={form} />
+                <DescriptionProperty form={form} />
+                <RequiredProperty form={form} />
                 <FormField
                     control={form.control}
                     name="rows"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Rows{form.watch("rows")}</FormLabel>
+                            <FormLabel>Rows {form.watch("rows")}</FormLabel>
                             <FormControl>
                                 <Slider 
                                     defaultValue={[field.value]}
@@ -194,48 +158,7 @@ function PropertiesComponent({
                         </FormItem>
                     )}
                 />
-                <FormField
-                    control={form.control}
-                    name="placeHolder"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>PlaceHolder</FormLabel>
-                            <FormControl>
-                                <Input {...field}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        e.currentTarget.blur();
-                                    }
-                                }}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                The placeholder of the field.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="required"
-                    render={({ field }) => (
-                        <FormItem>
-                            <div>
-                                <FormLabel>Required</FormLabel>
-                                <FormDescription>
-                                </FormDescription>
-                                </div>
-                            <FormControl>
-                                <Switch
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                />
-                            </FormControl>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
+                
             </form>
         </Form>
     );
