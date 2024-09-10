@@ -26,7 +26,7 @@ interface Participant {
     id: string;
 }
 
-const ViewParticipant = () => {
+const ViewParticipants = () => {
     const [search, setSearch] = useState<string>("");
     //const [showSearchBar, setShowSearchBar] = useState(false);
     const [participants, setParticipants] = useState<Participant[]>([]);
@@ -94,50 +94,48 @@ const ViewParticipant = () => {
             <SectionWrapper>
                 <h4 className="text-lg font-semibold">Participants</h4>
                 <p className="text-muted-foreground text-sm">Add participants to the form.</p>
-                
-                
-                    <div className='mt-4'>
-                        <div className="flex items-center gap-2">
-                            <Command>
-                                <CommandInput
-                                    value={search}
-                                    onValueChange={(value) => setSearch(value)}
-                                    placeholder="Search user by email..."
-                                />
-                                <CommandList>
-                                    {search.length > 0 && participants.length === 0 && (
-                                        <CommandEmpty>No participants found.</CommandEmpty>
-                                    )}
-                                    {participants.length > 0 && (
-                                        <CommandGroup heading="Suggestions">
-                                            {participants.map((participant) => (
-                                                <CommandItem
-                                                    key={participant.id}
-                                                    onSelect={() => handleSelectParticipant(participant)}
-                                                >
-                                                    {participant.email}
-                                                </CommandItem>
-                                            ))}
-                                        </CommandGroup>
-                                    )}
-                                </CommandList>
-                            </Command>
-                        </div>
-                        {/* Display selected participants */}
-                        <div className="flex flex-wrap gap-2 mt-2">
-                            {selectedParticipants.map((participant) => (
-                                <div key={participant.id} className="flex items-center gap-2 bg-gray-200 px-2 py-1 rounded">
-                                    <span className="text-sm">{participant.email}</span>
-                                    <FaTimesCircle
-                                        className="cursor-pointer text-sm"
-                                        onClick={() => setSelectedParticipants(selectedParticipants.filter((p) => p.id !== participant.id))}
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                        <Button className="mt-4" onClick={handleAddParticipant}> + Add Participants</Button>
+                <div className='mt-2'>
+                    <div className="flex items-start gap-2">
+                        <Command>
+                            <CommandInput
+                                value={search}
+                                onValueChange={(value) => setSearch(value)}
+                                placeholder="Search user by email..."
+                            />
+                            <CommandList>
+                                {search.length > 0 && participants.length === 0 && (
+                                    <CommandEmpty>No participants found.</CommandEmpty>
+                                )}
+                                {participants.length > 0 && (
+                                    <CommandGroup heading="Suggestions">
+                                        {participants.map((participant) => (
+                                            <CommandItem
+                                                key={participant.id}
+                                                onSelect={() => handleSelectParticipant(participant)}
+                                            >
+                                                {participant.email}
+                                            </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                )}
+                            </CommandList>
+                        </Command>
+                        <Button onClick={handleAddParticipant}> + Add Participants</Button>
                     </div>
-                
+                    {/* Display selected participants */}
+                    <div className="flex flex-wrap gap-2 mt-2">
+                        {selectedParticipants.map((participant) => (
+                            <div key={participant.id} className="flex items-center gap-2 bg-gray-200 px-2 py-1 rounded">
+                                <span className="text-sm">{participant.email}</span>
+                                <FaTimesCircle
+                                    className="cursor-pointer text-sm"
+                                    onClick={() => setSelectedParticipants(selectedParticipants.filter((p) => p.id !== participant.id))}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
 
                 {/* Participants List Table */}
                 <div className="mt-4">
@@ -152,4 +150,4 @@ const ViewParticipant = () => {
     );
 };
 
-export default ViewParticipant;
+export default ViewParticipants;

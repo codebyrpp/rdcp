@@ -14,7 +14,7 @@ const PageProjectSettings = () => {
     const { project, isLoading } = useProjectInfoViewModel({ projectId });
 
     return (
-        <div className="container mx-auto p-4">
+        <div className="">
             <div className="flex mb-4">
                 <BreadCrumbs links={[
                     { name: 'Projects', url: '/projects' },
@@ -36,20 +36,7 @@ const PageProjectSettings = () => {
                             </>)
                     }
                 </div>
-                
-                <div className="flex flex-col gap-3">
-                    {/* Search and Add Collaborator */}
-                    {/*}
-                    <div>
-                        <AddCollaborator />
-                    </div>
-                    */}
-                    {/* Invite Members */}
-                    <div>
-                        <InviteMembers />
-                    </div>
-                </div>
-                
+                <InviteMembers />
             </div>
 
         </div>

@@ -2,7 +2,7 @@ import BreadCrumbs from "@/components/common/BreadCrumbs"
 import DeleteForm from "@/components/feats/forms/DeleteForm"
 import FormUpdateFormSettings from "@/components/forms/FormUpdateFormSettings"
 import { useParams } from "react-router-dom"
-import ViewParticipant from "@/components/projects/ViewParticipant";
+import ViewParticipants from "@/components/projects/ViewParticipant";
 
 const PageFormSettings = () => {
 
@@ -11,8 +11,8 @@ const PageFormSettings = () => {
     const { formId } = useParams<{ formId: string }>()
     
     return (
-        <div>
-            <div className="flex">
+        <div className="overflow-y-auto">
+            <div className="flex mb-4">
                 <BreadCrumbs links={[
                     { name: '...', url: '/projects' },
                     { name: "Project", url: `/projects/${projectId}` },
@@ -29,7 +29,7 @@ const PageFormSettings = () => {
                 </div>
                 <div className="flex flex-col gap-3">
                     {/* Search and Add Collaborator */}
-                    <ViewParticipant/>
+                    <ViewParticipants/>
                 </div>
             </div>
 
