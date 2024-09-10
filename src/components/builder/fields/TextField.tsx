@@ -155,6 +155,7 @@ function PropertiesComponent({
 
 
     function updateValidationInstance(validation: TextFieldValidationInstance | undefined) {
+        console.log("Updating Validation Instance...", validation);
         updateElement(element.id, {
             ...element,
             extraAttributes: {
@@ -162,20 +163,24 @@ function PropertiesComponent({
                 validation,
             }
         });
+
     }
 
     const [validation, setValidation] = useState<TextFieldValidation | undefined>(undefined);
 
     const setValidationType = (validationType: string | undefined) => {
         if (validationType) {
-            setValidation(TextValidations[validationType as TextFieldValidationType]);
             updateValidationInstance({
                 type: validationType as TextFieldValidationType,
-                schema: validationInstance?.schema
+                schema: TextValidations[validationType as TextFieldValidationType].schema
             });
+            // validation state must be set after the updateValidationInstance
+            setValidation(TextValidations[validationType as TextFieldValidationType]);
+
         } else {
-            setValidation(undefined);
             updateValidationInstance(undefined);
+            // validation state must be set after the updateValidationInstance
+            setValidation(undefined);
         }
     }
 
@@ -197,14 +202,14 @@ function PropertiesComponent({
                 validationType={validationInstance?.type}
                 setValidationType={setValidationType}
             />
-            {/* {validation && (
+            {validation && (
                 <validation.propertiesComponent
                     validationInstance={{
                         ...validation
                     }}
                     update={updateValidationInstance}
                 />
-            )} */}
+            )}
         </div>
     );
 }
@@ -228,6 +233,7 @@ const ResponseValidationProperties = (
                 <Label>Validation Type</Label>
                 <Select value={value}
                     onValueChange={(newValue) => {
+                        console.log("New Value...", newValue);
                         setValue(newValue.toString());
                         setValidationType(newValue.toString());
                         setKey(+new Date());
