@@ -203,11 +203,9 @@ function PropertiesComponent({
                 validationType={validationInstance?.type}
                 setValidationType={setValidationType}
             />
-            {validation && (
+            {validation && validationInstance && (
                 <validation.propertiesComponent
-                    validationInstance={{
-                        ...validation
-                    }}
+                    validationInstance={validationInstance}
                     update={updateValidationInstance}
                 />
             )}
