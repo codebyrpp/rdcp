@@ -13,10 +13,6 @@ const AuthGuard = ({ children }: { children: ReactNode }) => {
         }
     }, [user, navigate]);
 
-    if (!user) {
-        return <>Loading...</>;
-    }
-
     return (
         <>{
             children
