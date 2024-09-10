@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react'
 import { ProjectRole } from '@/models/projects'
 import useProjectNavigation from '@/hooks/useProjectNavigation'
 import { ListItem, ListItemTitle } from '@/components/common/ListItems'
-import { FaInfo, FaPen, FaTable } from 'react-icons/fa6'
 import { FaCog } from 'react-icons/fa'
 
 interface FormListItemProps {
@@ -23,7 +22,8 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
         settings: false
     })
 
-    const { navigateToFormSettings, navigateToFormResponses, navigateToFormSummary } = useProjectNavigation()
+    const { navigateToFormSettings, navigateToFormResponses,
+        navigateToFormSummary, navigateToForm, navigateToFormDesigner } = useProjectNavigation()
 
     const canDo = (roles: ProjectRole[], compareRoles: ProjectRole[]) => {
         return roles.some(role => compareRoles.includes(role))
@@ -35,6 +35,7 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
     const handleDesign = (e: any) => {
         e.stopPropagation()
         // Design form
+        navigateToFormDesigner(form.projectId, form.id)
     }
 
     const canCheckResponses = (roles: ProjectRole[]) => {
@@ -75,7 +76,7 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
     return (
         <ListItem onClick={() => {
             // Redirect to the form
-            
+
         }}>
             <div className='px-2 flex flex-col gap-1'>
                 <div className="flex gap-2">
@@ -119,6 +120,14 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
                     buttonVisibility.settings && <Button variant={"icon"} size={"icon"}
                         onClick={handleEditSettings} className='flex gap-2'>
                         <FaCog />
+                    </Button>
+                }
+                {
+                    <Button onClick={() => {
+                        navigateToForm(form.id)
+                    }}
+                        variant={"secondary"} size={"sm"} className='flex gap-2'>
+                        View
                     </Button>
                 }
             </div>

@@ -2,6 +2,7 @@
 
 import { createContext, Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { FormElementInstance } from "../builder/components/FormElements";
+import { useToast } from "../ui/use-toast";
 
 type DesignerContextType = {
     elements: FormElementInstance[];
@@ -13,17 +14,19 @@ type DesignerContextType = {
     setSelectedElement: Dispatch<SetStateAction<FormElementInstance | null>>;
 
     updateElement: (id: string, element: FormElementInstance) => void;
+    saveFormChanges: (formId: string) => void;  
 };
 
-export const DesignerContext = createContext<DesignerContextType | null> (null);
+export const DesignerContext = createContext<DesignerContextType | null>(null);
 
 export default function DesignerContextProvider({
     children,
-}: {children: ReactNode;
+}: {
+    children: ReactNode;
 
 }) {
     const [elements, setElements] = useState<FormElementInstance[]>([]);
-    const [selectedElement, setSelectedElement] = useState<FormElementInstance| null>(null)
+    const [selectedElement, setSelectedElement] = useState<FormElementInstance | null>(null)
 
     const addElement = (index: number, element: FormElementInstance) => {
         setElements((prev) => {
@@ -31,9 +34,13 @@ export default function DesignerContextProvider({
             newElements.splice(index, 0, element);
             return newElements;
         });
+        setSelectedElement(element);
     };
 
     const removeElement = (id: string) => {
+        if (id === selectedElement?.id) {
+            setSelectedElement(null);
+        }
         setElements((prev) => prev.filter((element) => element.id !== id));
     };
 
@@ -46,19 +53,43 @@ export default function DesignerContextProvider({
         });
     };
 
+    const { toast } = useToast();
+    const saveFormChanges = (formId: string) => {
+        try {
+            const jsonElements = JSON.stringify(elements);
+            localStorage.setItem(formId, jsonElements);
+            // toast success
+            toast({
+                title: "Form Saved",
+                variant: "success",
+                description: "Changes to the form have been saved.",
+                duration: 5000,
+            });
+        }
+        catch (e) {
+            toast({
+                title: "Error",
+                variant: "destructive",
+                description: "An error occured while saving the form",
+                duration: 5000,
+            });
+        }
+    }
+
     return (
-        <DesignerContext.Provider 
-        value={{
-            elements, 
-            setElements,
-            addElement, 
-            removeElement,
+        <DesignerContext.Provider
+            value={{
+                elements,
+                setElements,
+                addElement,
+                removeElement,
 
-            selectedElement,
-            setSelectedElement,
+                selectedElement,
+                setSelectedElement,
 
-            updateElement,
-        }}>
+                updateElement,
+                saveFormChanges,
+            }}>
             {children}
         </DesignerContext.Provider>
     );
