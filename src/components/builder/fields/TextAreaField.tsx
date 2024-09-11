@@ -4,44 +4,43 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ElementsType, FormElement, FormElementInstance } from "../components/FormElements";
 import { Label } from "../../ui/label";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
+import { Form } from "../../ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { Slider } from "@/components/ui/slider";
 import { LetterText } from "lucide-react";
 import DescriptionProperty from "./common/DescriptionProperty";
 import LabelProperty from "./common/LabelProperty";
 import RequiredProperty from "./common/RequiredProperty";
+import { InputDescription, InputLabel } from "./common/Input";
+import { TextFieldValidation, TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
+import { ErrorObject } from "ajv";
 
 const type: ElementsType = "TextAreaField";
+const PLACEHOLDER = "Long answer text";
 
 const extraAttributes = {
-    label: "Text Area Field",
-    helperText: "Description",
+    label: "Untitled Question",
+    helperText: "",
     required: false,
-    placeHolder: "Value here...",
-    rows:  3,
 };
 
 const propertiesSchema = z.object({
     label: z.string().min(2).max(50),
     helperText: z.string().max(200),
     required: z.boolean().default(false),
-    placeHolder: z.string().max(50),
-    rows: z.number().min(1).max(10),
 });
 
 export const TextAreaFieldFormElement: FormElement = {
     type,
-    construct: (id:string) => ({
+    construct: (id: string) => ({
         id,
         type,
         extraAttributes,
     }),
     designerBtnElement: {
-        label: "Text Area Field",
+        label: "Paragraph",
         icon: <LetterText />,
     },
     designerComponent: DesignerComponent,
@@ -51,7 +50,9 @@ export const TextAreaFieldFormElement: FormElement = {
 };
 
 type CustomInstance = FormElementInstance & {
-    extraAttributes: typeof extraAttributes;
+    extraAttributes: typeof extraAttributes & {
+        validation?: TextFieldValidationInstance;
+    };
 };
 
 function DesignerComponent({
@@ -60,14 +61,15 @@ function DesignerComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, placeHolder, helperText} = element.extraAttributes;
+    const { label, required, helperText, validation } = element.extraAttributes;
+    const ValidationInfo = validation ? TextValidations[validation.type].designerComponent : undefined;
     return (<div className="flex flex-col gap-2 w-full">
-        <Label>
-            {label}
-            {required && "*"}
-        </Label>
-        {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
-        <Textarea readOnly disabled placeholder= {placeHolder}/>    
+        <InputLabel label={label} required={required} />
+        {helperText && (<InputDescription description={helperText} />)}
+        <Textarea readOnly disabled placeholder={PLACEHOLDER} />
+        {validation && ValidationInfo && (
+            <ValidationInfo validationInstance={validation} />
+        )}
     </div>
     );
 }
@@ -78,35 +80,63 @@ function FormComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, placeHolder, helperText, rows} = element.extraAttributes;
+    const { label, required, helperText } = element.extraAttributes;
+    const [errors, setErrors] = useState<ErrorObject[] | null>([]);
+    const [value, setValue] = useState("");
+
     return (<div className="flex flex-col gap-2 w-full flex-grow">
         <Label className="font-semibold">
             {label}
             {required && "*"}
         </Label>
         {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
-        <Textarea placeholder= {placeHolder}  rows={rows}/>
+        <Textarea placeholder={PLACEHOLDER}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onBlur={(e) => {
+                //TODO: Implement validation
+            }} />
+        {errors && (
+            <div className="text-red-500 text-xs">
+                {errors.map((error, index) => (
+                    <div key={index}>{error.message}</div>
+                ))}
+            </div>
+        )}
     </div>
     );
 }
 
-type propertiesFormschemaType = z.infer<typeof propertiesSchema>;
+type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
+
 function PropertiesComponent({
     elementInstance,
-}:{
+}: {
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
+    const [validationInstance, setValidationInstance] = useState<TextFieldValidationInstance | undefined>(undefined);
+    const [validation, setValidation] = useState<TextFieldValidation | undefined>(undefined);
+
+    useEffect(() => {
+        const currentValidationInstance = element.extraAttributes.validation;
+        setValidationInstance(currentValidationInstance);
+
+        if (currentValidationInstance) {
+            setValidation(TextValidations[currentValidationInstance.type]);
+        } else {
+            setValidation(undefined);
+        }
+    }, [element]);
+    
     const { updateElement } = useDesigner();
-    const form = useForm<propertiesFormschemaType>({
+    const form = useForm<propertiesFormSchemaType>({
         resolver: zodResolver(propertiesSchema),
-        mode: "onBlur",
+        mode: "onChange",
         defaultValues: {
             label: element.extraAttributes.label,
             helperText: element.extraAttributes.helperText,
             required: element.extraAttributes.required,
-            placeHolder: element.extraAttributes.placeHolder,
-            rows: element.extraAttributes.rows,
         },
     });
 
@@ -114,51 +144,28 @@ function PropertiesComponent({
         form.reset(element.extraAttributes);
     }, [element, form]);
 
-    function applyChanges(values:  propertiesFormschemaType) {
-        const { label, helperText, required, placeHolder, rows } = values;
-        updateElement(element.id,{
+    function applyChanges(values: propertiesFormSchemaType) {
+        const { label, helperText, required } = values;
+        updateElement(element.id, {
             ...element,
             extraAttributes: {
                 label,
                 helperText,
-                placeHolder,
                 required,
-                rows,
+                validation: validationInstance
             },
         });
     }
 
-    return(
+
+    return (
         <Form {...form}>
-            <form onBlur={form.handleSubmit(applyChanges)} 
-                onSubmit={(e) => {
-                    e.preventDefault();
-                }}
+            <form onChange={form.handleSubmit(applyChanges)}
+                onSubmit={(e) => { e.preventDefault(); }}
                 className="space-y-3">
                 <LabelProperty form={form} />
                 <DescriptionProperty form={form} />
                 <RequiredProperty form={form} />
-                <FormField
-                    control={form.control}
-                    name="rows"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Rows {form.watch("rows")}</FormLabel>
-                            <FormControl>
-                                <Slider 
-                                    defaultValue={[field.value]}
-                                    min={1}
-                                    max={10}
-                                    step={1}
-                                    onValueChange={(value) => {
-                                        field.onChange(value[0]);
-                                    }}/>
-                            </FormControl>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                
             </form>
         </Form>
     );
