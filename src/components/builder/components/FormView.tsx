@@ -22,9 +22,7 @@ const FormView = ({ form }: { form: FormWithSchema }) => {
     }
 
     return (
-        <div className="flex-1 max-h-full h-full 
-        flex-grow 
-        w-screen flex items-center justify-center">
+        <div className="flex-1 max-h-full h-full flex-grow w-screen flex justify-center">
             <div className="flex flex-col items-center gap-2 w-1/2
             bg-slate-200 rounded-md  pt-5 
             h-full">
