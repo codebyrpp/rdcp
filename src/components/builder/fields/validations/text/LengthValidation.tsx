@@ -23,7 +23,7 @@ type CustomValidationInstance = TextFieldValidationInstance & {
 const propertiesSchema = z.object({
     min: z.number().min(0, "Minimum length must be at least 0"),
     max: z.number().min(1, "Maximum length must be at least 1"),
-}).refine((data) => data.max > data.min, {
+}).refine((data) => data.max >= data.min, {
     message: "Maximum length must be greater than minimum length",
     path: ["max"],
 });;
