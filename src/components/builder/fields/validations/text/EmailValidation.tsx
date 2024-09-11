@@ -3,8 +3,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
-import { TextFieldValidation, TextFieldValidationInstance } from './Validations';
-
+import { CommonTextValidationDesignerComponent, TextFieldValidation, TextFieldValidationInstance } from './Validations';
 
 const emailSchema = {
     "type": "string",
@@ -73,11 +72,10 @@ function PropertiesComponent({ validationInstance, update }: {
     )
 }
 
-
-
 export const EmailValidation: TextFieldValidation = {
     type: "email",
     name: "Email",
     schema: emailSchema,
     propertiesComponent: PropertiesComponent,
+    designerComponent: CommonTextValidationDesignerComponent
 }

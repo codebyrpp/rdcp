@@ -17,7 +17,6 @@ import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, Sele
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { TextFieldValidation, TextFieldValidationInstance, TextFieldValidationType, TextValidations } from "./validations/text/Validations";
-import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { useAjvValidation } from "../hooks/useAjvValidation";
 import { ErrorObject } from "ajv";
 
@@ -67,18 +66,13 @@ function DesignerComponent({
     const element = elementInstance as CustomInstance;
     const { label, required, helperText } = element.extraAttributes;
     const validation = element.extraAttributes.validation as TextFieldValidationInstance | undefined;
-
+    const ValidationInfo = validation ? TextValidations[validation.type].designerComponent : undefined;
     return (<div className="flex flex-col gap-2 w-full">
         <InputLabel label={label} required={required} />
         {helperText && (<InputDescription description={helperText} />)}
         <Input readOnly disabled placeholder={PLACEHOLDER}></Input>
-        {validation && (
-            <div className="text-muted-foreground text-xs flex items-center">
-                <InfoCircledIcon className="w-4 h-4 inline-block mr-1" />
-                <span>
-                    {TextValidations[validation.type].name} Validation Applied
-                </span>
-            </div>
+        {validation && ValidationInfo && (
+            <ValidationInfo validationInstance={validation} />
         )}
     </div>
     );
