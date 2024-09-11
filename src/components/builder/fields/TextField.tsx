@@ -13,13 +13,11 @@ import LabelProperty from "./common/LabelProperty";
 import DescriptionProperty from "./common/DescriptionProperty";
 import RequiredProperty from "./common/RequiredProperty";
 import { InputDescription, InputLabel } from "./common/Input";
-import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
 import { useAjvValidation } from "../hooks/useAjvValidation";
 import { ErrorObject } from "ajv";
 import useTextValidation from "./validations/text/useTextValidation";
+import ResponseValidationProperties from "./validations/ResponseValidation";
 
 const type: ElementsType = "TextField";
 const PLACEHOLDER = "Short Answer";
@@ -180,6 +178,7 @@ function PropertiesComponent({
             <div className="text-muted-foreground text-sm">Response Validation</div>
             <ResponseValidationProperties
                 key={validationInstance?.type || "no-validation"}
+                validations={TextValidations}
                 validationType={validationInstance?.type}
                 setValidationType={setValidationType}
             />
@@ -197,58 +196,3 @@ function PropertiesComponent({
 }
 
 
-const ResponseValidationProperties = (
-    {
-        validationType,
-        setValidationType
-    }: {
-        validationType: string | undefined,
-        setValidationType: (value: string | undefined) => void
-    }
-) => {
-    const [value, setValue] = useState<string | undefined>(validationType);
-    const [key, setKey] = useState(+new Date());
-
-    return (
-        <div key={key} className="flex flex-col gap-4">
-            <div className="space-y-3">
-                <Label>Validation Type</Label>
-                <Select value={value}
-                    onValueChange={(newValue) => {
-                        console.log("New Value...", newValue);
-                        setValue(newValue.toString());
-                        setValidationType(newValue.toString());
-                        setKey(+new Date());
-                    }}>
-                    <SelectTrigger className="">
-                        <SelectValue placeholder="Select a Validation Type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {
-                            Object.entries(TextValidations).map(([key, value]) => {
-                                return (
-                                    <SelectItem key={key} value={key}>
-                                        {value.name}
-                                    </SelectItem>
-                                );
-                            })
-                        }
-                        <SelectSeparator />
-                        <Button
-                            className="w-full px-2"
-                            variant="secondary"
-                            size="sm"
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                setValue(undefined)
-                                setValidationType(undefined)
-                            }}
-                        >
-                            Clear
-                        </Button>
-                    </SelectContent>
-                </Select>
-            </div>
-        </div>
-    );
-}
