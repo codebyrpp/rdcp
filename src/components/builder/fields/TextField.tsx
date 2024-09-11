@@ -16,7 +16,7 @@ import { InputDescription, InputLabel } from "./common/Input";
 import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { TextFieldValidationInstance, TextFieldValidationType, TextValidations } from "./validations/text/Validations";
+import { TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
 import { useAjvValidation } from "../hooks/useAjvValidation";
 import { ErrorObject } from "ajv";
 import useTextValidation from "./validations/text/useTextValidation";
@@ -130,7 +130,6 @@ function PropertiesComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { validation, setValidation, validationInstance, setValidationInstance } = useTextValidation(element);
 
     const { updateElement } = useDesigner();
     const form = useForm<propertiesFormSchemaType>({
@@ -142,6 +141,9 @@ function PropertiesComponent({
             required: element.extraAttributes.required,
         },
     });
+
+    const { validation, validationInstance,
+        setValidationType, updateValidationInstance } = useTextValidation(element, form);
 
     useEffect(() => {
         console.log("Resetting Form...", element.extraAttributes);
@@ -161,35 +163,6 @@ function PropertiesComponent({
                 validation: validationInstance
             },
         });
-    }
-
-
-    function updateValidationInstance(validation: TextFieldValidationInstance | undefined) {
-        console.log("Updating Validation Instance...", validation);
-        updateElement(element.id, {
-            ...element,
-            extraAttributes: {
-                ...form.getValues(),
-                validation,
-            }
-        });
-        setValidationInstance(validation);
-    }
-
-    const setValidationType = (validationType: string | undefined) => {
-        if (validationType) {
-            updateValidationInstance({
-                type: validationType as TextFieldValidationType,
-                schema: TextValidations[validationType as TextFieldValidationType].schema
-            });
-            // validation state must be set after the updateValidationInstance
-            setValidation(TextValidations[validationType as TextFieldValidationType]);
-
-        } else {
-            updateValidationInstance(undefined);
-            // validation state must be set after the updateValidationInstance
-            setValidation(undefined);
-        }
     }
 
     return (
