@@ -22,19 +22,18 @@ import { useAjvValidation } from "../hooks/useAjvValidation";
 import { ErrorObject } from "ajv";
 
 const type: ElementsType = "TextField";
+const PLACEHOLDER = "Short Answer";
 
 const extraAttributes = {
     label: "Text Field",
     helperText: "",
     required: false,
-    placeHolder: "Short Answer",
 };
 
 const propertiesSchema = z.object({
     label: z.string().min(2).max(50),
     helperText: z.string().max(1500),
     required: z.boolean().default(false),
-    placeHolder: z.string().max(50),
 });
 
 export const TextFieldFormElement: FormElement = {
@@ -66,13 +65,13 @@ function DesignerComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, placeHolder, helperText } = element.extraAttributes;
+    const { label, required, helperText } = element.extraAttributes;
     const validation = element.extraAttributes.validation as TextFieldValidationInstance | undefined;
 
     return (<div className="flex flex-col gap-2 w-full">
         <InputLabel label={label} required={required} />
         {helperText && (<InputDescription description={helperText} />)}
-        <Input readOnly disabled placeholder={placeHolder}></Input>
+        <Input readOnly disabled placeholder={PLACEHOLDER}></Input>
         {validation && (
             <div className="text-muted-foreground text-xs flex items-center">
                 <InfoCircledIcon className="w-4 h-4 inline-block mr-1" />
@@ -93,7 +92,7 @@ function FormComponent({
     submitValue?: SubmitFunction;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, placeHolder, helperText } = element.extraAttributes;
+    const { label, required, helperText } = element.extraAttributes;
     const [errors, setErrors] = useState<ErrorObject[] | null>([]);
     const { validate } = useAjvValidation();
     const [value, setValue] = useState("");
@@ -102,7 +101,7 @@ function FormComponent({
         <InputLabel label={label} required={required} />
         {helperText && (<InputDescription description={helperText} />)}
         <Input
-            placeholder={placeHolder}
+            placeholder={PLACEHOLDER}
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onBlur={(e) => {
@@ -159,7 +158,6 @@ function PropertiesComponent({
             label: element.extraAttributes.label,
             helperText: element.extraAttributes.helperText,
             required: element.extraAttributes.required,
-            placeHolder: element.extraAttributes.placeHolder,
         },
     });
 
@@ -170,14 +168,13 @@ function PropertiesComponent({
 
 
     function applyChanges(values: propertiesFormSchemaType) {
-        const { label, helperText, required, placeHolder } = values;
+        const { label, helperText, required } = values;
         updateElement(element.id, {
             id: element.id,
             type: element.type,
             extraAttributes: {
                 label,
                 helperText,
-                placeHolder,
                 required,
                 validation: validationInstance
             },
