@@ -25,7 +25,7 @@ const type: ElementsType = "TextField";
 const PLACEHOLDER = "Short Answer";
 
 const extraAttributes = {
-    label: "Text Field",
+    label: "Untitled Question",
     helperText: "",
     required: false,
 };
@@ -44,7 +44,7 @@ export const TextFieldFormElement: FormElement = {
         extraAttributes,
     }),
     designerBtnElement: {
-        label: "Text Field",
+        label: "Short Answer",
         icon: <Type />,
     },
     designerComponent: DesignerComponent,
