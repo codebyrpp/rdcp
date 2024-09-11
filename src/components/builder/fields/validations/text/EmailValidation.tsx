@@ -37,24 +37,23 @@ function PropertiesComponent({ validationInstance, update }: {
     });
 
     function applyChanges(values: z.infer<typeof propertiesSchema>) {
-        const newSchema = {
-            ...schema,
-            errorMessage: {
-                ...schema.errorMessage,
-                pattern: values.error,
-            }
-        };
-
         update({
             ...validationInstance,
-            schema: newSchema,
+            schema: {
+                type: schema.type,
+                pattern: schema.pattern,
+                errorMessage: {
+                    required: schema.errorMessage.required,
+                    pattern: values.error,
+                }
+            },
         });
     }
 
     return (
         <Form {...form}>
             <form onBlur={form.handleSubmit(applyChanges)}
-            onSubmit={(e) => {e.preventDefault();}}>
+                onSubmit={(e) => { e.preventDefault(); }}>
                 <div className='flex flex-col gap-4'>
                     <FormField control={form.control}
                         name="error"

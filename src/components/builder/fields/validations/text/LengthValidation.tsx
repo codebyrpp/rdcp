@@ -55,7 +55,6 @@ function PropertiesComponent({ validationInstance, update }: {
             minLength: values.min,
             maxLength: values.max,
             errorMessage: {
-                ...schema.errorMessage,
                 minLength: `Length should be greater than ${values.min} characters.`,
                 maxLength: `Length should be less than ${values.max} characters.`,
             }

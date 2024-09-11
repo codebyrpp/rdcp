@@ -179,7 +179,6 @@ function PropertiesComponent({
                 validation,
             }
         });
-
     }
 
     const [validation, setValidation] = useState<TextFieldValidation | undefined>(
@@ -220,9 +219,12 @@ function PropertiesComponent({
                 validationType={validationInstance?.type}
                 setValidationType={setValidationType}
             />
-            {validation && validationInstance && (
+            {validation && (
                 <validation.propertiesComponent
-                    validationInstance={validationInstance}
+                    validationInstance={validationInstance ?? {
+                        type: validation.type,
+                        schema: validation.schema
+                    }}
                     update={updateValidationInstance}
                 />
             )}

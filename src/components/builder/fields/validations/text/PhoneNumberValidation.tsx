@@ -37,17 +37,15 @@ function PropertiesComponent({ validationInstance, update }: {
     });
 
     function applyChanges(values: z.infer<typeof propertiesSchema>) {
-        const newSchema = {
-            ...schema,
-            errorMessage: {
-                ...schema.errorMessage,
-                pattern: values.error,
-            }
-        };
-
         update({
             ...validationInstance,
-            schema: newSchema,
+            schema: {
+                ...schema,
+                errorMessage: {
+                    pattern: values.error,
+                    required: schema.errorMessage.required,
+                }
+            },
         });
     }
 
