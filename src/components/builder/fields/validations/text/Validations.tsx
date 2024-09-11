@@ -33,6 +33,10 @@ export const TextValidations: TextValidationTypes = {
     length: LengthValidation
 }; 
 
+export const TextAreaValidations = {
+    length: LengthValidation
+};
+
 export function CommonTextValidationDesignerComponent({ validationInstance }: {
     validationInstance: TextFieldValidationInstance
 }){

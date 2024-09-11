@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ElementsType, FormElement, FormElementInstance } from "../components/FormElements";
+import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from "../components/FormElements";
 import { Label } from "../../ui/label";
 import { useEffect, useState } from "react";
 import useDesigner from "../hooks/useDesigner";
@@ -14,8 +14,11 @@ import DescriptionProperty from "./common/DescriptionProperty";
 import LabelProperty from "./common/LabelProperty";
 import RequiredProperty from "./common/RequiredProperty";
 import { InputDescription, InputLabel } from "./common/Input";
-import { TextFieldValidation, TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
+import { TextAreaValidations, TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
 import { ErrorObject } from "ajv";
+import useTextValidation from "./validations/text/useTextValidation";
+import ResponseValidationProperties from "./validations/ResponseValidation";
+import { useAjvValidation } from "../hooks/useAjvValidation";
 
 const type: ElementsType = "TextAreaField";
 const PLACEHOLDER = "Long answer text";
@@ -76,12 +79,15 @@ function DesignerComponent({
 
 function FormComponent({
     elementInstance,
+    submitValue
 }: {
     elementInstance: FormElementInstance;
+    submitValue?: SubmitFunction;
 }) {
     const element = elementInstance as CustomInstance;
     const { label, required, helperText } = element.extraAttributes;
     const [errors, setErrors] = useState<ErrorObject[] | null>([]);
+    const { validate } = useAjvValidation();
     const [value, setValue] = useState("");
 
     return (<div className="flex flex-col gap-2 w-full flex-grow">
@@ -94,7 +100,16 @@ function FormComponent({
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onBlur={(e) => {
-                //TODO: Implement validation
+                if (!submitValue) return;
+                const schema = element.extraAttributes.validation?.schema;
+                if (!schema) return;
+                const result = validate(e.target.value, schema);
+                if (!result.isValid) {
+                    setErrors(result.errors);
+                } else {
+                    setErrors(null);
+                    submitValue(element.id, e.target.value);
+                }
             }} />
         {errors && (
             <div className="text-red-500 text-xs">
@@ -115,20 +130,6 @@ function PropertiesComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const [validationInstance, setValidationInstance] = useState<TextFieldValidationInstance | undefined>(undefined);
-    const [validation, setValidation] = useState<TextFieldValidation | undefined>(undefined);
-
-    useEffect(() => {
-        const currentValidationInstance = element.extraAttributes.validation;
-        setValidationInstance(currentValidationInstance);
-
-        if (currentValidationInstance) {
-            setValidation(TextValidations[currentValidationInstance.type]);
-        } else {
-            setValidation(undefined);
-        }
-    }, [element]);
-    
     const { updateElement } = useDesigner();
     const form = useForm<propertiesFormSchemaType>({
         resolver: zodResolver(propertiesSchema),
@@ -139,6 +140,9 @@ function PropertiesComponent({
             required: element.extraAttributes.required,
         },
     });
+
+    const { validation, validationInstance,
+        setValidationType, updateValidationInstance } = useTextValidation(element, form);
 
     useEffect(() => {
         form.reset(element.extraAttributes);
@@ -157,17 +161,35 @@ function PropertiesComponent({
         });
     }
 
-
     return (
-        <Form {...form}>
-            <form onChange={form.handleSubmit(applyChanges)}
-                onSubmit={(e) => { e.preventDefault(); }}
-                className="space-y-3">
-                <LabelProperty form={form} />
-                <DescriptionProperty form={form} />
-                <RequiredProperty form={form} />
-            </form>
-        </Form>
+        <div className="flex flex-col gap-4">
+            <Form {...form}>
+                <form onChange={form.handleSubmit(applyChanges)}
+                    onSubmit={(e) => { e.preventDefault(); }}
+                    className="space-y-3">
+                    <LabelProperty form={form} />
+                    <DescriptionProperty form={form} />
+                    <RequiredProperty form={form} />
+                </form>
+            </Form>
+            <hr />
+            <div className="text-muted-foreground text-sm">Response Validation</div>
+            <ResponseValidationProperties
+                key={validationInstance?.type || "no-validation"}
+                validations={TextAreaValidations}
+                validationType={validationInstance?.type}
+                setValidationType={setValidationType}
+            />
+            {validation && (
+                <validation.propertiesComponent
+                    validationInstance={validationInstance ?? {
+                        type: validation.type,
+                        schema: validation.schema
+                    }}
+                    update={updateValidationInstance}
+                />
+            )}
+        </div>
     );
 }
 
