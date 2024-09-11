@@ -1,23 +1,17 @@
 "use client";
 
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from "../components/FormElements";
 import { Input } from "../../ui/input";
 import { useEffect, useState } from "react";
 import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
-import { Form } from "../../ui/form";
 import { Type } from "lucide-react";
-import LabelProperty from "./common/LabelProperty";
-import DescriptionProperty from "./common/DescriptionProperty";
-import RequiredProperty from "./common/RequiredProperty";
 import { InputDescription, InputLabel } from "./common/Input";
-import { TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
+import { commonPropertiesFormSchemaType, commonPropertiesSchema, FieldProperties, TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
 import { useAjvValidation } from "../hooks/useAjvValidation";
 import { ErrorObject } from "ajv";
 import useTextValidation from "./validations/text/useTextValidation";
-import ResponseValidationProperties from "./validations/ResponseValidation";
 
 const type: ElementsType = "TextField";
 const PLACEHOLDER = "Short Answer";
@@ -28,11 +22,6 @@ const extraAttributes = {
     required: false,
 };
 
-const propertiesSchema = z.object({
-    label: z.string().min(2).max(50),
-    helperText: z.string().max(1500),
-    required: z.boolean().default(false),
-});
 
 export const TextFieldFormElement: FormElement = {
     type,
@@ -120,7 +109,6 @@ function FormComponent({
     );
 }
 
-type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
 function PropertiesComponent({
     elementInstance,
@@ -130,8 +118,8 @@ function PropertiesComponent({
     const element = elementInstance as CustomInstance;
 
     const { updateElement } = useDesigner();
-    const form = useForm<propertiesFormSchemaType>({
-        resolver: zodResolver(propertiesSchema),
+    const form = useForm<commonPropertiesFormSchemaType>({
+        resolver: zodResolver(commonPropertiesSchema),
         mode: "onChange",
         defaultValues: {
             label: element.extraAttributes.label,
@@ -144,12 +132,11 @@ function PropertiesComponent({
         setValidationType, updateValidationInstance } = useTextValidation(element, form);
 
     useEffect(() => {
-        console.log("Resetting Form...", element.extraAttributes);
         form.reset(element.extraAttributes);
     }, [element, form]);
 
 
-    function applyChanges(values: propertiesFormSchemaType) {
+    function applyChanges(values: commonPropertiesFormSchemaType) {
         const { label, helperText, required } = values;
         updateElement(element.id, {
             id: element.id,
@@ -164,35 +151,15 @@ function PropertiesComponent({
     }
 
     return (
-        <div className="flex flex-col gap-4">
-            <Form {...form}>
-                <form onChange={form.handleSubmit(applyChanges)}
-                    onSubmit={(e) => { e.preventDefault(); }}
-                    className="space-y-3">
-                    <LabelProperty form={form} />
-                    <DescriptionProperty form={form} />
-                    <RequiredProperty form={form} />
-                </form>
-            </Form>
-            <hr />
-            <div className="text-muted-foreground text-sm">Response Validation</div>
-            <ResponseValidationProperties
-                key={validationInstance?.type || "no-validation"}
-                validations={TextValidations}
-                validationType={validationInstance?.type}
-                setValidationType={setValidationType}
-            />
-            {validation && (
-                <validation.propertiesComponent
-                    validationInstance={validationInstance ?? {
-                        type: validation.type,
-                        schema: validation.schema
-                    }}
-                    update={updateValidationInstance}
-                />
-            )}
-        </div>
+        <FieldProperties
+            form={form}
+            applyChanges={applyChanges}
+            validationInstance={validationInstance}
+            setValidationType={setValidationType}
+            validation={validation}
+            updateValidationInstance={updateValidationInstance}
+            validations={TextValidations}
+        />
     );
 }
-
 
