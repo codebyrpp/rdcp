@@ -129,13 +129,28 @@ function FormComponent({
 }
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
+
 function PropertiesComponent({
     elementInstance,
 }: {
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const validationInstance = element.extraAttributes.validation as TextFieldValidationInstance | undefined;
+    const [validationInstance, setValidationInstance] = useState<TextFieldValidationInstance | undefined>(undefined);
+    const [validation, setValidation] = useState<TextFieldValidation | undefined>(undefined);
+
+    useEffect(() => {
+        const currentValidationInstance = element.extraAttributes.validation;
+        setValidationInstance(currentValidationInstance);
+
+        if (currentValidationInstance) {
+            setValidation(TextValidations[currentValidationInstance.type]);
+        } else {
+            setValidation(undefined);
+        }
+    }, [element]);
+
+
     const { updateElement } = useDesigner();
     const form = useForm<propertiesFormSchemaType>({
         resolver: zodResolver(propertiesSchema),
@@ -164,7 +179,7 @@ function PropertiesComponent({
                 helperText,
                 placeHolder,
                 required,
-                validation: element.extraAttributes.validation
+                validation: validationInstance
             },
         });
     }
@@ -179,11 +194,8 @@ function PropertiesComponent({
                 validation,
             }
         });
+        setValidationInstance(validation);
     }
-
-    const [validation, setValidation] = useState<TextFieldValidation | undefined>(
-        validationInstance ? TextValidations[validationInstance.type] : undefined
-    );
 
     const setValidationType = (validationType: string | undefined) => {
         if (validationType) {
@@ -201,7 +213,6 @@ function PropertiesComponent({
         }
     }
 
-
     return (
         <div className="flex flex-col gap-4">
             <Form {...form}>
@@ -215,10 +226,12 @@ function PropertiesComponent({
             </Form>
             <hr />
             <div className="text-muted-foreground text-sm">Response Validation</div>
-            <ResponseValidationProperties
-                validationType={validationInstance?.type}
-                setValidationType={setValidationType}
-            />
+            {
+                validationInstance && (<ResponseValidationProperties
+                    validationType={validationInstance?.type}
+                    setValidationType={setValidationType}
+                />)
+            }
             {validation && (
                 <validation.propertiesComponent
                     validationInstance={validationInstance ?? {
