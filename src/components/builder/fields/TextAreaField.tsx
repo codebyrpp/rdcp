@@ -7,17 +7,12 @@ import { Label } from "../../ui/label";
 import { useEffect, useState } from "react";
 import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
-import { Form } from "../../ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { LetterText } from "lucide-react";
-import DescriptionProperty from "./common/DescriptionProperty";
-import LabelProperty from "./common/LabelProperty";
-import RequiredProperty from "./common/RequiredProperty";
 import { InputDescription, InputLabel } from "./common/Input";
-import { TextAreaValidations, TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
+import { FieldProperties, TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
 import { ErrorObject } from "ajv";
 import useTextValidation from "./validations/text/useTextValidation";
-import ResponseValidationProperties from "./validations/ResponseValidation";
 import { useAjvValidation } from "../hooks/useAjvValidation";
 
 const type: ElementsType = "TextAreaField";
@@ -162,34 +157,15 @@ function PropertiesComponent({
     }
 
     return (
-        <div className="flex flex-col gap-4">
-            <Form {...form}>
-                <form onChange={form.handleSubmit(applyChanges)}
-                    onSubmit={(e) => { e.preventDefault(); }}
-                    className="space-y-3">
-                    <LabelProperty form={form} />
-                    <DescriptionProperty form={form} />
-                    <RequiredProperty form={form} />
-                </form>
-            </Form>
-            <hr />
-            <div className="text-muted-foreground text-sm">Response Validation</div>
-            <ResponseValidationProperties
-                key={validationInstance?.type || "no-validation"}
-                validations={TextAreaValidations}
-                validationType={validationInstance?.type}
-                setValidationType={setValidationType}
-            />
-            {validation && (
-                <validation.propertiesComponent
-                    validationInstance={validationInstance ?? {
-                        type: validation.type,
-                        schema: validation.schema
-                    }}
-                    update={updateValidationInstance}
-                />
-            )}
-        </div>
+        <FieldProperties
+            form={form}
+            applyChanges={applyChanges}
+            validationInstance={validationInstance}
+            setValidationType={setValidationType}
+            validation={validation}
+            updateValidationInstance={updateValidationInstance}
+            validations={TextValidations}
+        />
     );
 }
 
