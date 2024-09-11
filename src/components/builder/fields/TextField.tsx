@@ -179,6 +179,7 @@ function PropertiesComponent({
             <hr />
             <div className="text-muted-foreground text-sm">Response Validation</div>
             <ResponseValidationProperties
+                key={validationInstance?.type || "no-validation"}
                 validationType={validationInstance?.type}
                 setValidationType={setValidationType}
             />
