@@ -16,9 +16,10 @@ import { InputDescription, InputLabel } from "./common/Input";
 import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { TextFieldValidation, TextFieldValidationInstance, TextFieldValidationType, TextValidations } from "./validations/text/Validations";
+import { TextFieldValidationInstance, TextFieldValidationType, TextValidations } from "./validations/text/Validations";
 import { useAjvValidation } from "../hooks/useAjvValidation";
 import { ErrorObject } from "ajv";
+import useTextValidation from "./validations/text/useTextValidation";
 
 const type: ElementsType = "TextField";
 const PLACEHOLDER = "Short Answer";
@@ -129,20 +130,7 @@ function PropertiesComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const [validationInstance, setValidationInstance] = useState<TextFieldValidationInstance | undefined>(undefined);
-    const [validation, setValidation] = useState<TextFieldValidation | undefined>(undefined);
-
-    useEffect(() => {
-        const currentValidationInstance = element.extraAttributes.validation;
-        setValidationInstance(currentValidationInstance);
-
-        if (currentValidationInstance) {
-            setValidation(TextValidations[currentValidationInstance.type]);
-        } else {
-            setValidation(undefined);
-        }
-    }, [element]);
-
+    const { validation, setValidation, validationInstance, setValidationInstance } = useTextValidation(element);
 
     const { updateElement } = useDesigner();
     const form = useForm<propertiesFormSchemaType>({
@@ -217,12 +205,10 @@ function PropertiesComponent({
             </Form>
             <hr />
             <div className="text-muted-foreground text-sm">Response Validation</div>
-            {
-                validationInstance && (<ResponseValidationProperties
-                    validationType={validationInstance?.type}
-                    setValidationType={setValidationType}
-                />)
-            }
+            <ResponseValidationProperties
+                validationType={validationInstance?.type}
+                setValidationType={setValidationType}
+            />
             {validation && (
                 <validation.propertiesComponent
                     validationInstance={validationInstance ?? {
