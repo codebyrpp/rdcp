@@ -3,8 +3,9 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { TextFieldValidationInstance, TextFieldValidation, CommonTextValidationDesignerComponent } from './Validations';
+import { TextFieldValidationInstance, TextFieldValidation } from './validations';
 import { useEffect } from 'react';
+import { ValidationDesignerComponent } from '../ValidationDesignerView';
 
 const lengthSchema = {
     "type": "string",
@@ -114,5 +115,5 @@ export const LengthValidation: TextFieldValidation = {
     name: "Length",
     schema: lengthSchema,
     propertiesComponent: PropertiesComponent,
-    designerComponent: CommonTextValidationDesignerComponent
+    designerComponent: ValidationDesignerComponent
 }

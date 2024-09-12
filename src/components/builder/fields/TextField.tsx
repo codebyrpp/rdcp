@@ -8,18 +8,14 @@ import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { Type } from "lucide-react";
 import { InputDescription, InputLabel } from "./common/Input";
-import { commonPropertiesFormSchemaType, commonPropertiesSchema, FieldProperties, TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
-import useTextValidation from "./validations/text/useTextValidation";
+import { TextFieldValidation, TextFieldValidationInstance, TextValidations } from "./validations/text/validations";
 import useFormValidation from "./validations/useFormValidation";
+import { basePropertiesSchemaType, basePropertiesSchema, baseExtraAttributes } from "./validations/base";
+import { FieldProperties } from "./validations/FieldProperties";
+import useFieldValidation from "./validations/useFieldValidation";
 
 const type: ElementsType = "TextField";
 const PLACEHOLDER = "Short Answer";
-
-const extraAttributes = {
-    label: "Untitled Question",
-    helperText: "",
-    required: false,
-};
 
 
 export const TextFieldFormElement: FormElement = {
@@ -27,7 +23,7 @@ export const TextFieldFormElement: FormElement = {
     construct: (id: string) => ({
         id,
         type,
-        extraAttributes,
+        extraAttributes: baseExtraAttributes,
     }),
     designerBtnElement: {
         label: "Short Answer",
@@ -40,7 +36,7 @@ export const TextFieldFormElement: FormElement = {
 };
 
 type CustomInstance = FormElementInstance & {
-    extraAttributes: typeof extraAttributes & {
+    extraAttributes: typeof baseExtraAttributes & {
         validation?: TextFieldValidationInstance;
     };
 };
@@ -59,7 +55,9 @@ function DesignerComponent({
         {helperText && (<InputDescription description={helperText} />)}
         <Input readOnly disabled placeholder={PLACEHOLDER}></Input>
         {validation && ValidationInfo && (
-            <ValidationInfo validationInstance={validation} />
+            <ValidationInfo
+                validations={TextValidations}
+                validationInstance={validation} />
         )}
     </div>
     );
@@ -111,8 +109,8 @@ function PropertiesComponent({
     const element = elementInstance as CustomInstance;
 
     const { updateElement } = useDesigner();
-    const form = useForm<commonPropertiesFormSchemaType>({
-        resolver: zodResolver(commonPropertiesSchema),
+    const form = useForm<basePropertiesSchemaType>({
+        resolver: zodResolver(basePropertiesSchema),
         mode: "onChange",
         defaultValues: {
             label: element.extraAttributes.label,
@@ -121,15 +119,19 @@ function PropertiesComponent({
         },
     });
 
-    const { validation, validationInstance,
-        setValidationType, updateValidationInstance } = useTextValidation(element, form);
+    const {
+        validation,
+        validationInstance,
+        setValidationType,
+        updateValidationInstance
+    } = useFieldValidation<TextFieldValidationInstance, TextFieldValidation>(element, form, TextValidations);
 
     useEffect(() => {
         form.reset(element.extraAttributes);
     }, [element, form]);
 
 
-    function applyChanges(values: commonPropertiesFormSchemaType) {
+    function applyChanges(values: basePropertiesSchemaType) {
         const { label, helperText, required } = values;
         updateElement(element.id, {
             id: element.id,
@@ -144,7 +146,7 @@ function PropertiesComponent({
     }
 
     return (
-        <FieldProperties
+        <FieldProperties<TextFieldValidationInstance>
             form={form}
             applyChanges={applyChanges}
             validationInstance={validationInstance}

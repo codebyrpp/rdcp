@@ -3,7 +3,8 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
-import { TextFieldValidationInstance, TextFieldValidation, CommonTextValidationDesignerComponent } from './Validations';
+import { TextFieldValidationInstance, TextFieldValidation } from './validations';
+import { ValidationDesignerComponent } from '../ValidationDesignerView';
 
 
 const phoneNumberSchema = {
@@ -77,5 +78,5 @@ export const PhoneNumberValidation: TextFieldValidation = {
     name: "Phone Number",
     schema: phoneNumberSchema,
     propertiesComponent: PropertiesComponent,
-    designerComponent: CommonTextValidationDesignerComponent
+    designerComponent: ValidationDesignerComponent
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from "../components/FormElements";
 import { Label } from "../../ui/label";
@@ -10,31 +9,22 @@ import { useForm } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
 import { LetterText } from "lucide-react";
 import { InputDescription, InputLabel } from "./common/Input";
-import { FieldProperties, TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
-import useTextValidation from "./validations/text/useTextValidation";
+import { TextAreaValidations, TextFieldValidation, TextFieldValidationInstance, TextValidations } from "./validations/text/validations";
 import useFormValidation from "./validations/useFormValidation";
+import { FieldProperties } from "./validations/FieldProperties";
+import useFieldValidation from "./validations/useFieldValidation";
+import { baseExtraAttributes, basePropertiesSchema, basePropertiesSchemaType } from "./validations/base";
 
 const type: ElementsType = "TextAreaField";
 const PLACEHOLDER = "Long answer text";
 
-const extraAttributes = {
-    label: "Untitled Question",
-    helperText: "",
-    required: false,
-};
-
-const propertiesSchema = z.object({
-    label: z.string().min(2).max(50),
-    helperText: z.string().max(200),
-    required: z.boolean().default(false),
-});
 
 export const TextAreaFieldFormElement: FormElement = {
     type,
     construct: (id: string) => ({
         id,
         type,
-        extraAttributes,
+        extraAttributes: baseExtraAttributes,
     }),
     designerBtnElement: {
         label: "Paragraph",
@@ -47,7 +37,7 @@ export const TextAreaFieldFormElement: FormElement = {
 };
 
 type CustomInstance = FormElementInstance & {
-    extraAttributes: typeof extraAttributes & {
+    extraAttributes: typeof baseExtraAttributes & {
         validation?: TextFieldValidationInstance;
     };
 };
@@ -65,7 +55,9 @@ function DesignerComponent({
         {helperText && (<InputDescription description={helperText} />)}
         <Textarea readOnly disabled placeholder={PLACEHOLDER} />
         {validation && ValidationInfo && (
-            <ValidationInfo validationInstance={validation} />
+            <ValidationInfo
+                validations={TextAreaValidations}
+                validationInstance={validation} />
         )}
     </div>
     );
@@ -110,8 +102,6 @@ function FormComponent({
     );
 }
 
-type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
-
 function PropertiesComponent({
     elementInstance,
 }: {
@@ -119,8 +109,8 @@ function PropertiesComponent({
 }) {
     const element = elementInstance as CustomInstance;
     const { updateElement } = useDesigner();
-    const form = useForm<propertiesFormSchemaType>({
-        resolver: zodResolver(propertiesSchema),
+    const form = useForm<basePropertiesSchemaType>({
+        resolver: zodResolver(basePropertiesSchema),
         mode: "onChange",
         defaultValues: {
             label: element.extraAttributes.label,
@@ -129,14 +119,18 @@ function PropertiesComponent({
         },
     });
 
-    const { validation, validationInstance,
-        setValidationType, updateValidationInstance } = useTextValidation(element, form);
+    const {
+        validation,
+        validationInstance,
+        setValidationType,
+        updateValidationInstance
+    } = useFieldValidation<TextFieldValidationInstance, TextFieldValidation>(element, form, TextValidations);
 
     useEffect(() => {
         form.reset(element.extraAttributes);
     }, [element, form]);
 
-    function applyChanges(values: propertiesFormSchemaType) {
+    function applyChanges(values: basePropertiesSchemaType) {
         const { label, helperText, required } = values;
         updateElement(element.id, {
             ...element,
@@ -150,7 +144,7 @@ function PropertiesComponent({
     }
 
     return (
-        <FieldProperties
+        <FieldProperties<TextFieldValidationInstance>
             form={form}
             applyChanges={applyChanges}
             validationInstance={validationInstance}
