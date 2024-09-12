@@ -71,7 +71,7 @@ function FormComponent({
     const element = elementInstance as CustomInstance;
     const { label, required, helperText } = element.extraAttributes;
     const { errors, validateField } = useFormValidation(element.extraAttributes.validation?.schema);
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<number>();
 
     return (<div className="flex flex-col gap-2 w-full">
         <InputLabel label={label} required={required} />
@@ -79,12 +79,15 @@ function FormComponent({
         <Input
             placeholder={PLACEHOLDER}
             value={value}
-            onChange={(e) => setValue(e.target.value)}
+            type="number"
+            onChange={(e) => setValue(e.target.value ? Number(e.target.value) : undefined)}
             onBlur={(e) => {
+                const _value = e.target.value ? Number(e.target.value) : undefined;
+                if(!_value) return;
                 if (!submitValue) return;
-                const isValid = validateField(e.target.value);
+                const isValid = validateField(_value);
                 if (isValid) {
-                    submitValue(element.id, e.target.value);
+                    submitValue(element.id, _value);
                 }
             }} />
         {errors && (
