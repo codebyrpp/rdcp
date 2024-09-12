@@ -1,8 +1,5 @@
-"use client";
-
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ElementsType, FormElement, FormElementInstance } from "../components/FormElements";
+import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from "../components/FormElements";
 import { useEffect, useState } from "react";
 import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
@@ -16,28 +13,16 @@ import RequiredProperty from "./common/RequiredProperty";
 import { InputLabel, InputDescription } from "./common/Input";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-
+import { baseExtraAttributes, basePropertiesSchema, basePropertiesSchemaType } from "./validations/base";
 
 const type: ElementsType = "DateField";
-
-const extraAttributes = {
-    label: "Date Field",
-    helperText: "",
-    required: false,
-};
-
-const propertiesSchema = z.object({
-    label: z.string().min(2).max(50),
-    helperText: z.string().max(1500),
-    required: z.boolean().default(false),
-});
 
 export const DateFieldFormElement: FormElement = {
     type,
     construct: (id: string) => ({
         id,
         type,
-        extraAttributes,
+        extraAttributes: baseExtraAttributes,
     }),
     designerBtnElement: {
         label: "Date",
@@ -50,7 +35,7 @@ export const DateFieldFormElement: FormElement = {
 };
 
 type CustomInstance = FormElementInstance & {
-    extraAttributes: typeof extraAttributes;
+    extraAttributes: typeof baseExtraAttributes;
 };
 
 function DesignerComponent({
@@ -72,11 +57,13 @@ function DesignerComponent({
     </div>
     );
 }
-//have to add the validation to the date field/ calendar
+
 function FormComponent({
     elementInstance,
+    submitValue
 }: {
     elementInstance: FormElementInstance;
+    submitValue?: SubmitFunction;
 }) {
     const element = elementInstance as CustomInstance;
     const { label, required, helperText } = element.extraAttributes;
@@ -100,7 +87,12 @@ function FormComponent({
                 <Calendar
                     mode="single"
                     selected={date}
-                    onSelect={setDate}
+                    onSelect={(date)=>{
+                        setDate(date);
+                        if (submitValue && date) {
+                            submitValue(element.id, date.toISOString());
+                        }
+                    }}
                     initialFocus
                 />
             </PopoverContent>
@@ -109,7 +101,6 @@ function FormComponent({
     );
 }
 
-type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 function PropertiesComponent({
     elementInstance,
 }: {
@@ -117,8 +108,8 @@ function PropertiesComponent({
 }) {
     const element = elementInstance as CustomInstance;
     const { updateElement } = useDesigner();
-    const form = useForm<propertiesFormSchemaType>({
-        resolver: zodResolver(propertiesSchema),
+    const form = useForm<basePropertiesSchemaType>({
+        resolver: zodResolver(basePropertiesSchema),
         mode: "onChange",
         defaultValues: {
             label: element.extraAttributes.label,
@@ -128,11 +119,10 @@ function PropertiesComponent({
     });
 
     useEffect(() => {
-        console.log("Resetting Date Form Extra Attributes", element.extraAttributes);
         form.reset(element.extraAttributes);
     }, [element, form]);
 
-    function applyChanges(values: propertiesFormSchemaType) {
+    function applyChanges(values: basePropertiesSchemaType) {
         const { label, helperText, required } = values;
         updateElement(element.id, {
             ...element,
