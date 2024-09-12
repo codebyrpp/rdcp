@@ -8,7 +8,7 @@ import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { Type } from "lucide-react";
 import { InputDescription, InputLabel } from "./common/Input";
-import { TextFieldValidation, TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
+import { TextFieldValidation, TextFieldValidationInstance, TextValidations } from "./validations/text/validations";
 import useFormValidation from "./validations/useFormValidation";
 import { basePropertiesSchemaType, basePropertiesSchema } from "./validations/base";
 import { FieldProperties } from "./validations/FieldProperties";
@@ -61,7 +61,9 @@ function DesignerComponent({
         {helperText && (<InputDescription description={helperText} />)}
         <Input readOnly disabled placeholder={PLACEHOLDER}></Input>
         {validation && ValidationInfo && (
-            <ValidationInfo validationInstance={validation} />
+            <ValidationInfo
+                validations={TextValidations}
+                validationInstance={validation} />
         )}
     </div>
     );

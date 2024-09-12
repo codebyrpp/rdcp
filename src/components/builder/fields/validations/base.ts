@@ -16,6 +16,7 @@ export type BaseFieldValidation<TInstance> = {
     }>;
     designerComponent: React.FC<{
         validationInstance: TInstance;
+        validations: Record<string, BaseFieldValidation<TInstance>>;
     }>;
 };
 

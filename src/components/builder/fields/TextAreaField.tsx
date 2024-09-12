@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
 import { LetterText } from "lucide-react";
 import { InputDescription, InputLabel } from "./common/Input";
-import { TextFieldValidation, TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
+import { TextAreaValidations, TextFieldValidation, TextFieldValidationInstance, TextValidations } from "./validations/text/validations";
 import useFormValidation from "./validations/useFormValidation";
 import { FieldProperties } from "./validations/FieldProperties";
 import useFieldValidation from "./validations/useFieldValidation";
@@ -60,7 +60,9 @@ function DesignerComponent({
         {helperText && (<InputDescription description={helperText} />)}
         <Textarea readOnly disabled placeholder={PLACEHOLDER} />
         {validation && ValidationInfo && (
-            <ValidationInfo validationInstance={validation} />
+            <ValidationInfo
+                validations={TextAreaValidations}
+                validationInstance={validation} />
         )}
     </div>
     );
