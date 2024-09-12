@@ -3,8 +3,12 @@ import { ExclusiveMaxValidation } from "./ExclusiveMaxValidation";
 import { ExclusiveMinValidation } from "./ExclusiveMinValidation";
 import { MaxValidation } from "./MaxValidation";
 import { MinValidation } from "./MinValidation";
+import { EqualValidation } from "./EqualValidation";
+import { NotEqualValidation } from "./NotEqualValidation";
+import { BetweenValidation } from "./BetweenValidation";
 
-export type NumberFieldValidationType = "exclusiveMin" | "min" | "exclusiveMax" | "max" | "range";
+export type NumberFieldValidationType = "exclusiveMin" | "min" | "exclusiveMax" | "max" 
+    | "equal" | "notEqual" | "between" | "notBetween";
 
 export type NumberFieldValidationInstance = {
     type: NumberFieldValidationType;
@@ -20,6 +24,9 @@ export const NumberValidations: Record<string, NumberFieldValidation> = {
     exclusiveMin: ExclusiveMinValidation,
     max: MaxValidation,
     exclusiveMax: ExclusiveMaxValidation,
+    equal: EqualValidation,
+    notEqual: NotEqualValidation,
+    between: BetweenValidation
 };
 
 
