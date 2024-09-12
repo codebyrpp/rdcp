@@ -6,7 +6,7 @@ function useFormValidation(schema?: any) {
   const [errors, setErrors] = useState<ErrorObject[] | null>([]);
   const { validate } = useAjvValidation();
 
-  const validateField = (value: string) => {
+  const validateField = (value: string|number) => {
     if (!schema) return;
     const result = validate(value, schema);
     if (!result.isValid) {
