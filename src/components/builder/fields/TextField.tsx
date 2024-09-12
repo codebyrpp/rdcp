@@ -10,18 +10,12 @@ import { Type } from "lucide-react";
 import { InputDescription, InputLabel } from "./common/Input";
 import { TextFieldValidation, TextFieldValidationInstance, TextValidations } from "./validations/text/validations";
 import useFormValidation from "./validations/useFormValidation";
-import { basePropertiesSchemaType, basePropertiesSchema } from "./validations/base";
+import { basePropertiesSchemaType, basePropertiesSchema, baseExtraAttributes } from "./validations/base";
 import { FieldProperties } from "./validations/FieldProperties";
 import useFieldValidation from "./validations/useFieldValidation";
 
 const type: ElementsType = "TextField";
 const PLACEHOLDER = "Short Answer";
-
-const extraAttributes = {
-    label: "Untitled Question",
-    helperText: "",
-    required: false,
-};
 
 
 export const TextFieldFormElement: FormElement = {
@@ -29,7 +23,7 @@ export const TextFieldFormElement: FormElement = {
     construct: (id: string) => ({
         id,
         type,
-        extraAttributes,
+        extraAttributes: baseExtraAttributes,
     }),
     designerBtnElement: {
         label: "Short Answer",
@@ -42,7 +36,7 @@ export const TextFieldFormElement: FormElement = {
 };
 
 type CustomInstance = FormElementInstance & {
-    extraAttributes: typeof extraAttributes & {
+    extraAttributes: typeof baseExtraAttributes & {
         validation?: TextFieldValidationInstance;
     };
 };

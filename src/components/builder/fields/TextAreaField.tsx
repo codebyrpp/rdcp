@@ -13,23 +13,18 @@ import { TextAreaValidations, TextFieldValidation, TextFieldValidationInstance, 
 import useFormValidation from "./validations/useFormValidation";
 import { FieldProperties } from "./validations/FieldProperties";
 import useFieldValidation from "./validations/useFieldValidation";
-import { basePropertiesSchema, basePropertiesSchemaType } from "./validations/base";
+import { baseExtraAttributes, basePropertiesSchema, basePropertiesSchemaType } from "./validations/base";
 
 const type: ElementsType = "TextAreaField";
 const PLACEHOLDER = "Long answer text";
 
-const extraAttributes = {
-    label: "Untitled Question",
-    helperText: "",
-    required: false,
-};
 
 export const TextAreaFieldFormElement: FormElement = {
     type,
     construct: (id: string) => ({
         id,
         type,
-        extraAttributes,
+        extraAttributes: baseExtraAttributes,
     }),
     designerBtnElement: {
         label: "Paragraph",
@@ -42,7 +37,7 @@ export const TextAreaFieldFormElement: FormElement = {
 };
 
 type CustomInstance = FormElementInstance & {
-    extraAttributes: typeof extraAttributes & {
+    extraAttributes: typeof baseExtraAttributes & {
         validation?: TextFieldValidationInstance;
     };
 };

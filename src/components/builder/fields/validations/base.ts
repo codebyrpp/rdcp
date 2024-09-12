@@ -20,6 +20,12 @@ export type BaseFieldValidation<TInstance> = {
     }>;
 };
 
+export const baseExtraAttributes = {
+    label: "Unique Question",
+    helperText: "",
+    required: false,
+};
+
 export const basePropertiesSchema = z.object({
     label: z.string().min(2).max(50),
     helperText: z.string().max(1500),
