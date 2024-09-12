@@ -72,7 +72,7 @@ export function FieldProperties({ form, applyChanges, validationInstance, setVal
     applyChanges: (values: commonPropertiesFormSchemaType) => void,
     validationInstance: TextFieldValidationInstance | undefined,
     setValidationType: (validationType: string | undefined) => void,
-    validation: import("c:/Users/pavan/Projects/SEP/rdpc-web/src/components/builder/fields/validations/text/Validations").TextFieldValidation | undefined,
+    validation: TextFieldValidation | undefined,
     updateValidationInstance: (validation: TextFieldValidationInstance | undefined) => void
     validations: Record<string, TextFieldValidation>
 }) {
