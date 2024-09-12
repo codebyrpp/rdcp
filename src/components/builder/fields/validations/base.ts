@@ -21,7 +21,7 @@ export type BaseFieldValidation<TInstance> = {
 };
 
 export const baseExtraAttributes = {
-    label: "Unique Question",
+    label: "Untitled Question",
     helperText: "",
     required: false,
 };
