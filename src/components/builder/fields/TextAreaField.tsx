@@ -10,10 +10,10 @@ import { useForm } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
 import { LetterText } from "lucide-react";
 import { InputDescription, InputLabel } from "./common/Input";
-import { TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
-import useTextValidation from "./validations/text/useTextValidation";
+import { TextFieldValidation, TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
 import useFormValidation from "./validations/useFormValidation";
 import { FieldProperties } from "./validations/FieldProperties";
+import useFieldValidation from "./validations/useFieldValidation";
 
 const type: ElementsType = "TextAreaField";
 const PLACEHOLDER = "Long answer text";
@@ -130,8 +130,12 @@ function PropertiesComponent({
         },
     });
 
-    const { validation, validationInstance,
-        setValidationType, updateValidationInstance } = useTextValidation(element, form);
+    const {
+        validation,
+        validationInstance,
+        setValidationType,
+        updateValidationInstance
+    } = useFieldValidation<TextFieldValidationInstance, TextFieldValidation>(element, form, TextValidations);
 
     useEffect(() => {
         form.reset(element.extraAttributes);
