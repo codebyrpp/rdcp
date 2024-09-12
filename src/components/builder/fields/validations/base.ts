@@ -19,11 +19,11 @@ export type BaseFieldValidation<TInstance> = {
     }>;
 };
 
-export const commonPropertiesSchema = z.object({
+export const basePropertiesSchema = z.object({
     label: z.string().min(2).max(50),
     helperText: z.string().max(1500),
     required: z.boolean().default(false),
 });
 
 
-export type commonPropertiesFormSchemaType = z.infer<typeof commonPropertiesSchema>;
+export type basePropertiesSchemaType = z.infer<typeof basePropertiesSchema>;

@@ -1,6 +1,5 @@
 "use client";
 
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from "../components/FormElements";
 import { Label } from "../../ui/label";
@@ -14,6 +13,7 @@ import { TextFieldValidation, TextFieldValidationInstance, TextValidations } fro
 import useFormValidation from "./validations/useFormValidation";
 import { FieldProperties } from "./validations/FieldProperties";
 import useFieldValidation from "./validations/useFieldValidation";
+import { basePropertiesSchema, basePropertiesSchemaType } from "./validations/base";
 
 const type: ElementsType = "TextAreaField";
 const PLACEHOLDER = "Long answer text";
@@ -23,12 +23,6 @@ const extraAttributes = {
     helperText: "",
     required: false,
 };
-
-const propertiesSchema = z.object({
-    label: z.string().min(2).max(50),
-    helperText: z.string().max(200),
-    required: z.boolean().default(false),
-});
 
 export const TextAreaFieldFormElement: FormElement = {
     type,
@@ -111,8 +105,6 @@ function FormComponent({
     );
 }
 
-type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
-
 function PropertiesComponent({
     elementInstance,
 }: {
@@ -120,8 +112,8 @@ function PropertiesComponent({
 }) {
     const element = elementInstance as CustomInstance;
     const { updateElement } = useDesigner();
-    const form = useForm<propertiesFormSchemaType>({
-        resolver: zodResolver(propertiesSchema),
+    const form = useForm<basePropertiesSchemaType>({
+        resolver: zodResolver(basePropertiesSchema),
         mode: "onChange",
         defaultValues: {
             label: element.extraAttributes.label,
@@ -141,7 +133,7 @@ function PropertiesComponent({
         form.reset(element.extraAttributes);
     }, [element, form]);
 
-    function applyChanges(values: propertiesFormSchemaType) {
+    function applyChanges(values: basePropertiesSchemaType) {
         const { label, helperText, required } = values;
         updateElement(element.id, {
             ...element,

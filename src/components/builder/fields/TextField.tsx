@@ -10,7 +10,7 @@ import { Type } from "lucide-react";
 import { InputDescription, InputLabel } from "./common/Input";
 import { TextFieldValidation, TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
 import useFormValidation from "./validations/useFormValidation";
-import { commonPropertiesFormSchemaType, commonPropertiesSchema } from "./validations/base";
+import { basePropertiesSchemaType, basePropertiesSchema } from "./validations/base";
 import { FieldProperties } from "./validations/FieldProperties";
 import useFieldValidation from "./validations/useFieldValidation";
 
@@ -113,8 +113,8 @@ function PropertiesComponent({
     const element = elementInstance as CustomInstance;
 
     const { updateElement } = useDesigner();
-    const form = useForm<commonPropertiesFormSchemaType>({
-        resolver: zodResolver(commonPropertiesSchema),
+    const form = useForm<basePropertiesSchemaType>({
+        resolver: zodResolver(basePropertiesSchema),
         mode: "onChange",
         defaultValues: {
             label: element.extraAttributes.label,
@@ -135,7 +135,7 @@ function PropertiesComponent({
     }, [element, form]);
 
 
-    function applyChanges(values: commonPropertiesFormSchemaType) {
+    function applyChanges(values: basePropertiesSchemaType) {
         const { label, helperText, required } = values;
         updateElement(element.id, {
             id: element.id,

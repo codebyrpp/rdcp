@@ -1,5 +1,5 @@
 import { UseFormReturn } from "react-hook-form";
-import { BaseFieldValidation, BaseValidationInstance, commonPropertiesFormSchemaType } from "./base";
+import { BaseFieldValidation, BaseValidationInstance, basePropertiesSchemaType } from "./base";
 import { Form } from "@/components/ui/form";
 import LabelProperty from "../common/LabelProperty";
 import DescriptionProperty from "../common/DescriptionProperty";
@@ -8,8 +8,8 @@ import ResponseValidationProperties from "./ResponseValidation";
 
 
 type FieldPropertiesProps<TInstance extends BaseValidationInstance> = {
-    form: UseFormReturn<commonPropertiesFormSchemaType, any, undefined>;
-    applyChanges: (values: commonPropertiesFormSchemaType) => void;
+    form: UseFormReturn<basePropertiesSchemaType, any, undefined>;
+    applyChanges: (values: basePropertiesSchemaType) => void;
     validationInstance: TInstance | undefined;
     setValidationType: (validationType: string | undefined) => void;
     validation: BaseFieldValidation<TInstance> | undefined;
