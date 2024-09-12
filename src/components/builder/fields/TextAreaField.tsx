@@ -11,9 +11,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { LetterText } from "lucide-react";
 import { InputDescription, InputLabel } from "./common/Input";
 import { FieldProperties, TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
-import { ErrorObject } from "ajv";
 import useTextValidation from "./validations/text/useTextValidation";
-import { useAjvValidation } from "../hooks/useAjvValidation";
+import useFormValidation from "./validations/useFormValidation";
 
 const type: ElementsType = "TextAreaField";
 const PLACEHOLDER = "Long answer text";
@@ -81,9 +80,8 @@ function FormComponent({
 }) {
     const element = elementInstance as CustomInstance;
     const { label, required, helperText } = element.extraAttributes;
-    const [errors, setErrors] = useState<ErrorObject[] | null>([]);
-    const { validate } = useAjvValidation();
     const [value, setValue] = useState("");
+    const { errors, validateField } = useFormValidation(element.extraAttributes.validation?.schema);
 
     return (<div className="flex flex-col gap-2 w-full flex-grow">
         <Label className="font-semibold">
@@ -96,13 +94,8 @@ function FormComponent({
             onChange={(e) => setValue(e.target.value)}
             onBlur={(e) => {
                 if (!submitValue) return;
-                const schema = element.extraAttributes.validation?.schema;
-                if (!schema) return;
-                const result = validate(e.target.value, schema);
-                if (!result.isValid) {
-                    setErrors(result.errors);
-                } else {
-                    setErrors(null);
+                const isValid = validateField(e.target.value);
+                if (isValid) {
                     submitValue(element.id, e.target.value);
                 }
             }} />
