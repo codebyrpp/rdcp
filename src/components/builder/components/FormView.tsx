@@ -9,9 +9,9 @@ const FormView = ({ form }: { form: FormWithSchema }) => {
 
     const elements = form.elements;
 
-    const formValues = useRef<{ [key: string]: string }>({});
+    const formValues = useRef<{ [key: string]: string | number }>({});
 
-    const submitValue: SubmitFunction = (key: string, value: string) => {
+    const submitValue: SubmitFunction = (key: string, value: string | number) => {
         formValues.current[key] = value;
         console.log("Form Values...", formValues.current);
     };
