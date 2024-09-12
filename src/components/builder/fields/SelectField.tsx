@@ -4,26 +4,27 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ElementsType, FormElement, FormElementInstance } from "../components/FormElements";
 import { Input } from "../../ui/input";
-import { Label } from "../../ui/label";
 import { useEffect } from "react";
 import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
-import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
-import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Form, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { AiOutlinePlus } from "react-icons/ai";
 import { ListCheck } from "lucide-react";
 import DescriptionProperty from "./common/DescriptionProperty";
 import LabelProperty from "./common/LabelProperty";
 import RequiredProperty from "./common/RequiredProperty";
+import { InputDescription, InputLabel } from "./common/Input";
 
 const type: ElementsType = "SelectField";
 
+const PLACEHOLDER = "Choose an option...";
+
 const extraAttributes = {
     label: "Select Field",
-    helperText: "Description",
+    helperText: "",
     required: false,
-    placeHolder: "Value here...",
     options: [],
 };
 
@@ -31,7 +32,6 @@ const propertiesSchema = z.object({
     label: z.string().min(2).max(50),
     helperText: z.string().max(200),
     required: z.boolean().default(false),
-    placeHolder: z.string().max(50),
     options: z.array(z.string()).default([]),
 });
 
@@ -62,18 +62,24 @@ function DesignerComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, placeHolder, helperText } = element.extraAttributes;
+    const { label, required, helperText, options } = element.extraAttributes;
     return (<div className="flex flex-col gap-2 w-full">
-        <Label className="font-semibold">
-            {label}
-            {required && "*"}
-        </Label>
-        {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
-        <Select>
+        <InputLabel label={label} required={required} />
+        <InputDescription description={helperText} />
+        <Select disabled={true}>
             <SelectTrigger className="w-full">
-                <SelectValue placeholder={placeHolder} />
+                <SelectValue placeholder={PLACEHOLDER} />
             </SelectTrigger>
         </Select>
+        <div className="flex flex-wrap items-center gap-2">
+            <div className="text-xs">Options: </div>
+            {
+                options.map((option) => (
+                    <div key={option} className="bg-slate-100 rounded-md
+                     badge text-xs px-2 py-1">{option}</div>
+                ))
+            }
+        </div>
     </div>
     );
 }
@@ -84,24 +90,21 @@ function FormComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, placeHolder, helperText } = element.extraAttributes;
+    const { label, required, helperText, options } = element.extraAttributes;
     return (<div className="flex flex-col gap-2 w-full">
-        <Label className="font-semibold">
-            {label}
-            {required && "*"}
-        </Label>
-        {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
+        <InputLabel label={label} required={required} />
+        <InputDescription description={helperText} />
         <Select>
             <SelectTrigger className="w-full">
-                <SelectValue placeholder={placeHolder} />
+                <SelectValue placeholder={PLACEHOLDER} />
             </SelectTrigger>
-            {/*<SelectContent>
-                {setOptions.map((option) => (
+            <SelectContent>
+                {options.map((option) => (
                     <SelectItem key={option} value={option}>
                         {option}
                     </SelectItem>
                 ))}
-            </SelectContent>*/}
+            </SelectContent>
         </Select>
     </div>
     );
@@ -117,12 +120,11 @@ function PropertiesComponent({
     const { updateElement } = useDesigner();
     const form = useForm<propertiesFormschemaType>({
         resolver: zodResolver(propertiesSchema),
-        mode: "onBlur",
+        mode: "onChange",
         defaultValues: {
             label: element.extraAttributes.label,
             helperText: element.extraAttributes.helperText,
             required: element.extraAttributes.required,
-            placeHolder: element.extraAttributes.placeHolder,
             options: element.extraAttributes.options,
         },
     });
@@ -132,13 +134,12 @@ function PropertiesComponent({
     }, [element, form]);
 
     function applyChanges(values: propertiesFormschemaType) {
-        const { label, helperText, required, placeHolder, options } = values;
+        const { label, helperText, required, options } = values;
         updateElement(element.id, {
             ...element,
             extraAttributes: {
                 label,
                 helperText,
-                placeHolder,
                 required,
                 options,
             },
@@ -147,7 +148,7 @@ function PropertiesComponent({
 
     return (
         <Form {...form}>
-            <form onBlur={form.handleSubmit(applyChanges)}
+            <form onChange={form.handleSubmit(applyChanges)}
                 onSubmit={(e) => {
                     e.preventDefault();
                 }}
@@ -189,9 +190,6 @@ function PropertiesComponent({
                                     </div>
                                 ))}
                             </div>
-                            <FormDescription>
-                                The decription of the field. <br /> It will be displayed below the label.
-                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
