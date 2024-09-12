@@ -8,9 +8,11 @@ import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { Type } from "lucide-react";
 import { InputDescription, InputLabel } from "./common/Input";
-import { commonPropertiesFormSchemaType, commonPropertiesSchema, FieldProperties, TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
+import { TextFieldValidationInstance, TextValidations } from "./validations/text/Validations";
 import useTextValidation from "./validations/text/useTextValidation";
 import useFormValidation from "./validations/useFormValidation";
+import { commonPropertiesFormSchemaType, commonPropertiesSchema } from "./validations/base";
+import { FieldProperties } from "./validations/FieldProperties";
 
 const type: ElementsType = "TextField";
 const PLACEHOLDER = "Short Answer";
@@ -144,7 +146,7 @@ function PropertiesComponent({
     }
 
     return (
-        <FieldProperties
+        <FieldProperties<TextFieldValidationInstance>
             form={form}
             applyChanges={applyChanges}
             validationInstance={validationInstance}
