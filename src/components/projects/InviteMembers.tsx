@@ -11,13 +11,14 @@ import { ColumnDef } from '@tanstack/react-table';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { FaEllipsisH as MoreHorizontal } from 'react-icons/fa';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../ui/dialog';
+import { SectionWrapper } from '../common/wrapper';
 
 const dummyCollaborators = [
-    { email: "user1@rdcp.com", id: "1", roles: ['owner'] },
-    { email: "user2@rdcp.com", id: "2", roles: ['editor'] },
-    { email: "user3@rdcp.com", id: "3", roles: ['viewer'] },
-    { email: "user4@rdcp.com", id: "4", roles: ['editor'] },
-  ];
+  { email: "user1@rdcp.com", id: "1", roles: ['owner'] },
+  { email: "user2@rdcp.com", id: "2", roles: ['editor'] },
+  { email: "user3@rdcp.com", id: "3", roles: ['viewer'] },
+  { email: "user4@rdcp.com", id: "4", roles: ['editor'] },
+];
 
 const InviteMembers: React.FC = () => {
   const [emails, setEmails] = useState<string>('');  // Main email state for multiple emails
@@ -31,7 +32,7 @@ const InviteMembers: React.FC = () => {
 
   // Validate the email format
   const validateEmail = (email: string) => {
-    const regex =  /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+    const regex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     return regex.test(email);
   };
 
@@ -160,139 +161,139 @@ const InviteMembers: React.FC = () => {
   ];
 
   return (
-        <Card className="p-2 bg-slate-50 px-2 py-2 rounded-lg">
-        <CardHeader>
-            <CardTitle>Invite Collaborators</CardTitle>
-        </CardHeader>
-        <CardContent>
-            {/* Invite Collaborators Section */}
-            <div className="mb-4">
-                <Label htmlFor="emails" className="text-lg">1. Invite Collaborators</Label>
-                    <p className="text-muted-foreground text-sm">
-                        Invite collaborators to access all or specific forms in this project.
-                    </p>
-                    <div className="flex items-center gap-2 mt-2">
-                        <Input
-                            id="emails"
-                            placeholder="Enter email addresses separated by commas"
-                            value={emails}
-                            onChange={(e) => setEmails(e.target.value)} // Update emails on input
-                            className="mt-2"
-                            />
-                        <Button onClick={handleAddEmails} className="mt-2">
-                            + Add Emails
-                        </Button>
-                    </div>
-                {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
-                {/* Display suggestions */}
-                {suggestions.length > 0 && (
-                    <div className="mt-2 bg-white text-sm border border-gray-300 rounded shadow-lg">
-                    {suggestions.map((suggestion, index) => (
-                        <div
-                        key={index}
-                        className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-                        onClick={() => setEmails(suggestion)}
-                        >
-                        {suggestion}
-                        </div>
-                    ))} 
-                    </div>
-                )}
-            </div>
-
-            {/* Display invited members */}
-            <div className="flex flex-wrap gap-2 mt-2">
-            {invitedMembers.map((member) => (
-                <div key={member} className="flex items-center gap-2 bg-gray-200 px-2 py-1 rounded">
-                <span className="text-sm">{member}</span>
-                <FaTimesCircle
-                    className="cursor-pointer text-sm"
-                    onClick={() => handleRemoveEmail(member)}
-                />
+    <div className='h-[80vh]'>
+      <SectionWrapper>
+        <h5 className='text-lg my-2 font-bold'>
+          Collaborators
+        </h5>
+        {/* Invite Collaborators Section */}
+        <div className="mb-4">
+          <Label htmlFor="emails">1. Invite Collaborators</Label>
+          <p className="text-muted-foreground text-sm">
+            Invite collaborators to access all or specific forms in this project.
+          </p>
+          <div className="flex items-center gap-2 mt-2">
+            <Input
+              id="emails"
+              placeholder="Enter email addresses separated by commas"
+              value={emails}
+              onChange={(e) => setEmails(e.target.value)} // Update emails on input
+              className="mt-2"
+            />
+            <Button onClick={handleAddEmails} className="mt-2">
+              + Add Email
+            </Button>
+          </div>
+          {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
+          {/* Display suggestions */}
+          {suggestions.length > 0 && (
+            <div className="mt-2 bg-white text-sm border border-gray-300 rounded shadow-lg">
+              {suggestions.map((suggestion, index) => (
+                <div
+                  key={index}
+                  className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+                  onClick={() => setEmails(suggestion)}
+                >
+                  {suggestion}
                 </div>
-            ))}
+              ))}
             </div>
+          )}
+        </div>
 
-            {/* Collaborator Roles Section */}
-            <div className={`mt-6 ${invitedMembers.length === 0 ? 'opacity-50 pointer-events-none' : ''}`}>
-            <Label className="text-lg mb-4">2. Collaborator Roles</Label>
-            <p className="text-muted-foreground text-sm mb-6">
-                Select the roles to be assigned for the collaborator /collaborators.
-            </p>
+        {/* Display invited members */}
+        <div className="flex flex-wrap gap-2 mt-2">
+          {invitedMembers.map((member) => (
+            <div key={member} className="flex items-center gap-2 bg-gray-200 px-2 py-1 rounded">
+              <span className="text-sm">{member}</span>
+              <FaTimesCircle
+                className="cursor-pointer text-sm"
+                onClick={() => handleRemoveEmail(member)}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Collaborator Roles Section */}
+        <div className={`${invitedMembers.length === 0 ? 'opacity-50 pointer-events-none' : ''}`}>
+          <Label className="mb-4">2. Collaborator Roles</Label>
+          <p className="text-muted-foreground text-sm mb-6">
+            Select the roles to be assigned for the collaborator /collaborators.
+          </p>
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            {Object.values(ProjectRole).map((role) => (
+              <div key={role} className="flex space-x-2">
+                <Checkbox
+                  checked={selectedRoles.includes(role)}
+                  onCheckedChange={() => handleRoleChange(role)}
+                />
+                <div>
+                  <span className="text-sm">{getRoleName(role)}</span>
+                  <p className="text-xs font-medium text-muted-foreground">
+                    {getRolePermissions(role)}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Add to Table Button */}
+        <div className="mt-4">
+          <Button
+            onClick={handleAddToTable}
+            disabled={selectedRoles.length === 0}
+            className="mt-2"
+          >
+            + Add Collaborators
+          </Button>
+        </div>
+
+        {/* Collaborators List Table */}
+        <div className="mt-4">
+          <p className="text-sm font-semibold">Invited Collaborators List</p>
+          <DataTable columns={columns} data={tableData} />
+        </div>
+      </SectionWrapper>
+
+      {/* Edit Roles Dialog */}
+      {isEditing && (
+        <Dialog open={isEditing} onOpenChange={setIsEditing}>
+          <DialogContent aria-describedby="edit-roles-description">
+            <DialogHeader>
+              <DialogTitle>Edit Roles for {editingEmail}</DialogTitle>
+              <p id="edit-roles-description" className="text-sm text-muted-foreground">
+                Select the roles you want to assign to the collaborator.
+              </p>
+            </DialogHeader>
             <div className="grid grid-cols-2 gap-2 mt-2">
-                {Object.values(ProjectRole).map((role) => (
+              {Object.values(ProjectRole).map((role) => (
                 <div key={role} className="flex space-x-2">
-                    <Checkbox
+                  <Checkbox
                     checked={selectedRoles.includes(role)}
                     onCheckedChange={() => handleRoleChange(role)}
-                    />
-                    <div>
+                  />
+                  <div>
                     <span className="text-sm">{getRoleName(role)}</span>
                     <p className="text-xs font-medium text-muted-foreground">
-                        {getRolePermissions(role)}
+                      {getRolePermissions(role)}
                     </p>
-                    </div>
+                  </div>
                 </div>
-                ))}
+              ))}
             </div>
-            </div>
-
-            {/* Add to Table Button */}
-            <div className="mt-4">
-            <Button
-                onClick={handleAddToTable}
-                disabled={ selectedRoles.length === 0}
-                className="mt-2"
-            >
-                + Add Collaborators
-            </Button>
-            </div>
-
-            {/* Collaborators List Table */}
-            <div className="mt-4">
-            <p className="text-sm font-semibold">Invited Collaborators List</p>
-            <DataTable columns={columns} data={tableData} />
-            </div>
-        </CardContent>
-
-        {/* Edit Roles Dialog */}
-        {isEditing && (
-            <Dialog open={isEditing} onOpenChange={setIsEditing}>
-            <DialogContent aria-describedby="edit-roles-description">
-                <DialogHeader>
-                <DialogTitle>Edit Roles for {editingEmail}</DialogTitle>
-                <p id="edit-roles-description" className="text-sm text-muted-foreground">
-                    Select the roles you want to assign to the collaborator.
-                </p>
-                </DialogHeader>
-                <div className="grid grid-cols-2 gap-2 mt-2">
-                {Object.values(ProjectRole).map((role) => (
-                    <div key={role} className="flex space-x-2">
-                    <Checkbox
-                        checked={selectedRoles.includes(role)}
-                        onCheckedChange={() => handleRoleChange(role)}
-                    />
-                    <div>
-                        <span className="text-sm">{getRoleName(role)}</span>
-                        <p className="text-xs font-medium text-muted-foreground">
-                        {getRolePermissions(role)}
-                        </p>
-                    </div>
-                    </div>
-                ))}
-                </div>
-                <DialogFooter>
-                    <Button onClick={() => setIsEditing(false)} variant="ghost">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleSaveRoles}>
-                        Save
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-            </Dialog>
-        )}
-        </Card>
+            <DialogFooter>
+              <Button onClick={() => setIsEditing(false)} variant="ghost">
+                Cancel
+              </Button>
+              <Button onClick={handleSaveRoles}>
+                Save
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+    </div>
   );
 };
 
