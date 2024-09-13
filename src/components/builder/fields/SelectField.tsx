@@ -2,20 +2,21 @@
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ElementsType, FormElement, FormElementInstance } from "../components/FormElements";
+import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from "../components/FormElements";
 import { Input } from "../../ui/input";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
 import { ListCheck } from "lucide-react";
 import DescriptionProperty from "./common/DescriptionProperty";
 import LabelProperty from "./common/LabelProperty";
 import RequiredProperty from "./common/RequiredProperty";
 import { InputDescription, InputLabel } from "./common/Input";
+import ClearableSelect from "@/components/common/ClearableSelect";
 
 const type: ElementsType = "SelectField";
 
@@ -43,7 +44,7 @@ export const SelectFieldFormElement: FormElement = {
         extraAttributes,
     }),
     designerBtnElement: {
-        label: "Select Field",
+        label: "Dropdown",
         icon: <ListCheck />
     },
     designerComponent: DesignerComponent,
@@ -86,26 +87,32 @@ function DesignerComponent({
 
 function FormComponent({
     elementInstance,
+    submitValue
 }: {
     elementInstance: FormElementInstance;
+    submitValue?: SubmitFunction;
 }) {
     const element = elementInstance as CustomInstance;
     const { label, required, helperText, options } = element.extraAttributes;
+    const [value, setValue] = useState<string | undefined>(undefined);
+    const [key, setKey] = useState(+new Date());
+
     return (<div className="flex flex-col gap-2 w-full">
         <InputLabel label={label} required={required} />
         <InputDescription description={helperText} />
-        <Select>
-            <SelectTrigger className="w-full">
-                <SelectValue placeholder={PLACEHOLDER} />
-            </SelectTrigger>
-            <SelectContent>
-                {options.map((option) => (
-                    <SelectItem key={option} value={option}>
-                        {option}
-                    </SelectItem>
-                ))}
-            </SelectContent>
-        </Select>
+        <ClearableSelect
+            key={key}
+            value={value}
+            options={options.map((option) => ({ key: option, label: option }))}
+            onValueChange={(newValue) => {
+                setValue(newValue)
+                if (submitValue) {
+                    submitValue(element.id, newValue?.toString() || "");
+                }
+                setKey(+new Date()); // To force re-render if needed
+            }}
+            placeholder={PLACEHOLDER}
+        />
     </div>
     );
 }
@@ -164,6 +171,39 @@ function PropertiesComponent({
                         <FormItem>
                             <div className="flex justify-between items-center">
                                 <FormLabel>Options</FormLabel>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                {form.watch("options").map((option, index) => (
+                                    <div key={index} className="flex items-center justify-between gap-1">
+
+                                        <div className="text-xs p-2">{index + 1}</div>
+
+                                        <Input
+                                            required={true}
+                                            placeholder={`Option ${index + 1}`}
+                                            value={option}
+                                            onBlur={(e) => {
+                                                if (e.target.value === "") {
+                                                    form.setValue("options", field.value.filter((_, i) => i !== index));
+                                                }
+                                            }}
+                                            onChange={(e) => {
+                                                field.value[index] = e.target.value;
+                                                field.onChange(field.value);
+                                            }}
+                                        />
+                                        <Button
+                                            variant={"outline"}
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                form.setValue("options", field.value.filter((_, i) => i !== index));
+                                                applyChanges(form.getValues());
+                                            }}
+                                        >
+                                            <AiOutlineClose className="h-4" />
+                                        </Button>
+                                    </div>
+                                ))}
                                 <Button
                                     variant={"outline"}
                                     className="gap-2"
@@ -175,20 +215,6 @@ function PropertiesComponent({
                                     <AiOutlinePlus />
                                     Add
                                 </Button>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                {form.watch("options").map((option, index) => (
-                                    <div key={index} className="flex items-center justify-between gap-1">
-                                        <Input
-                                            placeholder=""
-                                            value={option}
-                                            onChange={(e) => {
-                                                field.value[index] = e.target.value;
-                                                field.onChange(field.value);
-                                            }}
-                                        />
-                                    </div>
-                                ))}
                             </div>
                             <FormMessage />
                         </FormItem>
