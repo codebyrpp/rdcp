@@ -114,7 +114,7 @@ function Designer() {
           }}>
 
           <div ref={droppable.setNodeRef}
-            className={cn(`max-w-[800px] min-h-full pb-16 m-auto rounded-xl 
+            className={cn(`max-w-[800px] min-h-full pb-64 m-auto rounded-xl 
             flex flex-col flex-grow items-center justify-start flex-1`)}>
             {!droppable.isOver && elements.length === 0 && (
               // Initial Drop zone when no element over it
