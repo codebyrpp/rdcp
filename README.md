@@ -1,9 +1,13 @@
-# Expo Router and Tailwind CSS
+# RDCP Mobile App
 
-Use [Expo Router](https://docs.expo.dev/router/introduction/) with [Nativewind](https://www.nativewind.dev/v4/overview/) styling.
+## Installation
+- Install dependencies
+```sh
+yarn install
+```
 
-## 🚀 How to use
+## 🚀 Usage
 
 ```sh
-npx create-expo-app -e with-router-tailwind
+yarn start
 ```
