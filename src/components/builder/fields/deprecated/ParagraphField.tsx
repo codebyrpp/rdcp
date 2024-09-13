@@ -2,25 +2,26 @@
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ElementsType, FormElement, FormElementInstance } from "../builder/components/FormElements";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import { ElementsType, FormElement, FormElementInstance } from "../../components/FormElements";
+import { Label } from "../../../ui/label";
 import { useEffect } from "react";
-import useDesigner from "../builder/hooks/useDesigner";
+import useDesigner from "../../hooks/useDesigner";
 import { useForm } from "react-hook-form";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../../ui/form";
+import { Textarea } from "@/components/ui/textarea";
+import { AlignJustify } from "lucide-react";
 
-const type: ElementsType = "TitleField";
+const type: ElementsType = "ParagraphField";
 
 const extraAttributes = {
-    title: "Title Field",
+    text: "Text here",
 };
 
 const propertiesSchema = z.object({
-    title: z.string().min(2).max(50),
+    text: z.string().min(2).max(500),
 });
 
-export const TitleFieldFormElement: FormElement = {
+export const ParagraphFieldFormElement: FormElement = {
     type,
     construct: (id:string) => ({
         id,
@@ -28,13 +29,13 @@ export const TitleFieldFormElement: FormElement = {
         extraAttributes,
     }),
     designerBtnElement: {
-        label: "Title Field",
+        label: "Paragraph Field",
+        icon: <AlignJustify />
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,
     propertiesComponent: PropertiesComponent,
 
-    //validate: ()=> true,
 };
 
 type CustomInstance = FormElementInstance & {
@@ -47,12 +48,12 @@ function DesignerComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { title} = element.extraAttributes;
+    const { text } = element.extraAttributes;
     return (<div className="flex flex-col gap-2 w-full">
         <Label className="text-muted-foreground">
-            Title Field
+            Paragraph Field
         </Label>
-        <p className="text-xl">{title}</p>
+        <p className="text-sm">{text}</p>
     </div>
     );
 }
@@ -64,8 +65,8 @@ function FormComponent({
 }) {
     const element = elementInstance as CustomInstance;
 
-    const { title } = element.extraAttributes;
-    return <p className="text-xl">{title}</p>;
+    const { text } = element.extraAttributes;
+    return <p className="text-sm">{text}</p>;
 }
 
 type propertiesFormschemaType = z.infer<typeof propertiesSchema>;
@@ -80,7 +81,7 @@ function PropertiesComponent({
         resolver: zodResolver(propertiesSchema),
         mode: "onBlur",
         defaultValues: {
-            title: element.extraAttributes.title,
+            text: element.extraAttributes.text,
         },
     });
 
@@ -89,11 +90,11 @@ function PropertiesComponent({
     }, [element, form]);
 
     function applyChanges(values:  propertiesFormschemaType) {
-        const { title } = values;
+        const { text } = values;
         updateElement(element.id,{
             ...element,
             extraAttributes: {
-                title,
+                text,
             },
         });
     }
@@ -107,12 +108,14 @@ function PropertiesComponent({
                 className="space-y-3">
                 <FormField
                     control={form.control}
-                    name="title"
+                    name="text"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Title</FormLabel>
+                            <FormLabel>Text</FormLabel>
                             <FormControl>
-                                <Input {...field}
+                                <Textarea 
+                                rows = {5}
+                                {...field}
                                 onKeyDown={(e) => {
                                     if (e.key === "Enter") {
                                         e.currentTarget.blur();
@@ -120,9 +123,6 @@ function PropertiesComponent({
                                 }}
                                 />
                             </FormControl>
-                            <FormDescription>
-                                The label of the field. <br/> It will be displayed above the field.
-                            </FormDescription>
                             <FormMessage/>
                         </FormItem>
                     )}

@@ -1,7 +1,16 @@
-//import { TitleFieldFormElement } from "../../fields/Titlefield";
-import { TextFeildFormElement } from "../../fields/TextField";
+import { TextFieldFormElement } from "../fields/TextField";
+import { NumberFieldFormElement } from "../fields/NumberField";
+import { TextAreaFieldFormElement } from "../fields/TextAreaField";
+import { DateFieldFormElement } from "../fields/DateField";
+import { SelectFieldFormElement } from "../fields/SelectField";
+import { CheckboxFieldFormElement } from "../fields/CheckboxField";
+import { ReactNode } from "react";
+import { TitleDescFieldFormElement } from "../fields/TitleDescField";
 
-export type ElementsType = "TextField"; //| "TitleField";
+export type ElementsType = "TextField" | "TitleDescField" | "NumberField" | "TextAreaField" | "DateField" 
+                            | "SelectField" | "CheckboxField";
+
+export type SubmitFunction = (key: string, value: string) => void;
 
 export type FormElement = {
     type: ElementsType;
@@ -10,6 +19,7 @@ export type FormElement = {
 
     designerBtnElement: {
         label: string;
+        icon?: ReactNode;
     };
 
     designerComponent: React.FC<{
@@ -17,12 +27,12 @@ export type FormElement = {
     }>;
     formComponent: React.FC<{
         elementInstance: FormElementInstance;
+        submitValue?: SubmitFunction;
     }>;
     propertiesComponent: React.FC<{
         elementInstance: FormElementInstance;
     }>;
 
-    //validate: (formElement: FormElementInstance, currentValue: string) => boolean;
 };
 
 export type FormElementInstance = {
@@ -36,6 +46,11 @@ type FormElementsType = {
 
 };
 export const FormElements: FormElementsType = {
-    TextField: TextFeildFormElement,
-    //TitleField: TitleFieldFormElement,
+    TitleDescField: TitleDescFieldFormElement,
+    TextField: TextFieldFormElement,
+    NumberField: NumberFieldFormElement,
+    TextAreaField: TextAreaFieldFormElement,
+    DateField: DateFieldFormElement,
+    SelectField: SelectFieldFormElement,
+    CheckboxField: CheckboxFieldFormElement,
 };
