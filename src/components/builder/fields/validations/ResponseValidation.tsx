@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { BaseFieldValidation } from "./base";
+import ClearableSelect from "@/components/common/ClearableSelect";
 
 type ResponseValidationPropertiesProps<TInstance> = {
     validations: Record<string, BaseFieldValidation<TInstance>>;
@@ -22,37 +21,19 @@ const ResponseValidationProperties = <TInstance,>({
         <div key={key} className="flex flex-col gap-4">
             <div className="space-y-3">
                 <Label>Validation Type</Label>
-                <Select
+                <ClearableSelect
                     value={value}
+                    options={Object.entries(validations).map(([key, value]) => ({
+                        key,
+                        label: value.name,
+                    }))}
                     onValueChange={(newValue) => {
-                        setValue(newValue.toString());
-                        setValidationType(newValue.toString());
-                        setKey(+new Date());
+                        setValue(newValue);
+                        setValidationType(newValue);
+                        setKey(+new Date()); // To force re-render if needed
                     }}
-                >
-                    <SelectTrigger>
-                        <SelectValue placeholder="Select a Validation Type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {Object.entries(validations).map(([key, value]) => (
-                            <SelectItem key={key} value={key}>
-                                {value.name}
-                            </SelectItem>
-                        ))}
-                        <SelectSeparator />
-                        <Button
-                            className="w-full px-2"
-                            variant="secondary"
-                            size="sm"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setValue(undefined);
-                                setValidationType(undefined);
-                            }}>
-                            Clear
-                        </Button>
-                    </SelectContent>
-                </Select>
+                    placeholder="Select a Validation Type"
+                />
             </div>
         </div>
     );
