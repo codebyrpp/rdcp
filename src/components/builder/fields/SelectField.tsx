@@ -3,20 +3,20 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from "../components/FormElements";
-import { Input } from "../../ui/input";
 import { useEffect, useState } from "react";
 import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
-import { Form, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
+import { Form, FormField, FormItem, FormLabel } from "../../ui/form";
 import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
+import { AiOutlinePlus } from "react-icons/ai";
 import { ListCheck } from "lucide-react";
 import DescriptionProperty from "./common/DescriptionProperty";
 import LabelProperty from "./common/LabelProperty";
 import RequiredProperty from "./common/RequiredProperty";
 import { InputDescription, InputLabel } from "./common/Input";
 import ClearableSelect from "@/components/common/ClearableSelect";
+import DraggableList from "./common/DraggableList";
 
 const type: ElementsType = "SelectField";
 
@@ -172,51 +172,37 @@ function PropertiesComponent({
                             <div className="flex justify-between items-center">
                                 <FormLabel>Options</FormLabel>
                             </div>
-                            <div className="flex flex-col gap-2">
-                                {form.watch("options").map((option, index) => (
-                                    <div key={index} className="flex items-center justify-between gap-1">
-
-                                        <div className="text-xs p-2">{index + 1}</div>
-
-                                        <Input
-                                            required={true}
-                                            placeholder={`Option ${index + 1}`}
-                                            value={option}
-                                            onBlur={(e) => {
-                                                if (e.target.value === "") {
-                                                    form.setValue("options", field.value.filter((_, i) => i !== index));
-                                                }
-                                            }}
-                                            onChange={(e) => {
-                                                field.value[index] = e.target.value;
-                                                field.onChange(field.value);
-                                            }}
-                                        />
-                                        <Button
-                                            variant={"outline"}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                form.setValue("options", field.value.filter((_, i) => i !== index));
-                                                applyChanges(form.getValues());
-                                            }}
-                                        >
-                                            <AiOutlineClose className="h-4" />
-                                        </Button>
-                                    </div>
-                                ))}
-                                <Button
-                                    variant={"outline"}
-                                    className="gap-2"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        form.setValue("options", [...field.value, ""]); {/* Add the correct validation */ }
-                                    }}
-                                >
-                                    <AiOutlinePlus />
-                                    Add
-                                </Button>
-                            </div>
-                            <FormMessage />
+                            <DraggableList
+                                items={form.watch("options")}
+                                onUpdate={(newItems) => {
+                                    form.setValue("options", newItems);
+                                    applyChanges(form.getValues());
+                                }}
+                                onRemove={(index) => {
+                                    form.setValue("options", field.value.filter((_, i) => i !== index));
+                                    applyChanges(form.getValues());
+                                }}
+                                onChangeItem={(index, newValue) => {
+                                    field.value[index] = newValue;
+                                    field.onChange(field.value);
+                                }}
+                            />
+                            <Button
+                                variant={"outline"}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    // filter the options to remove empty strings
+                                    const options = form.getValues().options.filter((option: string) => option.trim() !== "");
+                                    if (options.length !== 0) {
+                                        form.setValue("options", options);
+                                    }
+                                    applyChanges(form.getValues());
+                                    form.setValue("options", [...field.value, ""]);
+                                }}
+                            >
+                                <AiOutlinePlus className="h-4 mr-2" />
+                                Add Option
+                            </Button>
                         </FormItem>
                     )}
                 />
