@@ -1,5 +1,3 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from "../components/FormElements";
 import { Input } from "../../ui/input";
@@ -8,13 +6,16 @@ import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { FileIcon } from "lucide-react"; // Assuming this is an icon for file upload
 import { InputDescription, InputLabel } from "./common/Input";
-import useFormValidation from "./validations/useFormValidation";
 import { basePropertiesSchemaType, basePropertiesSchema, baseExtraAttributes } from "./validations/base";
-import { FieldProperties } from "./validations/FieldProperties";
-import useFieldValidation from "./validations/useFieldValidation";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import LabelProperty from "./common/LabelProperty";
+import DescriptionProperty from "./common/DescriptionProperty";
+import RequiredProperty from "./common/RequiredProperty";
+import { Form } from "@/components/ui/form";
 
 const type: ElementsType = "FileUploadField";
-const PLACEHOLDER = "Upload File";
 
 export const FileUploadFieldFormElement: FormElement = {
     type,
@@ -34,7 +35,10 @@ export const FileUploadFieldFormElement: FormElement = {
 
 type CustomInstance = FormElementInstance & {
     extraAttributes: typeof baseExtraAttributes & {
-        // validation?: FileFieldValidationInstance;
+        acceptSpecificTypes: boolean;
+        selectedFileTypes: string[];
+        maxFiles: number;
+        maxFileSize: number;
     };
 };
 
@@ -45,19 +49,11 @@ function DesignerComponent({
 }) {
     const element = elementInstance as CustomInstance;
     const { label, required, helperText } = element.extraAttributes;
-    // const validation = element.extraAttributes.validation as FileFieldValidationInstance | undefined;
-    // const ValidationInfo = validation ? FileValidations[validation.type].designerComponent : undefined;
     return (
         <div className="flex flex-col gap-2 w-full">
             <InputLabel label={label} required={required} />
             {helperText && <InputDescription description={helperText} />}
-            <div className="border-dashed border-2 p-4 text-center">{PLACEHOLDER}</div>
-            {/* {validation && ValidationInfo && (
-                <ValidationInfo
-                    validations={FileValidations}
-                    validationInstance={validation}
-                />
-            )} */}
+            <Input type="file" disabled />
         </div>
     );
 }
@@ -71,7 +67,6 @@ function FormComponent({
 }) {
     const element = elementInstance as CustomInstance;
     const { label, required, helperText } = element.extraAttributes;
-    const { errors, validateField } = useFormValidation(element.extraAttributes.validation?.schema);
     const [file, setFile] = useState<File | null>(null);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,16 +85,20 @@ function FormComponent({
                 type="file"
                 onChange={handleFileChange}
             />
-            {errors && (
-                <div className="text-red-500 text-xs">
-                    {errors.map((error, index) => (
-                        <div key={index}>{error.message}</div>
-                    ))}
-                </div>
-            )}
         </div>
     );
 }
+
+
+const fileTypes = [
+    { id: 'document', label: 'Document', description: 'doc, docx, pdf, txt' },
+    { id: 'spreadsheet', label: 'Spreadsheet', description: 'xls, xlsx, csv' },
+    { id: 'presentation', label: 'Presentation', description: 'ppt, pptx' },
+    { id: 'pdf', label: 'PDF', description: 'pdf' },
+    { id: 'image', label: 'Image', description: 'jpg, jpeg, png, gif, svg, tiff' },
+    { id: 'audio', label: 'Audio', description: 'mp3, m4a, wav, aac' },
+    { id: 'video', label: 'Video', description: 'mp4, mkv, mov, avi' },
+];
 
 function PropertiesComponent({
     elementInstance,
@@ -112,19 +111,8 @@ function PropertiesComponent({
     const form = useForm<basePropertiesSchemaType>({
         resolver: zodResolver(basePropertiesSchema),
         mode: "onChange",
-        defaultValues: {
-            label: element.extraAttributes.label,
-            helperText: element.extraAttributes.helperText,
-            required: element.extraAttributes.required,
-        },
+        defaultValues: element.extraAttributes,
     });
-
-    // const {
-    //     validation,
-    //     validationInstance,
-    //     setValidationType,
-    //     updateValidationInstance
-    // } = useFieldValidation<FileFieldValidationInstance, FileFieldValidation>(element, form, FileValidations);
 
     useEffect(() => {
         form.reset(element.extraAttributes);
@@ -144,18 +132,89 @@ function PropertiesComponent({
         });
     }
 
+    const [selectedFileTypes, setSelectedFileTypes] = useState<string[]>([])
+    const [maxFiles, setMaxFiles] = useState<number>(1)
+    const [maxFileSize, setMaxFileSize] = useState<number>(5)
+    const [acceptSpecificTypes, setAcceptSpecificTypes] = useState<boolean>(false)
+
+    const handleFileTypeChange = (fileType: string) => {
+        setSelectedFileTypes(prev =>
+            prev.includes(fileType)
+                ? prev.filter(type => type !== fileType)
+                : [...prev, fileType]
+        )
+    }
+
     return (
-        <>
-        File upload field properties
-        </>
-        // <FieldProperties<FileFieldValidationInstance>
-        //     form={form}
-        //     applyChanges={applyChanges}
-        //     validationInstance={validationInstance}
-        //     setValidationType={setValidationType}
-        //     validation={validation}
-        //     updateValidationInstance={updateValidationInstance}
-        //     validations={FileValidations}
-        // />
+        <div className="flex flex-col gap-4">
+            <Form {...form}>
+                <form
+                    onChange={form.handleSubmit(applyChanges)}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                    }}
+                    className="space-y-3"
+                >
+                    <LabelProperty form={form} />
+                    <DescriptionProperty form={form} />
+                    <RequiredProperty form={form} />
+                </form>
+            </Form>
+            <hr />
+            <div className="text-muted-foreground text-sm">File Validation</div>
+            <div className="space-y-6">
+                <div className="flex items-center space-x-2">
+                    <Switch
+                        id="accept-specific-types"
+                        checked={acceptSpecificTypes}
+                        onCheckedChange={setAcceptSpecificTypes}
+                    />
+                    <Label htmlFor="accept-specific-types">Accept specific types only</Label>
+                </div>
+
+                {acceptSpecificTypes && (
+                    <div className="space-y-2">
+                        <div className="grid grid-cols-3 gap-4">
+                            {fileTypes.map((type) => (
+                                <div key={type.id} className="flex space-x-2">
+                                    <Checkbox
+                                        id={type.id}
+                                        checked={selectedFileTypes.includes(type.id)}
+                                        onCheckedChange={() => handleFileTypeChange(type.id)}
+                                    />
+                                    <Label htmlFor={type.id}>{type.label}
+                                        <div className="text-muted-foreground text-xs">{type.description}</div>
+                                    </Label>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-2">
+                        <Label htmlFor="max-files">Maximum Number of Files</Label>
+                        <Input
+                            id="max-files"
+                            type="number"
+                            min="1"
+                            value={maxFiles}
+                            onChange={(e) => setMaxFiles(parseInt(e.target.value) || 1)}
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="max-file-size">Maximum File Size (MB)</Label>
+                        <Input
+                            id="max-file-size"
+                            type="number"
+                            min="1"
+                            value={maxFileSize}
+                            onChange={(e) => setMaxFileSize(parseInt(e.target.value) || 1)}
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }
