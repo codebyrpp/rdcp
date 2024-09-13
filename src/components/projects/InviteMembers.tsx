@@ -11,6 +11,11 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLab
 import { FaEllipsisH as MoreHorizontal } from 'react-icons/fa';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../ui/dialog';
 import { SectionWrapper } from '../common/wrapper';
+import { useAddCollaboratorsMutation, useUpdateCollaboratorRolesMutation, useRemoveCollaboratorMutation } from '@/state/apiSlices/collaboratorsApi';
+
+interface InviteMembersProps {
+  projectId: string;
+}
 
 const dummyCollaborators = [
   { email: "user1@rdcp.com", id: "1", roles: ['owner'] },
@@ -19,16 +24,20 @@ const dummyCollaborators = [
   { email: "user4@rdcp.com", id: "4", roles: ['editor'] },
 ];
 
-const InviteMembers: React.FC = () => {
+const InviteMembers: React.FC <InviteMembersProps> = ({projectId}) => {
   const [emails, setEmails] = useState<string>('');  
   const [invitedMembers, setInvitedMembers] = useState<string[]>([]);
   const [emailError, setEmailError] = useState<string | null>(null);
-  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+  const [selectedRoles, setSelectedRoles] = useState<ProjectRole[]>([]);
   const [tableData, setTableData] = useState<{ id: string; email: string, roles: string[] }[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editingEmail, setEditingEmail] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<string[]>([]);
+
+  const [addCollaborators] = useAddCollaboratorsMutation();
+  const [updateCollaboratorRoles] = useUpdateCollaboratorRolesMutation();
+  const [removeCollaborator] = useRemoveCollaboratorMutation();
 
   // Validate the email format
   const validateEmail = (email: string) => {
@@ -51,21 +60,32 @@ const InviteMembers: React.FC = () => {
     setEmailError(null); // Clear any previous error
   };
 
-  const handleAddToTable = () => {
+  const handleAddToTable = async () => {
     const emailList = invitedMembers.filter(email => validateEmail(email));
     if (emailList.length > 0 && selectedRoles.length > 0) {
-      const newCollaborators = emailList.map((email, index) => ({
-        id: (tableData.length + index + 1).toString(),  // Assign a unique ID based on timestamp and convert to string
-        email,
-        roles: selectedRoles,
-      }));
-      setTableData([...tableData, ...newCollaborators]);
-      console.log('New Collaborators Added:', newCollaborators); // Log the new collaborator data
-      setInvitedMembers([]); // Clear the invited members
-      setSelectedRoles([]); // Clear the selected roles
-      setEmailError(null); // Clear any error
+      try {
+        const newCollaborators = emailList.map((email, index) => ({
+          id: (tableData.length + index + 1).toString(),  
+          email,
+          roles: selectedRoles as ProjectRole[],
+        }));
+
+        await addCollaborators({
+          projectId,  
+          emails: emailList,
+          roles: selectedRoles,
+        }).unwrap();
+
+        setTableData([...tableData, ...newCollaborators]);
+        console.log('New Collaborators Added:', newCollaborators); 
+        setInvitedMembers([]); 
+        setSelectedRoles([]); 
+        setEmailError(null); 
+      } catch (error) {
+        console.error("Failed to add collaborators:", error);
+        setEmailError('Failed to add collaborators.');
+      }
     } else {
-      // Set the error message based on what's wrong (email or roles)
       if (emailList.length === 0) {
         setEmailError('Please enter valid email addresses.');
       } else if (selectedRoles.length === 0) {
@@ -75,16 +95,31 @@ const InviteMembers: React.FC = () => {
   };
 
   // Remove email from invited list and table
-  const handleRemoveEmail = (idToRemove: string) => {
-    setTableData(tableData.filter((data) => data.id !== idToRemove));
+  const handleRemoveEmail = async (idToRemove: string) => {
+    try {
+      // Find the collaborator's email in the tableData
+      const collaborator = tableData.find(data => data.id === idToRemove);
+      if (collaborator) {
+        // API call to remove collaborator
+        await removeCollaborator({
+          projectId,
+          collaboratorId: collaborator.id,
+        }).unwrap();
+  
+        setTableData(tableData.filter((data) => data.id !== idToRemove));
+      }
+    } catch (error) {
+      console.error("Failed to remove collaborator:", error);
+      setEmailError('Failed to remove collaborator.');
+    }
   };
 
   // Handle role selection (checkbox changes)
   const handleRoleChange = (role: string) => {
     setSelectedRoles((prevSelectedRoles) =>
-      prevSelectedRoles.includes(role)
+      prevSelectedRoles.includes(role as ProjectRole)
         ? prevSelectedRoles.filter((r) => r !== role)
-        : [...prevSelectedRoles, role]
+        : [...prevSelectedRoles, role as ProjectRole]
     );
   };
 
@@ -92,7 +127,7 @@ const InviteMembers: React.FC = () => {
   const handleEditRoles = (id: string, email: string) => {
     const collaborator = tableData.find((data) => data.id === id);
     if (collaborator) {
-      setSelectedRoles(collaborator.roles);
+      setSelectedRoles(collaborator.roles as ProjectRole[]);
       setEditingEmail(email);
       setEditingId(id); 
       setIsEditing(true);
@@ -100,17 +135,31 @@ const InviteMembers: React.FC = () => {
   };
 
   // Handle saving the edited roles
-  const handleSaveRoles = () => {
-    setTableData((prevTableData) =>
-      prevTableData.map((data) =>
-        data.id === editingId ? { ...data, roles: selectedRoles } : data
-      )
-    );
+  const handleSaveRoles = async () => {
+  try {
+    if (editingId) {
+      // API call to update collaborator roles
+      await updateCollaboratorRoles({
+        projectId,
+        collaboratorId: editingId,
+        roles: selectedRoles,
+      }).unwrap();
+
+      setTableData(prevTableData =>
+        prevTableData.map(data =>
+          data.id === editingId ? { ...data, roles: selectedRoles } : data
+        )
+      );
+    }
     setIsEditing(false);
     setEditingEmail(null);
     setEditingId(null);
     setSelectedRoles([]);
-  };
+  } catch (error) {
+    console.error("Failed to update collaborator roles:", error);
+    setEmailError('Failed to update collaborator roles.');
+  }
+};
 
   // Handle search input change
   useEffect(() => {

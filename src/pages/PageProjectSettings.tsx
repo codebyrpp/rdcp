@@ -1,6 +1,5 @@
 import BreadCrumbs from "@/components/common/BreadCrumbs"
 import FormUpdateProjectSettings from "@/components/forms/FormUpdateProjectSettings";
-//import AddCollaborator from "@/components/projects/AddCollaborator";
 import DeleteProject from "@/components/projects/DeleteProject";
 import InviteMembers from "@/components/projects/InviteMembers";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -36,7 +35,7 @@ const PageProjectSettings = () => {
                             </>)
                     }
                 </div>
-                <InviteMembers />
+                <InviteMembers projectId={project?.id || ""} />
             </div>
 
         </div>
