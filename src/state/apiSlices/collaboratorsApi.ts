@@ -8,7 +8,7 @@ interface AddCollaboratorDTO {
   message: string;
 }
 
-interface InviteCollaboratorsRequest {
+interface AddCollaboratorsRequest {
   projectId: string;
   emails: string[];
   roles: ProjectRole[];
@@ -27,7 +27,7 @@ interface RemoveCollaboratorRequest {
 
 export const inviteMembersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    inviteCollaborators: builder.mutation<AddCollaboratorDTO[], InviteCollaboratorsRequest>({
+    addCollaborators: builder.mutation<AddCollaboratorDTO[], AddCollaboratorsRequest>({
       query: ({ projectId, emails, roles }) => ({
         url: `projects/${projectId}/invite`, 
         method: 'POST',
@@ -53,7 +53,7 @@ export const inviteMembersApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-  useInviteCollaboratorsMutation,
+  useAddCollaboratorsMutation,
   useUpdateCollaboratorRolesMutation,
   useRemoveCollaboratorMutation,
 } = inviteMembersApiSlice;

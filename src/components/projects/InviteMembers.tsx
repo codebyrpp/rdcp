@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Label } from '../ui/label';
-import { Checkbox } from '../ui/checkbox'; // For the Domain Scoped Roles
+import { Checkbox } from '../ui/checkbox'; 
 import { FaTimesCircle } from 'react-icons/fa';
-import { getRoleName, getRolePermissions, ProjectRole } from '@/models/projects'; // Import the roles
+import { getRoleName, getRolePermissions, ProjectRole } from '@/models/projects'; 
 import { DataTable } from './collaborators/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
@@ -21,13 +20,14 @@ const dummyCollaborators = [
 ];
 
 const InviteMembers: React.FC = () => {
-  const [emails, setEmails] = useState<string>('');  // Main email state for multiple emails
+  const [emails, setEmails] = useState<string>('');  
   const [invitedMembers, setInvitedMembers] = useState<string[]>([]);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
-  const [tableData, setTableData] = useState<{ email: string, roles: string[] }[]>([]);
+  const [tableData, setTableData] = useState<{ id: string; email: string, roles: string[] }[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editingEmail, setEditingEmail] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   // Validate the email format
@@ -54,7 +54,11 @@ const InviteMembers: React.FC = () => {
   const handleAddToTable = () => {
     const emailList = invitedMembers.filter(email => validateEmail(email));
     if (emailList.length > 0 && selectedRoles.length > 0) {
-      const newCollaborators = emailList.map(email => ({ email, roles: selectedRoles }));
+      const newCollaborators = emailList.map((email, index) => ({
+        id: (tableData.length + index + 1).toString(),  // Assign a unique ID based on timestamp and convert to string
+        email,
+        roles: selectedRoles,
+      }));
       setTableData([...tableData, ...newCollaborators]);
       console.log('New Collaborators Added:', newCollaborators); // Log the new collaborator data
       setInvitedMembers([]); // Clear the invited members
@@ -71,9 +75,8 @@ const InviteMembers: React.FC = () => {
   };
 
   // Remove email from invited list and table
-  const handleRemoveEmail = (emailToRemove: string) => {
-    setInvitedMembers(invitedMembers.filter((email) => email !== emailToRemove));
-    setTableData(tableData.filter((data) => data.email !== emailToRemove));
+  const handleRemoveEmail = (idToRemove: string) => {
+    setTableData(tableData.filter((data) => data.id !== idToRemove));
   };
 
   // Handle role selection (checkbox changes)
@@ -86,11 +89,12 @@ const InviteMembers: React.FC = () => {
   };
 
   // Handle opening the edit dialog
-  const handleEditRoles = (email: string) => {
-    const collaborator = tableData.find((data) => data.email === email);
+  const handleEditRoles = (id: string, email: string) => {
+    const collaborator = tableData.find((data) => data.id === id);
     if (collaborator) {
       setSelectedRoles(collaborator.roles);
       setEditingEmail(email);
+      setEditingId(id); 
       setIsEditing(true);
     }
   };
@@ -99,11 +103,12 @@ const InviteMembers: React.FC = () => {
   const handleSaveRoles = () => {
     setTableData((prevTableData) =>
       prevTableData.map((data) =>
-        data.email === editingEmail ? { ...data, roles: selectedRoles } : data
+        data.id === editingId ? { ...data, roles: selectedRoles } : data
       )
     );
     setIsEditing(false);
     setEditingEmail(null);
+    setEditingId(null);
     setSelectedRoles([]);
   };
 
@@ -120,7 +125,7 @@ const InviteMembers: React.FC = () => {
   }, [emails]);
 
   // Define columns for DataTable
-  const columns: ColumnDef<{ email: string; roles: string[] }>[] = [
+  const columns: ColumnDef<{ id: string; email: string; roles: string[] }>[] = [
     {
       accessorKey: 'email',
       header: 'Email',
@@ -144,13 +149,13 @@ const InviteMembers: React.FC = () => {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => handleRemoveEmail(row.original.email)}
+              onClick={() => handleRemoveEmail(row.original.id)}
             >
               Remove
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => handleEditRoles(row.original.email)}
+              onClick={() => handleEditRoles(row.original.id, row.original.email)}
             >
               Update
             </DropdownMenuItem>
