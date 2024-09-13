@@ -10,7 +10,7 @@ import { TitleDescFieldFormElement } from "../fields/TitleDescField";
 export type ElementsType = "TextField" | "TitleDescField" | "NumberField" | "TextAreaField" | "DateField" 
                             | "SelectField" | "CheckboxField";
 
-export type SubmitFunction = (key: string, value: string | number) => void;
+export type SubmitFunction = (key: string, value: string | number | string[]) => void;
 
 export type FormElement = {
     type: ElementsType;

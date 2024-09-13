@@ -23,13 +23,15 @@ const type: ElementsType = "SelectField";
 const PLACEHOLDER = "Choose an option...";
 
 const extraAttributes = {
-    label: "Select Field",
+    label: "Untitled Question",
     helperText: "",
     required: false,
     options: [],
 };
 
-const propertiesSchema = z.object({
+export const selectExtraAttributes = extraAttributes;
+
+export const selectPropertiesSchema = z.object({
     label: z.string().min(2).max(50),
     helperText: z.string().max(200),
     required: z.boolean().default(false),
@@ -49,7 +51,7 @@ export const SelectFieldFormElement: FormElement = {
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,
-    propertiesComponent: PropertiesComponent,
+    propertiesComponent: SelectPropertiesComponent,
 
 };
 
@@ -117,8 +119,9 @@ function FormComponent({
     );
 }
 
-type propertiesFormschemaType = z.infer<typeof propertiesSchema>;
-function PropertiesComponent({
+type propertiesFormschemaType = z.infer<typeof selectPropertiesSchema>;
+
+export function SelectPropertiesComponent({
     elementInstance,
 }: {
     elementInstance: FormElementInstance;
@@ -126,7 +129,7 @@ function PropertiesComponent({
     const element = elementInstance as CustomInstance;
     const { updateElement } = useDesigner();
     const form = useForm<propertiesFormschemaType>({
-        resolver: zodResolver(propertiesSchema),
+        resolver: zodResolver(selectPropertiesSchema),
         mode: "onChange",
         defaultValues: {
             label: element.extraAttributes.label,
