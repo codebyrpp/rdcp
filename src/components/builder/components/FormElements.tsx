@@ -48,8 +48,8 @@ type FormElementsType = {
 export const FormElements: FormElementsType = {
     TitleDescField: TitleDescFieldFormElement,
     TextField: TextFieldFormElement,
-    NumberField: NumberFieldFormElement,
     TextAreaField: TextAreaFieldFormElement,
+    NumberField: NumberFieldFormElement,
     DateField: DateFieldFormElement,
     SelectField: SelectFieldFormElement,
     CheckboxField: CheckboxFieldFormElement,

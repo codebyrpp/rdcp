@@ -5,7 +5,7 @@ import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { Form } from "../../ui/form";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import LabelProperty from "./common/LabelProperty";
 import DescriptionProperty from "./common/DescriptionProperty";
@@ -68,26 +68,51 @@ function FormComponent({
     const element = elementInstance as CustomInstance;
     const { label, required, helperText } = element.extraAttributes;
     const [date, setDate] = useState<Date | undefined>(undefined);
+    const [errors, setErrors] = useState<string | undefined>(undefined)
 
     return (<div className="flex flex-col gap-2 w-full">
         <InputLabel label={label} required={required} />
         {helperText && (<InputDescription description={helperText} />)}
         <Popover>
             <PopoverTrigger asChild>
-                <Button
-                    variant={"outline"}
-                    className={cn("w-full justify-start text-left font-normal",
-                        date ? "text-primary" : "text-muted-foreground",
-                    )}>
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    <span>{date?.toLocaleDateString() ?? "Pick a date"}</span>
-                </Button>
+                <div>
+                    <div className="flex gap-1">
+                        <Button
+                            variant={"outline"}
+                            className={cn("w-full justify-start text-left font-normal",
+                                date ? "text-primary" : "text-muted-foreground",
+                            )}>
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            <span>{date?.toLocaleDateString() ?? "Pick a date"}</span>
+                        </Button>
+                        {/* Clear */}
+                        {
+                            date && <Button
+                                variant={"icon"}
+                                className=""
+                                onClick={() => {
+                                    setDate(undefined);
+                                    if (submitValue) {
+                                        submitValue(element.id, "");
+                                    }
+                                }}>
+                                <X className="w-4"/>
+                            </Button>
+                        }
+                    </div>
+                    {
+                        errors && <p className="text-destructive">
+                            {errors}
+                        </p>
+                    }
+                </div>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                     mode="single"
                     selected={date}
-                    onSelect={(date)=>{
+                    onSelect={(date) => {
+                        setErrors(undefined);
                         setDate(date);
                         if (submitValue && date) {
                             submitValue(element.id, date.toISOString());
