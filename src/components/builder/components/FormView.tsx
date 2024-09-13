@@ -9,7 +9,7 @@ const FormView = ({ form }: { form: FormWithSchema }) => {
 
     const elements = form.elements;
 
-    const formValues = useRef<{ [key: string]: string | number | string[] }>({});
+    const formValues = useRef<{ [key: string]: string | number | string[] | File }>({});
 
     const submitValue: SubmitFunction = (key, value) => {
         formValues.current[key] = value;
