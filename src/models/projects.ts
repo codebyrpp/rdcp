@@ -1,5 +1,11 @@
 import { Form } from "./forms";
 
+export interface Collaborator {
+    id: string;
+    email: string;
+    roles: ProjectRole[];
+}
+
 export interface Project {
     id: string,
     name: string,
@@ -8,6 +14,7 @@ export interface Project {
     updated_at: string,
     roles: ProjectRole[];
     forms?: Form[];
+    collaborators?: Collaborator[];
 }
 
 export enum ProjectRole {

@@ -11,7 +11,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLab
 import { FaEllipsisH as MoreHorizontal } from 'react-icons/fa';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../ui/dialog';
 import { SectionWrapper } from '../common/wrapper';
-import { useAddCollaboratorsMutation, useUpdateCollaboratorRolesMutation, useRemoveCollaboratorMutation } from '@/state/apiSlices/collaboratorsApi';
+import { useAddCollaboratorsMutation, useUpdateCollaboratorRolesMutation, useRemoveCollaboratorMutation, useFetchCollaboratorsQuery } from '@/state/apiSlices/collaboratorsApi';
 
 interface InviteMembersProps {
   projectId: string;
@@ -38,6 +38,17 @@ const InviteMembers: React.FC <InviteMembersProps> = ({projectId}) => {
   const [addCollaborators] = useAddCollaboratorsMutation();
   const [updateCollaboratorRoles] = useUpdateCollaboratorRolesMutation();
   const [removeCollaborator] = useRemoveCollaboratorMutation();
+  const { data: collaborators, refetch } = useFetchCollaboratorsQuery({ projectId });
+
+  useEffect(() => {
+    if (collaborators) {
+      setTableData(collaborators.map(collaborator => ({
+        id: collaborator.id,
+        email: collaborator.email,
+        roles: collaborator.roles
+      })));
+    }
+  }, [collaborators]);
 
   // Validate the email format
   const validateEmail = (email: string) => {
@@ -81,6 +92,7 @@ const InviteMembers: React.FC <InviteMembersProps> = ({projectId}) => {
         setInvitedMembers([]); 
         setSelectedRoles([]); 
         setEmailError(null); 
+        refetch();
       } catch (error) {
         console.error("Failed to add collaborators:", error);
         setEmailError('Failed to add collaborators.');
@@ -107,6 +119,7 @@ const InviteMembers: React.FC <InviteMembersProps> = ({projectId}) => {
         }).unwrap();
   
         setTableData(tableData.filter((data) => data.id !== idToRemove));
+        refetch();
       }
     } catch (error) {
       console.error("Failed to remove collaborator:", error);
@@ -155,6 +168,7 @@ const InviteMembers: React.FC <InviteMembersProps> = ({projectId}) => {
     setEditingEmail(null);
     setEditingId(null);
     setSelectedRoles([]);
+    refetch();
   } catch (error) {
     console.error("Failed to update collaborator roles:", error);
     setEmailError('Failed to update collaborator roles.');
