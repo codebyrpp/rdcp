@@ -9,6 +9,7 @@ import FormLoading from "./FormLoading";
 import PreviewDialogBtn from "./actions/PreviewDialogBtn";
 import DiscardChangesButton from "./actions/DiscardChangesBtn";
 import useSaveShortcut from "../hooks/useSaveShortcut";
+import useFormLock from "../hooks/useFormLock";
 
 const FormBuilder = ({ form }: { form: FormWithSchema }) => {
 
@@ -27,6 +28,7 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
     };
 
     useSaveShortcut(saveAction);
+    const { releaseLock } = useFormLock(form.id!);
 
     useEffect(() => {
         if (isReady) return;
