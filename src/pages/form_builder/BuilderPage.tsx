@@ -17,7 +17,10 @@ export default function BuilderPage() {
             console.log('formId', formId)
             getForm(formId).then((data: any) => {
                 console.log('data', data)
-                setForm(data)
+                setForm({
+                    formId,
+                    ...data,
+                })
             })
         }
         

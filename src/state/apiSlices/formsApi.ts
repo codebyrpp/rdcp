@@ -11,6 +11,11 @@ export interface ProjectDTO {
     forms?: Form[];
 }
 
+export type LockResponseDto = {
+    success: boolean;
+    user?: string;
+};
+
 export const formsApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         createForm: builder.mutation<Form, { projectId: string }>({
@@ -42,6 +47,24 @@ export const formsApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags:[FORM_TAG]
         }),
+        keepAlive: builder.mutation<Form, { formId: string }>({
+            query: ({ formId }) => ({
+                url: `forms/${formId}/keep-alive`,
+                method: 'POST',
+            }),
+        }),
+        acquireLock: builder.mutation<LockResponseDto, { formId: string }>({
+            query: ({ formId }) => ({
+                url: `forms/${formId}/lock`,
+                method: 'POST',
+            }),
+        }),
+        releaseLock: builder.mutation<Form, { formId: string }>({
+            query: ({ formId }) => ({
+                url: `forms/${formId}/release-lock`,
+                method: 'POST',
+            }),
+        }),
     }),
 });
 
@@ -49,5 +72,8 @@ export const {
     useCreateFormMutation,
     useGetFormQuery,
     useUpdateFormMutation,
-    useDeleteFormMutation
+    useDeleteFormMutation,
+    useKeepAliveMutation,
+    useAcquireLockMutation,
+    useReleaseLockMutation
 } = formsApiSlice;
