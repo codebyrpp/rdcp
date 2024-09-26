@@ -3,11 +3,11 @@ import { FormElements, SubmitFunction } from "./FormElements";
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 
-const FormView = ({ form }: { form: FormWithSchema }) => {
+const FormView = ({ form, isPreview = false }: { form: FormWithSchema, isPreview?: boolean }) => {
 
-    if (!form || !form.elements) return null;
+    if (!form) return null;
 
-    const elements = form.elements;
+    const elements = isPreview ? form.draft : form.schema;
 
     const formValues = useRef<{ [key: string]: string | number | string[] }>({});
 
@@ -31,7 +31,7 @@ const FormView = ({ form }: { form: FormWithSchema }) => {
                     <p className="text-sm text-gray-500">{form.description}</p>
                     <p className="text-xs text-red-500 mt-2">* Indicates a required question</p>
                 </div>
-                {elements.map((element) => {
+                {elements?.map((element) => {
                     const FormComponent = FormElements[element.type].formComponent;
                     return (
                         <div key={element.id}

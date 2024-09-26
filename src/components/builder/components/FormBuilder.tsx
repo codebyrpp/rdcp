@@ -22,6 +22,12 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
     const sensors = useSensors(mouseSensor);
 
     const { setElements, saveFormChanges, elements } = useDesigner();
+    const [previewKey, setPreviewKey] = useState(0);
+
+    useEffect(() => {
+        setPreviewKey(previewKey + 1);
+    }, [form, elements]);
+
     const [isReady, setIsReady] = useState(false);
     const saveAction = () => {
         saveFormChanges(form.id!);
@@ -32,7 +38,7 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
 
     useEffect(() => {
         if (isReady) return;
-        setElements(form.elements || []);
+        setElements(form.draft || []);
         const isReadyTimeout = setTimeout(() => {
             setIsReady(true);
         }, 500);
@@ -50,10 +56,10 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
                         <div className="flex justify-between items-center">
                             <h1 className="text-lg font-semibold">{form.name}</h1>
                             <div className="flex justify-end space-x-2">
-                                <PreviewDialogBtn form={{
+                                <PreviewDialogBtn key={previewKey} form={{
                                     ...form,
-                                    elements: elements || []
-                                }} />
+                                    draft: elements
+                                }}/>
                                 <SaveFormBtn action={saveAction} />
                                 <DiscardChangesButton />
                             </div>
