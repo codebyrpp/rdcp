@@ -1,7 +1,8 @@
-import { Form } from "@/models/forms";
+import { Form, FormWithSchema } from "@/models/forms";
 import { apiSlice } from "../api";
 import { ProjectRole } from "@/models/projects";
 import { FORM_TAG } from "../tags";
+import { FormElementInstance } from "@/components/builder/components/FormElements";
 
 export interface ProjectDTO {
     id: string;
@@ -24,11 +25,11 @@ export const formsApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body
             }),
-            invalidatesTags:[FORM_TAG]
+            invalidatesTags: [FORM_TAG]
         }),
-        getForm: builder.query<Form, { formId: string }>({
-            query: ({ formId }) => ({
-                url: `forms/${formId}`,
+        getForm: builder.query<Form | FormWithSchema, { formId: string, schema?: boolean }>({
+            query: ({ formId, schema = false }) => ({
+                url: `forms/${formId}?schema=${schema}`,
                 method: 'GET',
             }),
         }),
@@ -38,14 +39,29 @@ export const formsApiSlice = apiSlice.injectEndpoints({
                 method: 'PATCH',
                 body
             }),
-            invalidatesTags:[FORM_TAG]
+            invalidatesTags: [FORM_TAG]
         }),
         deleteForm: builder.mutation<Form, { formId: string }>({
             query: ({ formId }) => ({
                 url: `forms/${formId}`,
                 method: 'DELETE',
             }),
-            invalidatesTags:[FORM_TAG]
+            invalidatesTags: [FORM_TAG]
+        }),
+        saveForm: builder.mutation<Form, { formId: string, schema: FormElementInstance[] }>({
+            query: ({ formId, schema }) => ({
+                url: `forms/${formId}/save-form`,
+                method: 'POST',
+                body: {
+                    data: schema
+                }
+            }),
+        }),
+        publishForm: builder.mutation<Form, { formId: string }>({
+            query: ({ formId }) => ({
+                url: `forms/${formId}/publish`,
+                method: 'POST',
+            }),
         }),
         keepAlive: builder.mutation<Form, { formId: string }>({
             query: ({ formId }) => ({
@@ -68,11 +84,15 @@ export const formsApiSlice = apiSlice.injectEndpoints({
     }),
 });
 
-export const { 
+export const {
     useCreateFormMutation,
     useGetFormQuery,
     useUpdateFormMutation,
     useDeleteFormMutation,
+
+    // The following mutations are used for form editing
+    useSaveFormMutation,
+    usePublishFormMutation,
     useKeepAliveMutation,
     useAcquireLockMutation,
     useReleaseLockMutation

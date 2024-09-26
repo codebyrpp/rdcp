@@ -1,29 +1,33 @@
 import FormView from '@/components/builder/components/FormView';
 import Brand from '@/components/common/Brand';
-import { useGetFormMutation } from '@/state/formMockApi';
-import React, { useEffect } from 'react'
+import { useGetFormQuery } from '@/state/apiSlices/formsApi';
 import { useParams } from 'react-router-dom'
 
 const PageForm = () => {
 
   const formId = useParams<{ formId: string }>().formId
-  const { getForm } = useGetFormMutation();
-
-  const [form, setForm] = React.useState<any>();
-
-  useEffect(() => {
-    if (formId) {
-      getForm(formId).then((data: any) => {
-        console.log('data', data)
-        setForm(data)
-      })
-    }
-
-  }, [formId])
+  // RTK Query hook to get the form settings
+  const { data: form, isLoading: isDataLoading, isSuccess } = useGetFormQuery({
+    formId: formId ?? '',
+    schema: true
+  }, {
+    skip: !formId
+  });
 
   return (
     <div className='overflow-y-hidden min-h-screen flex flex-col justify-between gap-2'>
-      <FormView form={form} />
+      {
+        isDataLoading && <div>Loading...</div>
+      }
+      {
+        !isSuccess && <div>Something went wrong</div>
+      }
+      {
+        !form && <div>Form not found</div>
+      }
+      {
+        form && <FormView form={form!} />
+      }
       <div className="mt-12">
         <Footer />
       </div>
@@ -38,7 +42,7 @@ const Footer = () => {
     <div className='w-full border-t border-gray-300'>
       <div className='container mx-auto py-4'>
         <div className="transform scale-50">
-        <Brand/>
+          <Brand />
         </div>
       </div>
     </div>

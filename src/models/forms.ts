@@ -10,9 +10,10 @@ export type Form = {
     isPrivate?: boolean,
     isPublished?: boolean,
     multipleResponses?: boolean,
-    responseMessage?: string
+    responseMessage?: string,
 }
 
-export type FormWithSchema = Pick<Form, 'id' | 'name' | 'description'> & {
-    elements: FormElementInstance[]
+export type FormWithSchema = Partial<Form> & {
+    draft?: FormElementInstance[],
+    schema?: FormElementInstance[]
 }

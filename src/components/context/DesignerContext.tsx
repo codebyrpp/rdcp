@@ -3,6 +3,7 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { FormElementInstance } from "../builder/components/FormElements";
 import { useToast } from "../ui/use-toast";
+import { useSaveFormMutation, useUpdateFormMutation } from "@/state/apiSlices/formsApi";
 
 type DesignerContextType = {
     elements: FormElementInstance[];
@@ -14,7 +15,7 @@ type DesignerContextType = {
     setSelectedElement: Dispatch<SetStateAction<FormElementInstance | null>>;
 
     updateElement: (id: string, element: FormElementInstance) => void;
-    saveFormChanges: (formId: string) => void;  
+    saveFormChanges: (formId: string) => void;
 };
 
 export const DesignerContext = createContext<DesignerContextType | null>(null);
@@ -27,6 +28,7 @@ export default function DesignerContextProvider({
 }) {
     const [elements, setElements] = useState<FormElementInstance[]>([]);
     const [selectedElement, setSelectedElement] = useState<FormElementInstance | null>(null)
+    const [saveFormMutation] = useSaveFormMutation();
 
     const addElement = (index: number, element: FormElementInstance) => {
         setElements((prev) => {
@@ -56,8 +58,11 @@ export default function DesignerContextProvider({
     const { toast } = useToast();
     const saveFormChanges = (formId: string) => {
         try {
-            const jsonElements = JSON.stringify(elements);
-            localStorage.setItem(formId, jsonElements);
+            // const jsonElements = JSON.stringify(elements);
+            // localStorage.setItem(formId, jsonElements);
+
+            saveFormMutation({ formId, schema: elements });
+
             // toast success
             toast({
                 title: "Form Saved",
