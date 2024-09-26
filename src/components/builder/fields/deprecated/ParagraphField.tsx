@@ -11,6 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Textarea } from "@/components/ui/textarea";
 import { AlignJustify } from "lucide-react";
 
+//@ts-ignore
 const type: ElementsType = "ParagraphField";
 
 const extraAttributes = {
