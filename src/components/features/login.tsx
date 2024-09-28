@@ -45,7 +45,7 @@ export default function Login() {
 
   return (
     <View className="flex-1 justify-center px-8">
-      <Text className="text-5xl font-bold mb-2 text-center">Welcome!</Text>
+      <Text className="text-5xl font-bold mb-2 text-center text-slate-900">Welcome!</Text>
       <Text className="text-center mb-8">Login to access your projects</Text>
       <View className="flex gap-2 items-center flex-row border mb-4 rounded-lg p-2 ">
         {/* email icon */}
