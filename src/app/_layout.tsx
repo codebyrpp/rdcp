@@ -1,24 +1,15 @@
 import "../global.css";
 import React from "react";
 import { Stack } from "expo-router";
-import { AuthProvider, useAuth } from "../context/AuthContext";
+import { Provider } from "react-redux";
+import { store } from "@/redux/store";
+import { View } from "react-native";
 
-const Layout = () => {
-  const { isLoggedIn } = useAuth();
-
-  return isLoggedIn ? (
-    <AppStack>
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="forms/[id]"/>
-    </AppStack>
-  ) : (
-    <AppStack>
-      <Stack.Screen name="index" />
-    </AppStack>
-  );
+export type AppStackProps = {
+  children: React.ReactNode;
 };
 
-const AppStack = ({ children }) => {
+export const AppStack = ({ children }: AppStackProps) => {
   return (
     <Stack
       screenOptions={{
@@ -33,10 +24,18 @@ const AppStack = ({ children }) => {
   );
 };
 
-export default function AppLayout() {
+export const unstable_settings = {
+  // Ensure any route can link back to `/`
+  initialRouteName: "index",
+};
+
+export default function RootLayout() {
   return (
-    <AuthProvider>
-      <Layout />
-    </AuthProvider>
+    <Provider store={store}>
+      <AppStack>
+        <Stack.Screen name="login" />
+        <Stack.Screen name="(app)" />
+      </AppStack>
+    </Provider>
   );
 }

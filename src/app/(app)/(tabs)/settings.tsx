@@ -2,7 +2,9 @@ import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useAuth } from "@/context/AuthContext";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { useAuth } from "@/hooks/useAuth";
 
 const FingerprintSetup = () => {
   const [isModalVisible, setIsModalVisible] = React.useState(false);
@@ -84,6 +86,7 @@ const FingerprintSetup = () => {
 
 export default function Settings() {
   const { logout } = useAuth();
+  const {user} = useSelector((state:RootState) => state.auth);
   const handleLogout = () => {
     logout();
     router.replace("/");
@@ -101,7 +104,7 @@ export default function Settings() {
           <View>
             <Text className="text-lg font-bold">Log out</Text>
             <Text className="text-gray-500 font-bold">
-              rajivapitiwaduge@gmail.com
+              {user?.email}
             </Text>
           </View>
         </View>

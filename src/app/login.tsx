@@ -1,10 +1,8 @@
 import Login from '@/components/features/login'
 import React from 'react'
 
-const Index = () => {
+export default function Page(){
   return (
     <Login/>
   )
 }
-
-export default Index
