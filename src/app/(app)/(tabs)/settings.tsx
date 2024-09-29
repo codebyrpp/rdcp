@@ -2,9 +2,9 @@ import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useAuth } from "@/context/AuthContext";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { useAuth } from "@/hooks/useAuth";
 
 const FingerprintSetup = () => {
   const [isModalVisible, setIsModalVisible] = React.useState(false);

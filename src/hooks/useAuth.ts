@@ -1,4 +1,3 @@
-import React, { createContext, useContext, ReactNode, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLoginMutation } from "@/redux/apiSlices.ts/authApiSlice";
 import { RootState } from "@/redux/store";
@@ -7,18 +6,12 @@ import {
   setAuth,
 } from "@/redux/slices/authSlice";
 
-// Define the AuthContext type with login and logout
-interface AuthContextType {
-  login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
-}
-
-// Create the AuthContext
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// AuthProvider component
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+// Custom useAuth hook
+export const useAuth = () => {
   const dispatch = useDispatch();
+
+  // Access the current authentication state from Redux
+  const authState = useSelector((state: RootState) => state.auth);
 
   // Login mutation
   const [loginMutation] = useLoginMutation();
@@ -28,7 +21,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       // Call the login mutation
       const res = await loginMutation({ email, password }).unwrap();
-      // setAuthState(res);
+
+      // Dispatch the setAuth action to save auth state
       dispatch(
         setAuth({
           refreshToken: res.refreshToken,
@@ -55,18 +49,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     dispatch(revokeAuth());
   };
 
-  return (
-    <AuthContext.Provider value={{ login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-// Custom hook to use the AuthContext
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
+  return {
+    authState,  // Provides the current auth state (accessToken, refreshToken, user info)
+    login,      // Provides login functionality
+    logout,     // Provides logout functionality
+  };
 };

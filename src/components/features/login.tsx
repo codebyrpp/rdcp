@@ -1,11 +1,11 @@
 // app/login.tsx
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Button, Pressable } from "react-native";
-import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as LocalAuthentication from "expo-local-authentication";
 import { TextButton } from "../ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Login() {
   const [email, setEmail] = useState("");

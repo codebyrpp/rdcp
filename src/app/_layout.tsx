@@ -1,7 +1,6 @@
 import "../global.css";
 import React from "react";
 import { Stack } from "expo-router";
-import { AuthProvider } from "../context/AuthContext";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 
@@ -32,12 +31,10 @@ export const unstable_settings = {
 export default function RootLayout() {
   return (
     <Provider store={store}>
-      <AuthProvider>
         <AppStack>
           <Stack.Screen name="login" />
           <Stack.Screen name="(app)" />
         </AppStack>
-      </AuthProvider>
     </Provider>
   );
 }
