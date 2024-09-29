@@ -16,6 +16,7 @@ export default function AppLayout() {
     <AppStack>
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="forms/[id]" />
+      <Stack.Screen name="project/[projectId]" />
     </AppStack>
   );
 }

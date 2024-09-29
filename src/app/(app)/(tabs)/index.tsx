@@ -2,17 +2,24 @@ import {
   ActivityIndicator,
   FlatList,
   Text,
+  Touchable,
+  TouchableOpacity,
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useProjects } from "@/hooks/useProjects";
 import { ProjectListElement } from "@/components/features/projects_list";
 import Input from "@/components/ui/input";
+import { Link, router } from "expo-router";
 
 export default function Home() {
   const { projects, error, isLoading } = useProjects();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProjects, setFilteredProjects] = useState(projects);
+
+  const handlePress = (id: string) => {
+    router.push(`/project/${id}`); // Navigating to the dynamic route
+  };
 
   useEffect(() => {
     if (searchTerm) {
@@ -45,8 +52,13 @@ export default function Home() {
       </Text>
       <Input onValueChange={setSearchTerm} placeholder="Search projects" />
       <FlatList
+        className="flex w-full"
         data={filteredProjects}
-        renderItem={({ item }) => <ProjectListElement project={item} />}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => handlePress(item.id)}>
+            <ProjectListElement project={item} />
+          </TouchableOpacity>
+        )}
         keyExtractor={(item) => item.id.toString()} // Ensure id is string
       />
     </View>
