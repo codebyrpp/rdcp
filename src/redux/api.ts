@@ -1,6 +1,7 @@
 import { createApi, BaseQueryFn, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { RootState } from './store';
 import { refreshAuth, revokeAuth } from './slices/authSlice';
+import { router } from 'expo-router';
 
 // Base URL for the API
 const baseUrl = `${process.env.EXPO_PUBLIC_API_DOMAIN}/v1`;
@@ -41,9 +42,11 @@ const baseQueryWithReAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
                 result = await baseQuery(args, api, extraOptions);
             } else {
                 api.dispatch(revokeAuth());
+                router.replace('/login');
             }
         } else {
             api.dispatch(revokeAuth());
+            router.replace('/login');
         }
     }
 
