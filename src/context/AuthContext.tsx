@@ -3,14 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLoginMutation } from "@/redux/apiSlices.ts/authApiSlice";
 import { RootState } from "@/redux/store";
 import {
-  loadAuthFromStorage,
   revokeAuth,
   setAuth,
 } from "@/redux/slices/authSlice";
 
 // Define the AuthContext type with login and logout
 interface AuthContextType {
-  isLoggedIn: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
 }
@@ -21,17 +19,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // AuthProvider component
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
-
-  // Load auth state from AsyncStorage on component mount
-  useEffect(() => {
-    const loadAuth = async () => {
-      //@ts-ignore
-      loadAuthFromStorage(dispatch);
-    };
-    loadAuth();
-  }, [dispatch]);
-
-  const { accessToken, user } = useSelector((state: RootState) => state.auth);
 
   // Login mutation
   const [loginMutation] = useLoginMutation();
@@ -68,11 +55,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     dispatch(revokeAuth());
   };
 
-  // Check if the user is logged in based on accessToken
-  const isLoggedIn = Boolean(accessToken && user);
-  console.log("isLoggedIn", isLoggedIn);
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ login, logout }}>
       {children}
     </AuthContext.Provider>
   );
