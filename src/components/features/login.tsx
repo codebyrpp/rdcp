@@ -10,7 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, isLoginLoading } = useAuth();
+  const { login, isLoginLoading, loginError } = useAuth();
   const router = useRouter();
   const [isFingerprintAvailable, setIsFingerprintAvailable] = useState(false);
 
@@ -30,6 +30,10 @@ export default function Login() {
     if (success) {
       router.replace("/");
     } else {
+      // Show error message
+      if(!loginError) return;
+      //@ts-ignore
+      if(loginError.status == "FETCH_ERROR") return alert("Network error");
       alert("Invalid email or password");
     }
   };
