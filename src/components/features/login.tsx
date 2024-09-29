@@ -31,9 +31,12 @@ export default function Login() {
       router.replace("/");
     } else {
       // Show error message
-      if(!loginError) return;
+      if (!loginError) return;
       //@ts-ignore
-      if(loginError.status == "FETCH_ERROR") return alert("Network error");
+      if (loginError.status == "FETCH_ERROR")
+        return alert(
+          "You are offline. Please check your internet connection to login"
+        );
       alert("Invalid email or password");
     }
   };
@@ -53,7 +56,9 @@ export default function Login() {
 
   return (
     <View className="flex-1 justify-center px-8">
-      <Text className="text-5xl font-bold mb-2 text-center text-slate-900">Welcome!</Text>
+      <Text className="text-5xl font-bold mb-2 text-center text-slate-900">
+        Welcome!
+      </Text>
       <Text className="text-center mb-8">Login to access your projects</Text>
       <View className="flex gap-2 items-center flex-row border mb-4 rounded-lg p-2 ">
         {/* email icon */}
@@ -79,10 +84,12 @@ export default function Login() {
         <Ionicons name="eye" size={20} className="mb-0 p-0" />
       </View>
       {/* <Text className="text-red-500 mb-4">Invalid email or password!</Text> */}
-      <TextButton text="Login" 
-      disabled={isLoginLoading}
-      onPress={handleLogin} />
-    
+      <TextButton
+        text="Login"
+        disabled={isLoginLoading}
+        onPress={handleLogin}
+      />
+
       {/* {isFingerprintAvailable && (
         <Pressable onPress={handleFingerprintLogin}>
           <View className="flex flex-row justify-center mt-8">
