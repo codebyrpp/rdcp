@@ -14,7 +14,7 @@ export const useAuth = () => {
   const authState = useSelector((state: RootState) => state.auth);
 
   // Login mutation
-  const [loginMutation] = useLoginMutation();
+  const [loginMutation, {isLoading: isLoginLoading}] = useLoginMutation();
 
   // Function to handle login
   const login = async (email: string, password: string): Promise<boolean> => {
@@ -52,6 +52,7 @@ export const useAuth = () => {
   return {
     authState,  // Provides the current auth state (accessToken, refreshToken, user info)
     login,      // Provides login functionality
+    isLoginLoading, // Provides loading state of login mutation
     logout,     // Provides logout functionality
   };
 };
