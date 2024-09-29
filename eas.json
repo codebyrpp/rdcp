@@ -17,6 +17,9 @@
       }
     },
     "production": {
+      "android": {
+        "image": "latest"
+      },
       "env": {
         "EXPO_PUBLIC_API_DOMAIN": "ttps://rdcp-server.greenpond-49de0879.australiaeast.azurecontainerapps.io"
       }
