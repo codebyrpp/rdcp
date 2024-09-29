@@ -5,8 +5,6 @@ export type Form = {
     description: string,
     createdAt: string,
     updatedAt: string,
-    isPrivate?: boolean,
-    isPublished?: boolean,
     multipleResponses?: boolean,
     responseMessage?: string,
 }

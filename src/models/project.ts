@@ -6,5 +6,6 @@ export interface Project {
     description: string,
     createdAt: string,
     updated_at: string,
+    roles: string[],
     forms?: Form[];
 }

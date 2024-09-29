@@ -1,66 +1,39 @@
-import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native'
-import React, { useEffect } from 'react'
+import {
+  ActivityIndicator,
+  FlatList,
+  Text,
+  View,
+} from "react-native";
+import React, { useEffect } from "react";
+import { useProjects } from "@/hooks/useProjects";
+import { ProjectListElement } from "@/components/features/projects_list";
 
 export default function Home() {
+  const { projects, error, isLoading } = useProjects();
 
-  const [projects, setProjects] = React.useState([])
+  if (projects.length == 0 && isLoading) {
+    // CircularProgressIndicator in the center of the screen
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
-  useEffect(() => {
-    // 100 dummy projects
-    const _projects = Array.from({ length: 100 }, (_, index) => ({
-      id: index,
-      name: `Project ${index + 1}`,
-      description: 'This is a description of the project',
-    }))
-
-    setProjects(_projects)
-  }, [])
+  if (projects.length == 0 && error) {
+    return <Text className="text-red-500">Error fetching projects</Text>;
+  }
 
   return (
-    <View className='flex-1 gap-2 p-4'>
-      <Text className='text-muted my-1 text-balance'>
+    <View className="flex-1 gap-2 p-4">
+      <Text className="text-slate-500 my-1">
         You can find the projects you are currently working on here
       </Text>
-      <View className="flex flex-row gap-2">
-        {/* Search Input  */}
-        <TextInput
-          className="bg-white border-gray-200 w-full border-2  p-2 rounded-lg"
-          placeholder="Search projects by name"
-        />
-      </View>
       <FlatList
         data={projects}
         renderItem={({ item }) => <ProjectListElement project={item} />}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()} // Ensure id is string
       />
     </View>
-  )
-}
-
-const styles = StyleSheet.create({})
-
-interface Project {
-  id: string,
-  name: string,
-  description: string,
-}
-
-const ProjectListElement = ({ project }: { project: Project }) => {
-  return (
-    <View
-      key={project.id}
-      className="flex sm:flex-row gap-2 justify-between p-3 bg-gray-50 
-      border border-gray-400 rounded-xl my-1"
-    >
-      <View className="flex">
-        <Text className="font-bold">{project.name}</Text>
-        <Text className="text-gray-500">{project.description}</Text>
-      </View>
-      <View className="flex flex-row flex-wrap gap-1">
-        {/* pills for roles */}
-        <Text className="bg-gray-200 text-gray-500 p-1 rounded-md">Role 1</Text>
-        <Text className="bg-gray-200 text-gray-500 p-1 rounded-md">Role 2</Text>
-      </View>
-    </View>
-  )
+  );
 }
