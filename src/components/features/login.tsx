@@ -24,9 +24,14 @@ export default function Login() {
     });
   }, []);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     // Perform your login logic here
-    login(email, password);
+    const success = await login(email, password);
+    if (success) {
+      router.replace("/");
+    } else {
+      alert("Invalid email or password");
+    }
   };
 
   const handleFingerprintLogin = () => {

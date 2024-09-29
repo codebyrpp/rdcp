@@ -12,7 +12,7 @@ interface FormScreenProps {
   id: string;
 }
 
-const FormScreen = ({ id }: FormScreenProps) => {
+function FormScreen({ id }: FormScreenProps) {
   const params = useLocalSearchParams();
   const navigation = useNavigation();
 
@@ -26,7 +26,7 @@ const FormScreen = ({ id }: FormScreenProps) => {
         "Discard changes?",
         "You have unsaved changes. Are you sure to discard them and leave the screen?",
         [
-          { text: "Don't leave", style: "cancel", onPress: () => {} },
+          { text: "Don't leave", style: "cancel", onPress: () => { } },
           {
             text: "Discard",
             style: "destructive",
@@ -45,11 +45,10 @@ const FormScreen = ({ id }: FormScreenProps) => {
         options={{
           title: `Form ${params.id}`,
           headerShown: true,
-        }}
-      />
+        }} />
       <ViewForm />
     </>
   );
-};
+}
 
 export default FormScreen;

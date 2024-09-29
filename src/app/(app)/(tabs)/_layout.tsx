@@ -2,7 +2,7 @@ import { Tabs, router } from "expo-router";
 import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-const TabsLayout = () => {
+export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
@@ -22,23 +22,21 @@ const TabsLayout = () => {
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="index"
         options={{
           title: "Projects",
           tabBarIcon(props) {
             return <Ionicons name="file-tray-full" size={24} {...props} />;
           },
-        }}
-      />
-        <Tabs.Screen
-            name="forms_to_fill"
-            options={{
-            title: "Forms to Fill",
-            tabBarIcon(props) {
-                return <Ionicons name="documents-outline" size={24} {...props} />;
-            },
-            }}
-        />
+        }} />
+      <Tabs.Screen
+        name="forms_to_fill"
+        options={{
+          title: "Forms to Fill",
+          tabBarIcon(props) {
+            return <Ionicons name="documents-outline" size={24} {...props} />;
+          },
+        }} />
 
       <Tabs.Screen
         name="settings"
@@ -46,15 +44,11 @@ const TabsLayout = () => {
           title: "Settings",
           tabBarIcon(props) {
             return <Ionicons
-            name="settings-outline"
-            size={24}
-            {...props}
-          />;
+              name="settings-outline"
+              size={24}
+              {...props} />;
           },
-        }}
-      />
+        }} />
     </Tabs>
   );
-};
-
-export default TabsLayout;
+}
