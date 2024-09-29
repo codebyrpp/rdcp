@@ -7,8 +7,6 @@ import {
   combineReducers,
 } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
-import { offline } from "@redux-offline/redux-offline";
-import offlineConfig from "@redux-offline/redux-offline/lib/defaults";
 import apiSlice from "./api";
 import persistReducer from "redux-persist/es/persistReducer";
 import { PERSIST, REHYDRATE, persistStore } from "redux-persist";
@@ -24,7 +22,6 @@ const rootReducer = combineReducers({
   [apiSlice.reducerPath]: apiSlice.reducer,
 });
 
-const offlineEnhancer = offline(offlineConfig);
 
 export const store = configureStore({
   reducer: persistReducer(persistConfig, rootReducer),
@@ -34,7 +31,6 @@ export const store = configureStore({
         ignoredActions: [PERSIST, REHYDRATE],
       },
     }).concat(apiSlice.middleware),
-  // enhancers: () => new Tuple(offlineEnhancer as StoreEnhancer),
 });
 
 export const persistor = persistStore(store);
