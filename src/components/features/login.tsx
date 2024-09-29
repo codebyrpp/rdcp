@@ -10,7 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useAuth();
+  const { login, isLoginLoading } = useAuth();
   const router = useRouter();
   const [isFingerprintAvailable, setIsFingerprintAvailable] = useState(false);
 
@@ -75,9 +75,11 @@ export default function Login() {
         <Ionicons name="eye" size={20} className="mb-0 p-0" />
       </View>
       {/* <Text className="text-red-500 mb-4">Invalid email or password!</Text> */}
-      <TextButton text="Login" onPress={handleLogin} />
+      <TextButton text="Login" 
+      disabled={isLoginLoading}
+      onPress={handleLogin} />
     
-      {isFingerprintAvailable && (
+      {/* {isFingerprintAvailable && (
         <Pressable onPress={handleFingerprintLogin}>
           <View className="flex flex-row justify-center mt-8">
             <View className="w-fit border flex flex-row rounded-lg p-3">
@@ -86,7 +88,7 @@ export default function Login() {
             </View>
           </View>
         </Pressable>
-      )}
+      )} */}
     </View>
   );
 }
