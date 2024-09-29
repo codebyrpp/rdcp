@@ -35,7 +35,9 @@ const PageProjectSettings = () => {
                             </>)
                     }
                 </div>
-                <InviteMembers projectId={project?.id || ""} />
+                {
+                    project?.id ? <InviteMembers projectId={project.id} /> :  <Skeleton className="h-full w-full" />
+                }       
             </div>
 
         </div>
