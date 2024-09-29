@@ -31,6 +31,7 @@ export default function ProjectDetails({ route }) {
         options={{
           title: `${projectWithForms.name}`,
           headerShown: true,
+          headerShadowVisible: false,
         }}
       />
       <View className="flex-1 p-4">
