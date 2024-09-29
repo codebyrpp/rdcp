@@ -4,12 +4,26 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useProjects } from "@/hooks/useProjects";
 import { ProjectListElement } from "@/components/features/projects_list";
+import Input from "@/components/ui/input";
 
 export default function Home() {
   const { projects, error, isLoading } = useProjects();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredProjects, setFilteredProjects] = useState(projects);
+
+  useEffect(() => {
+    if (searchTerm) {
+      const filtered = projects.filter((project) =>
+        project.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredProjects(filtered);
+    } else {
+      setFilteredProjects(projects);
+    }
+  }, [searchTerm, projects]);
 
   if (projects.length == 0 && isLoading) {
     // CircularProgressIndicator in the center of the screen
@@ -29,8 +43,9 @@ export default function Home() {
       <Text className="text-slate-500 my-1">
         You can find the projects you are currently working on here
       </Text>
+      <Input onValueChange={setSearchTerm} placeholder="Search projects" />
       <FlatList
-        data={projects}
+        data={filteredProjects}
         renderItem={({ item }) => <ProjectListElement project={item} />}
         keyExtractor={(item) => item.id.toString()} // Ensure id is string
       />
