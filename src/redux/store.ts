@@ -7,6 +7,7 @@ import {
   combineReducers,
 } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
+import projectsReducer from "./slices/projectsSlice";
 import apiSlice from "./api";
 import persistReducer from "redux-persist/es/persistReducer";
 import { PERSIST, REHYDRATE, persistStore } from "redux-persist";
@@ -19,6 +20,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  projects: projectsReducer,
   [apiSlice.reducerPath]: apiSlice.reducer,
 });
 

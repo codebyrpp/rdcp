@@ -1,10 +1,10 @@
 import { Form } from "./form";
 
 export interface Project {
-    id: number;
-    name: string;
-    description: string;
-    createdAt: string;
-    updatedAt: string;
-    forms: Form[];
+    id: string,
+    name: string,
+    description: string,
+    createdAt: string,
+    updated_at: string,
+    forms?: Form[];
 }
