@@ -3,7 +3,7 @@ import { RootState } from './store';
 import { refreshAuth, revokeAuth } from './slices/authSlice';
 
 // Base URL for the API
-const baseUrl = `${process.env.API_DOMAIN}/v1` || 'http://localhost:3000/v1';
+const baseUrl = `${process.env.EXPO_PUBLIC_API_DOMAIN}/v1`;
 
 // Fetch base query for API requests
 const baseQuery = fetchBaseQuery({

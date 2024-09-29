@@ -2,6 +2,8 @@ import "../global.css";
 import React from "react";
 import { Stack } from "expo-router";
 import { AuthProvider, useAuth } from "../context/AuthContext";
+import { Provider } from "react-redux";
+import { store } from "@/redux/store";
 
 const Layout = () => {
   const { isLoggedIn } = useAuth();
@@ -35,8 +37,10 @@ const AppStack = ({ children }) => {
 
 export default function AppLayout() {
   return (
-    <AuthProvider>
-      <Layout />
-    </AuthProvider>
+    <Provider store={store}>
+      <AuthProvider>
+        <Layout />
+      </AuthProvider>
+    </Provider>
   );
 }

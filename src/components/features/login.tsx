@@ -26,8 +26,7 @@ export default function Login() {
 
   const handleLogin = () => {
     // Perform your login logic here
-    login();
-    router.replace("/home");
+    login(email, password);
   };
 
   const handleFingerprintLogin = () => {
