@@ -78,14 +78,15 @@ function FormComponent({
         setIsSelected(initialSelected);
     }, [options]);
 
-    useEffect(() => {
+    const processInput = (isSelected: Record<string, boolean>) => {
         const selected = Object.keys(isSelected).filter((option) => isSelected[option]);
-        if (!submitValue) return;
+        if (!submitValue) return false;
         const areValuesSelected = selected.length > 0;
         const res = requiredValidation(areValuesSelected);
-        if (res) return;
+        if (res) return false;
         submitValue(element.id, selected);
-    }, [isSelected]);
+        return true;
+    };
 
     return (<div className="flex flex-col gap-2 w-full">
         <InputLabel label={label} required={required} />
@@ -99,10 +100,12 @@ function FormComponent({
                         checked={isSelected[option]}
                         onCheckedChange={(checked) => {
                             if (!submitValue) return;
-                            setIsSelected({
+                            const newSelected = {
                                 ...isSelected,
                                 [option]: checked.valueOf() as boolean,
-                            });
+                            };
+                            setIsSelected(newSelected);
+                            processInput(newSelected);
                         }}
                     />
                     <Label htmlFor={id}>{option}</Label>

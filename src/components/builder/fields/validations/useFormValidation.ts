@@ -3,6 +3,8 @@ import { ErrorObject } from "ajv";
 import { useAjvValidation } from "../../hooks/useAjvValidation";
 import { set } from "date-fns";
 
+const REQUIRED_MESSAGE = "This field is required";
+
 function useFormValidation(required: boolean) {
   const [errors, setErrors] = useState<(string)[]>([]);
   const { validate } = useAjvValidation();
@@ -40,14 +42,14 @@ function useFormValidation(required: boolean) {
   const requiredValidation = (value: string | number | boolean) => {
     if (!value && required) {
       // add required error if not exists
-      if (!errors.includes("This field is required")) {
-        addError("This field is required");
+      if (!errors.includes(REQUIRED_MESSAGE)) {
+        addError(REQUIRED_MESSAGE);
       }
       // return true and stop validation
       return true;
     }
     // remove required error if exists
-    setErrors(errors.filter((error) => error !== "This field is required"));
+    setErrors(errors.filter((error) => error !== REQUIRED_MESSAGE));
     return false;
   }
 
