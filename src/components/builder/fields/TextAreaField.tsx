@@ -14,6 +14,7 @@ import useFormValidation from "./validations/useFormValidation";
 import { FieldProperties } from "./validations/FieldProperties";
 import useFieldValidation from "./validations/useFieldValidation";
 import { baseExtraAttributes, basePropertiesSchema, basePropertiesSchemaType } from "./validations/base";
+import { FieldErrors } from "./FieldErrors";
 
 const type: ElementsType = "TextAreaField";
 const PLACEHOLDER = "Long answer text";
@@ -73,7 +74,7 @@ function FormComponent({
     const element = elementInstance as CustomInstance;
     const { label, required, helperText } = element.extraAttributes;
     const [value, setValue] = useState("");
-    const { errors, validateField } = useFormValidation(element.extraAttributes.validation?.schema);
+    const { errors, validateField } = useFormValidation(required, element.extraAttributes.validation?.schema);
 
     return (<div className="flex flex-col gap-2 w-full flex-grow">
         <Label className="font-semibold">
@@ -92,11 +93,7 @@ function FormComponent({
                 }
             }} />
         {errors && (
-            <div className="text-red-500 text-xs">
-                {errors.map((error, index) => (
-                    <div key={index}>{error.message}</div>
-                ))}
-            </div>
+            <FieldErrors errors={errors} />
         )}
     </div>
     );

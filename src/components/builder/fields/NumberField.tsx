@@ -13,6 +13,7 @@ import useFormValidation from "./validations/useFormValidation";
 import { baseExtraAttributes, basePropertiesSchema, basePropertiesSchemaType } from "./validations/base";
 import useFieldValidation from "./validations/useFieldValidation";
 import { FieldProperties } from "./validations/FieldProperties";
+import { FieldErrors } from "./FieldErrors";
 
 const type: ElementsType = "NumberField";
 const PLACEHOLDER = "Number";
@@ -70,7 +71,7 @@ function FormComponent({
 }) {
     const element = elementInstance as CustomInstance;
     const { label, required, helperText } = element.extraAttributes;
-    const { errors, validateField } = useFormValidation(element.extraAttributes.validation?.schema);
+    const { errors, validateField } = useFormValidation(required, element.extraAttributes.validation?.schema);
     const [value, setValue] = useState<number>();
 
     return (<div className="flex flex-col gap-2 w-full">
@@ -91,11 +92,7 @@ function FormComponent({
                 }
             }} />
         {errors && (
-            <div className="text-red-500 text-xs">
-                {errors.map((error, index) => (
-                    <div key={index}>{error.message}</div>
-                ))}
-            </div>
+            <FieldErrors errors={errors} />
         )}
     </div>
     );

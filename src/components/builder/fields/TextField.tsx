@@ -13,7 +13,7 @@ import useFormValidation from "./validations/useFormValidation";
 import { basePropertiesSchemaType, basePropertiesSchema, baseExtraAttributes } from "./validations/base";
 import { FieldProperties } from "./validations/FieldProperties";
 import useFieldValidation from "./validations/useFieldValidation";
-import { FaExclamationCircle } from "react-icons/fa";
+import { FieldErrors } from "./FieldErrors";
 
 const type: ElementsType = "TextField";
 const PLACEHOLDER = "Short Answer";
@@ -97,14 +97,7 @@ function FormComponent({
                 }
             }} />
         {errors && (
-            <div className="text-red-500 text-xs flex">
-                {errors.map((error, index) => (
-                    <>
-                        <FaExclamationCircle className="mr-2" />
-                        <div key={index}>{error}</div>
-                    </>
-                ))}
-            </div>
+            <FieldErrors errors={errors} />
         )}
     </div>
     );
