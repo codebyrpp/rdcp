@@ -133,7 +133,6 @@ function PropertiesComponent({
     }
 
     const [selectedFileTypes, setSelectedFileTypes] = useState<string[]>([])
-    const [maxFiles, setMaxFiles] = useState<number>(1)
     const [maxFileSize, setMaxFileSize] = useState<number>(5)
     const [acceptSpecificTypes, setAcceptSpecificTypes] = useState<boolean>(false)
 
@@ -192,17 +191,6 @@ function PropertiesComponent({
                 )}
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="space-y-2">
-                        <Label htmlFor="max-files">Maximum Number of Files</Label>
-                        <Input
-                            id="max-files"
-                            type="number"
-                            min="1"
-                            value={maxFiles}
-                            onChange={(e) => setMaxFiles(parseInt(e.target.value) || 1)}
-                        />
-                    </div>
-
                     <div className="space-y-2">
                         <Label htmlFor="max-file-size">Maximum File Size (MB)</Label>
                         <Input
