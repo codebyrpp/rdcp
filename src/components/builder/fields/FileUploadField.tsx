@@ -57,7 +57,10 @@ function DesignerComponent({
 }) {
     const element = elementInstance as CustomInstance;
     const { label, required, helperText, validation } = element.extraAttributes;
-    const { acceptSpecificTypes, selectedFileTypes, maxFileSize } = validation;
+    const acceptSpecificTypes = validation.acceptSpecificTypes;
+    const selectedFileTypes = validation.selectedFileTypes;
+    const maxFileSize = validation.maxFileSize;
+
     return (
         <div className="flex flex-col gap-2 w-full">
             <InputLabel label={label} required={required} />
@@ -124,6 +127,7 @@ function PropertiesComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
+    const validation = element.extraAttributes.validation;
 
     const { updateElement } = useDesigner();
     const form = useForm<basePropertiesSchemaType>({
@@ -158,9 +162,9 @@ function PropertiesComponent({
         });
     }
 
-    const [selectedFileTypes, setSelectedFileTypes] = useState<string[]>([])
-    const [maxFileSize, setMaxFileSize] = useState<number>(5)
-    const [acceptSpecificTypes, setAcceptSpecificTypes] = useState<boolean>(false)
+    const [selectedFileTypes, setSelectedFileTypes] = useState<string[]>(validation.selectedFileTypes ?? [])
+    const [maxFileSize, setMaxFileSize] = useState<number>(validation.maxFileSize ?? 5)
+    const [acceptSpecificTypes, setAcceptSpecificTypes] = useState<boolean>(validation.acceptSpecificTypes ?? false)
 
     const handleFileTypeChange = (fileType: string) => {
         setSelectedFileTypes(prev =>
