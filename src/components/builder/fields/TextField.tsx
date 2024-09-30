@@ -13,6 +13,7 @@ import useFormValidation from "./validations/useFormValidation";
 import { basePropertiesSchemaType, basePropertiesSchema, baseExtraAttributes } from "./validations/base";
 import { FieldProperties } from "./validations/FieldProperties";
 import useFieldValidation from "./validations/useFieldValidation";
+import { FaExclamationCircle } from "react-icons/fa";
 
 const type: ElementsType = "TextField";
 const PLACEHOLDER = "Short Answer";
@@ -72,7 +73,11 @@ function FormComponent({
 }) {
     const element = elementInstance as CustomInstance;
     const { label, required, helperText } = element.extraAttributes;
-    const { errors, validateField } = useFormValidation(element.extraAttributes.validation?.schema);
+    const { errors, validateField } = useFormValidation(
+        required,
+        element.extraAttributes.validation?.schema);
+
+    const [requiredError, setRequiredError] = useState(false);
     const [value, setValue] = useState("");
 
     return (<div className="flex flex-col gap-2 w-full">
@@ -83,16 +88,21 @@ function FormComponent({
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onBlur={(e) => {
-                if (!submitValue) return;
-                const isValid = validateField(e.target.value);
+                if (!submitValue)
+                    return;
+                const _value = e.target.value;
+                const isValid = validateField(_value);
                 if (isValid) {
-                    submitValue(element.id, e.target.value);
+                    submitValue(element.id, _value);
                 }
             }} />
         {errors && (
-            <div className="text-red-500 text-xs">
+            <div className="text-red-500 text-xs flex">
                 {errors.map((error, index) => (
-                    <div key={index}>{error.message}</div>
+                    <>
+                        <FaExclamationCircle className="mr-2" />
+                        <div key={index}>{error}</div>
+                    </>
                 ))}
             </div>
         )}
