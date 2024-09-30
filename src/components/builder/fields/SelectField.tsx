@@ -2,13 +2,11 @@
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ElementsType, FormElement, FormElementInstance } from "../components/FormElements";
-import { Input } from "../../ui/input";
-import { Label } from "../../ui/label";
-import { useEffect } from "react";
+import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from "../components/FormElements";
+import { useEffect, useState } from "react";
 import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
-import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
+import { Form, FormField, FormItem, FormLabel } from "../../ui/form";
 import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { AiOutlinePlus } from "react-icons/ai";
@@ -16,22 +14,29 @@ import { ListCheck } from "lucide-react";
 import DescriptionProperty from "./common/DescriptionProperty";
 import LabelProperty from "./common/LabelProperty";
 import RequiredProperty from "./common/RequiredProperty";
+import { InputDescription, InputLabel } from "./common/Input";
+import ClearableSelect from "@/components/common/ClearableSelect";
+import DraggableList from "./common/DraggableList";
+import useFormValidation from "./validations/useFormValidation";
+import { FieldErrors } from "./FieldErrors";
 
 const type: ElementsType = "SelectField";
 
+const PLACEHOLDER = "Choose an option...";
+
 const extraAttributes = {
-    label: "Select Field",
-    helperText: "Description",
+    label: "Untitled Question",
+    helperText: "",
     required: false,
-    placeHolder: "Value here...",
     options: [],
 };
 
-const propertiesSchema = z.object({
+export const selectExtraAttributes = extraAttributes;
+
+export const selectPropertiesSchema = z.object({
     label: z.string().min(2).max(50),
     helperText: z.string().max(200),
     required: z.boolean().default(false),
-    placeHolder: z.string().max(50),
     options: z.array(z.string()).default([]),
 });
 
@@ -43,12 +48,12 @@ export const SelectFieldFormElement: FormElement = {
         extraAttributes,
     }),
     designerBtnElement: {
-        label: "Select Field",
+        label: "Dropdown",
         icon: <ListCheck />
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,
-    propertiesComponent: PropertiesComponent,
+    propertiesComponent: SelectPropertiesComponent,
 
 };
 
@@ -62,53 +67,66 @@ function DesignerComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, placeHolder, helperText } = element.extraAttributes;
+    const { label, required, helperText, options } = element.extraAttributes;
     return (<div className="flex flex-col gap-2 w-full">
-        <Label className="font-semibold">
-            {label}
-            {required && "*"}
-        </Label>
-        {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
-        <Select>
+        <InputLabel label={label} required={required} />
+        <InputDescription description={helperText} />
+        <Select disabled={true}>
             <SelectTrigger className="w-full">
-                <SelectValue placeholder={placeHolder} />
+                <SelectValue placeholder={PLACEHOLDER} />
             </SelectTrigger>
         </Select>
+        <div className="flex flex-wrap items-center gap-2">
+            <div className="text-xs">Options: </div>
+            {
+                options.map((option) => (
+                    <div key={option} className="bg-slate-100 rounded-md
+                     badge text-xs px-2 py-1">{option}</div>
+                ))
+            }
+        </div>
     </div>
     );
 }
 
 function FormComponent({
     elementInstance,
+    submitValue
 }: {
     elementInstance: FormElementInstance;
+    submitValue?: SubmitFunction;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, placeHolder, helperText } = element.extraAttributes;
+    const { label, required, helperText, options } = element.extraAttributes;
+    const [value, setValue] = useState<string | undefined>(undefined);
+    const [key, setKey] = useState(+new Date());
+    const { errors, requiredValidation } = useFormValidation(required);
+
     return (<div className="flex flex-col gap-2 w-full">
-        <Label className="font-semibold">
-            {label}
-            {required && "*"}
-        </Label>
-        {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
-        <Select>
-            <SelectTrigger className="w-full">
-                <SelectValue placeholder={placeHolder} />
-            </SelectTrigger>
-            {/*<SelectContent>
-                {setOptions.map((option) => (
-                    <SelectItem key={option} value={option}>
-                        {option}
-                    </SelectItem>
-                ))}
-            </SelectContent>*/}
-        </Select>
+        <InputLabel label={label} required={required} />
+        <InputDescription description={helperText} />
+        <ClearableSelect
+            key={key}
+            value={value}
+            options={options.map((option) => ({ key: option, label: option }))}
+            onValueChange={(newValue) => {
+                setValue(newValue)
+                if (submitValue) {
+                    requiredValidation(newValue?.toString() ?? "");
+                    submitValue(element.id, newValue?.toString() ?? "");
+                }
+                setKey(+new Date()); // To force re-render if needed
+            }}
+            placeholder={PLACEHOLDER}
+        />
+        {errors && (<FieldErrors errors={errors} />)}
     </div>
     );
 }
 
-type propertiesFormschemaType = z.infer<typeof propertiesSchema>;
-function PropertiesComponent({
+type propertiesFormschemaType = z.infer<typeof selectPropertiesSchema>;
+
+export function SelectPropertiesComponent({
     elementInstance,
 }: {
     elementInstance: FormElementInstance;
@@ -116,13 +134,12 @@ function PropertiesComponent({
     const element = elementInstance as CustomInstance;
     const { updateElement } = useDesigner();
     const form = useForm<propertiesFormschemaType>({
-        resolver: zodResolver(propertiesSchema),
-        mode: "onBlur",
+        resolver: zodResolver(selectPropertiesSchema),
+        mode: "onChange",
         defaultValues: {
             label: element.extraAttributes.label,
             helperText: element.extraAttributes.helperText,
             required: element.extraAttributes.required,
-            placeHolder: element.extraAttributes.placeHolder,
             options: element.extraAttributes.options,
         },
     });
@@ -132,13 +149,12 @@ function PropertiesComponent({
     }, [element, form]);
 
     function applyChanges(values: propertiesFormschemaType) {
-        const { label, helperText, required, placeHolder, options } = values;
+        const { label, helperText, required, options } = values;
         updateElement(element.id, {
             ...element,
             extraAttributes: {
                 label,
                 helperText,
-                placeHolder,
                 required,
                 options,
             },
@@ -147,7 +163,7 @@ function PropertiesComponent({
 
     return (
         <Form {...form}>
-            <form onBlur={form.handleSubmit(applyChanges)}
+            <form onChange={form.handleSubmit(applyChanges)}
                 onSubmit={(e) => {
                     e.preventDefault();
                 }}
@@ -163,41 +179,47 @@ function PropertiesComponent({
                         <FormItem>
                             <div className="flex justify-between items-center">
                                 <FormLabel>Options</FormLabel>
-                                <Button
-                                    variant={"outline"}
-                                    className="gap-2"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        form.setValue("options", [...field.value, ""]); {/* Add the correct validation */ }
-                                    }}
-                                >
-                                    <AiOutlinePlus />
-                                    Add
-                                </Button>
                             </div>
-                            <div className="flex flex-col gap-2">
-                                {form.watch("options").map((option, index) => (
-                                    <div key={index} className="flex items-center justify-between gap-1">
-                                        <Input
-                                            placeholder=""
-                                            value={option}
-                                            onChange={(e) => {
-                                                field.value[index] = e.target.value;
-                                                field.onChange(field.value);
-                                            }}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                            <FormDescription>
-                                The decription of the field. <br /> It will be displayed below the label.
-                            </FormDescription>
-                            <FormMessage />
+                            <DraggableList
+                                items={form.watch("options")}
+                                onUpdate={(newItems) => {
+                                    form.setValue("options", newItems);
+                                    applyChanges(form.getValues());
+                                }}
+                                onRemove={(index) => {
+                                    form.setValue("options", field.value.filter((_, i) => i !== index));
+                                    applyChanges(form.getValues());
+                                }}
+                                onChangeItem={(index, newValue) => {
+                                    field.value[index] = newValue;
+                                    field.onChange(field.value);
+                                }}
+                            />
+                            <Button
+                                variant={"outline"}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleAddOption(e, field, form);
+                                }}
+                            >
+                                <AiOutlinePlus className="h-4 mr-2" />
+                                Add Option
+                            </Button>
                         </FormItem>
                     )}
                 />
             </form>
         </Form>
     );
+
+    function handleAddOption(e: any, field: any, form: any) {
+        // filter the options to remove empty strings
+        const options = form.getValues().options.filter((option: string) => option.trim() !== "");
+        if (options.length !== 0) {
+            form.setValue("options", options);
+        }
+        applyChanges(form.getValues());
+        form.setValue("options", [...field.value, ""]);
+    }
 }
 

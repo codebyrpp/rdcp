@@ -8,11 +8,12 @@ function FormElementsSidebar() {
         <SidebarBtnElement formElement={FormElements.TitleDescField} />
         <hr className="border-slate-500 border w-full" />
         <SidebarBtnElement formElement={FormElements.TextField} />
-        <SidebarBtnElement formElement={FormElements.NumberField} />
         <SidebarBtnElement formElement={FormElements.TextAreaField} />
+        <SidebarBtnElement formElement={FormElements.NumberField} />
         <SidebarBtnElement formElement={FormElements.DateField} />
         <SidebarBtnElement formElement={FormElements.SelectField} />
         <SidebarBtnElement formElement={FormElements.CheckboxField} />
+        <SidebarBtnElement formElement={FormElements.FileUploadField} />
       </div>
     </div>
   );

@@ -1,47 +1,32 @@
-"use client";
 
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ElementsType, FormElement, FormElementInstance } from "../components/FormElements";
+import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from "../components/FormElements";
 import { Label } from "../../ui/label";
-import { useEffect } from "react";
-import useDesigner from "../hooks/useDesigner";
-import { useForm } from "react-hook-form";
-import { Form } from "../../ui/form";
-import { Checkbox } from "@radix-ui/react-checkbox";
 import { CheckCheck } from "lucide-react";
-import LabelProperty from "./common/LabelProperty";
-import DescriptionProperty from "./common/DescriptionProperty";
-import RequiredProperty from "./common/RequiredProperty";
+import { selectExtraAttributes, SelectPropertiesComponent } from "./SelectField";
+import { InputDescription, InputLabel } from "./common/Input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useEffect, useState } from "react";
+import useFormValidation from "./validations/useFormValidation";
+import { FieldErrors } from "./FieldErrors";
 
 const type: ElementsType = "CheckboxField";
-
 const extraAttributes = {
-    label: "Checkbox Field",
-    helperText: "Description",
-    required: false,
+    ...selectExtraAttributes,
 };
-
-const propertiesSchema = z.object({
-    label: z.string().min(2).max(50),
-    helperText: z.string().max(200),
-    required: z.boolean().default(false),
-});
-
 export const CheckboxFieldFormElement: FormElement = {
     type,
-    construct: (id:string) => ({
+    construct: (id: string) => ({
         id,
         type,
         extraAttributes,
     }),
     designerBtnElement: {
         label: "Checkboxes",
-        icon: <CheckCheck/>
+        icon: <CheckCheck />
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,
-    propertiesComponent: PropertiesComponent,
+    propertiesComponent: SelectPropertiesComponent,
 
 };
 
@@ -55,88 +40,83 @@ function DesignerComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, helperText} = element.extraAttributes;
-    const id = `checkbox-${element.id}`;
-    return (<div className="flex items-top space-x-2">
-        <Checkbox id={id} defaultChecked={required} />
+    const { label, required, helperText, options } = element.extraAttributes;
+    return (<div className="flex flex-col gap-2 w-full">
+        <InputLabel label={label} required={required} />
+        {helperText && (<InputDescription description={helperText} />)}
+        {/* Render the options as checkboxes */}
         <div className="grid gap-1.5 leading-none">
-            <Label htmlFor={id}>
-                {label}
-                {required && "*"}
-            </Label>
+            {options.map((option: string, index: number) => {
+                const id = `checkbox-${element.id}-${index}`;
+                return (<div key={id} className="flex items-center space-x-2">
+                    <Checkbox disabled id={id} defaultChecked={false} />
+                    <Label htmlFor={id}>{option}</Label>
+                </div>);
+            })}
         </div>
-        {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
     </div>
     );
 }
 
 function FormComponent({
     elementInstance,
+    submitValue
 }: {
     elementInstance: FormElementInstance;
+    submitValue?: SubmitFunction;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, helperText} = element.extraAttributes;
-    const id = `checkbox-${element.id}`;
-    return (<div className="flex items-top space-x-2">
-        <Checkbox id={id} defaultChecked={required} />
-        <div className="grid gap-1.5 leading-none">
-            <Label htmlFor={id}>
-                {label}
-                {required && "*"}
-            </Label>
-        </div>
-        {helperText && (<p className="text-muted-foreground text-[0.8rem]">{helperText}</p>)}
-    </div>
-    );
-}
-
-type propertiesFormschemaType = z.infer<typeof propertiesSchema>;
-function PropertiesComponent({
-    elementInstance,
-}:{
-    elementInstance: FormElementInstance;
-}) {
-    const element = elementInstance as CustomInstance;
-    const { updateElement } = useDesigner();
-    const form = useForm<propertiesFormschemaType>({
-        resolver: zodResolver(propertiesSchema),
-        mode: "onBlur",
-        defaultValues: {
-            label: element.extraAttributes.label,
-            helperText: element.extraAttributes.helperText,
-            required: element.extraAttributes.required,
-        },
-    });
+    const { label, required, helperText, options } = element.extraAttributes;
+    const [isSelected, setIsSelected] = useState<Record<string, boolean>>({});
+    const { errors, requiredValidation } = useFormValidation(required);
 
     useEffect(() => {
-        form.reset(element.extraAttributes);
-    }, [element, form]);
-
-    function applyChanges(values:  propertiesFormschemaType) {
-        const { label, helperText, required} = values;
-        updateElement(element.id,{
-            ...element,
-            extraAttributes: {
-                label,
-                helperText,
-                required,
-            },
+        const initialSelected: Record<string, boolean> = {};
+        options.forEach((option) => {
+            initialSelected[option] = false;
         });
-    }
+        setIsSelected(initialSelected);
+    }, [options]);
 
-    return(
-        <Form {...form}>
-            <form onBlur={form.handleSubmit(applyChanges)} 
-                onSubmit={(e) => {
-                    e.preventDefault();
-                }}
-                className="space-y-3">
-                <LabelProperty form={form}/>
-                <DescriptionProperty form={form}/>
-                <RequiredProperty form={form}/>
-            </form>
-        </Form>
-    );
+    const processInput = (isSelected: Record<string, boolean>) => {
+        const selected = Object.keys(isSelected).filter((option) => isSelected[option]);
+        if (!submitValue) return false;
+        const areValuesSelected = selected.length > 0;
+        const res = requiredValidation(areValuesSelected);
+        if (res) return false;
+        submitValue(element.id, selected);
+        return true;
+    };
+
+    return (<div className="flex flex-col gap-2 w-full">
+        <InputLabel label={label} required={required} />
+        {helperText && (<InputDescription description={helperText} />)}
+        {/* Render the options as checkboxes */}
+        <div className="grid gap-1.5 leading-none">
+            {options.map((option: string, index: number) => {
+                const id = `checkbox-${element.id}-${index}`;
+                return (<div key={id} className="flex items-center space-x-2">
+                    <Checkbox id={id} defaultChecked={false}
+                        checked={isSelected[option]}
+                        onCheckedChange={(checked) => {
+                            if (!submitValue) return;
+                            const newSelected = {
+                                ...isSelected,
+                                [option]: checked.valueOf() as boolean,
+                            };
+                            setIsSelected(newSelected);
+                            processInput(newSelected);
+                        }}
+                    />
+                    <Label htmlFor={id}>{option}</Label>
+                </div>);
+            })}
+        </div>
+        {
+            errors && (
+                <FieldErrors errors={errors} />
+            )
+        }
+    </div>);
 }
 
