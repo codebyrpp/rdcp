@@ -81,16 +81,27 @@ export const formsApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
             }),
         }),
+        submitForm: builder.mutation<Form, { formId: string, body: any }>({
+            query: ({ formId, body }) => ({
+                url: `responses/${formId}/submit`,
+                method: 'POST',
+                body
+            }),
+        }),
     }),
 });
 
 export const {
+    // form management
     useCreateFormMutation,
     useGetFormQuery,
     useUpdateFormMutation,
     useDeleteFormMutation,
 
-    // The following mutations are used for form editing
+    // form responses
+    useSubmitFormMutation,
+
+    // form editing
     useSaveFormMutation,
     usePublishFormMutation,
     useKeepAliveMutation,
