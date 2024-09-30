@@ -21,12 +21,13 @@ export function useFileUploadValidation({
     selectedFileTypes = [],
     maxFileSize = 5, // Default to 5 MB
 }: FileValidationOptions): FileValidationResult {
-    const [file, setFile] = useState<File | null | any>(null);
+    const [file, setFile] = useState<File | null | any>(undefined);
     const [isValid, setIsValid] = useState<boolean>(true);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [touched, setTouched] = useState<boolean>(false);
 
     const validateFile = (file: File | null | any) => {
-        if (required && !file) {
+        if (required && !file && touched) {
             setIsValid(false);
             setErrorMessage('A file is required.');
             return false;
@@ -63,13 +64,16 @@ export function useFileUploadValidation({
     };
 
     const handleFileChange = (file: File | any) => {
+        setTouched(true); // File has been touched
         setFile(file);
         validateFile(file);
     };
 
     useEffect(() => {
-        validateFile(file);
-    }, [file, required, acceptSpecificTypes, selectedFileTypes, maxFileSize]);
+        if (touched) { // Only validate if the user has interacted with the file input
+            validateFile(file);
+        }
+    }, [file, required, acceptSpecificTypes, selectedFileTypes, maxFileSize, touched]);
 
     return {
         file,
