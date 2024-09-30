@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fileTypes } from '../fields/fileTypes';
+import { fileTypes } from '../constants/fileTypes';
 
 type FileValidationOptions = {
     required?: boolean;

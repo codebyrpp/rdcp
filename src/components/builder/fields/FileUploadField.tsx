@@ -16,7 +16,7 @@ import RequiredProperty from "./common/RequiredProperty";
 import { Form } from "@/components/ui/form";
 import { useFileUploadValidation } from "../hooks/useFileUploadValidation";
 import { FieldErrors } from "./FieldErrors";
-import { fileTypes } from "./fileTypes";
+import { fileTypes } from "../constants/fileTypes";
 
 const type: ElementsType = "FileUploadField";
 
