@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../../ui/form";
 import { Heading1 } from "lucide-react";
 
+//@ts-ignore
 const type: ElementsType = "TitleField";
 
 const extraAttributes = {
