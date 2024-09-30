@@ -1,8 +1,10 @@
 import FormView, { FormFieldValuesType, FormValueType } from '@/components/builder/components/FormView';
 import Brand from '@/components/common/Brand';
-import { useGetFormQuery, useSubmitFormMutation } from '@/state/apiSlices/formsApi';
+import { useGetFormQuery } from '@/state/apiSlices/formsApi';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom'
+import axios from 'axios';
+import useSubmitForm from '@/hooks/useSubmitForm';
 
 const PageForm = () => {
 
@@ -16,18 +18,16 @@ const PageForm = () => {
     skip: !formId
   });
 
-  // submit form mutation
-  const [submitForm, { isLoading, isSuccess: isSubmissionSuccess }] = useSubmitFormMutation()
+  const { submitForm, loading, error, success } = useSubmitForm();
 
   useEffect(() => {
-    if (isSubmissionSuccess) {
-      //TODO: Redirect to success page
-      alert('Form submitted successfully')
+    if (success) {
+      alert('Form submitted successfully!');
     }
-  }, [isSubmissionSuccess])
+  }, [success]);
 
-  const sendFormData = (formId: string, values: FormFieldValuesType): void => {
-    
+  const sendFormData = async (formId: string, values: FormFieldValuesType): Promise<void> => {
+
     // prepare form data
     let formData = new FormData();
     Object.keys(values).forEach(key => {
@@ -39,7 +39,13 @@ const PageForm = () => {
       }
     });
 
-    submitForm({ formId: formId, formData: formData });
+    // Make the POST request
+    try {
+      await submitForm(formId, values);
+      // Handle success, such as showing a message or redirecting
+    } catch (err) {
+      console.error('Submission error:', err);
+    }
   };
 
   return (

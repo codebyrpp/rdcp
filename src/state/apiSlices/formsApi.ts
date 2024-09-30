@@ -81,17 +81,6 @@ export const formsApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
             }),
         }),
-        submitForm: builder.mutation<Form, { formId: string, formData: FormData }>({
-            query: ({ formId, formData }) => ({
-                url: `responses/${formId}/submit`,
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'multipart/form-data;'
-                },
-                body: {formData},
-                formData: true
-            }),
-        }),
     }),
 });
 
@@ -102,10 +91,6 @@ export const {
     useUpdateFormMutation,
     useDeleteFormMutation,
 
-    // form responses
-    useSubmitFormMutation,
-
-    // form editing
     useSaveFormMutation,
     usePublishFormMutation,
     useKeepAliveMutation,
