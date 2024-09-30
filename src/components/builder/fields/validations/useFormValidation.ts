@@ -10,14 +10,8 @@ function useFormValidation(
 
   const validateFieldFromSchema = (value: string | number, schema: any) => {
 
-    if (!value && required) {
-      // add required error
-      setErrors(["This field is required", ...errors]);
+    if(requiredValidation(value)) 
       return;
-    }
-    else {
-      setErrors(errors.filter((error) => error !== "This field is required"));
-    }
 
     if (!schema) return;
 
@@ -35,6 +29,19 @@ function useFormValidation(
     return result.isValid;
   };
 
+  // validate required field
+  // if required is true and value is empty, add required error
+  const requiredValidation = (value: string | number) => {
+    if (!value && required) {
+      // add required error
+      setErrors(["This field is required", ...errors]);
+      return true;
+    }
+    // remove required error if exists
+    setErrors(errors.filter((error) => error !== "This field is required"));
+    return false;
+  }
+
   const addError = (error: string) => {
     setErrors((prev) => {
       if (!prev) return [error];
@@ -42,7 +49,7 @@ function useFormValidation(
     });
   }
 
-  return { errors, validateFieldFromSchema, addError };
+  return { errors, validateFieldFromSchema, addError, requiredValidation };
 }
 
 export default useFormValidation;

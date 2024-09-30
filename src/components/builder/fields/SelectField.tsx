@@ -17,6 +17,8 @@ import RequiredProperty from "./common/RequiredProperty";
 import { InputDescription, InputLabel } from "./common/Input";
 import ClearableSelect from "@/components/common/ClearableSelect";
 import DraggableList from "./common/DraggableList";
+import useFormValidation from "./validations/useFormValidation";
+import { FieldErrors } from "./FieldErrors";
 
 const type: ElementsType = "SelectField";
 
@@ -98,6 +100,7 @@ function FormComponent({
     const { label, required, helperText, options } = element.extraAttributes;
     const [value, setValue] = useState<string | undefined>(undefined);
     const [key, setKey] = useState(+new Date());
+    const {errors, requiredValidation} = useFormValidation(required);
 
     return (<div className="flex flex-col gap-2 w-full">
         <InputLabel label={label} required={required} />
@@ -109,12 +112,14 @@ function FormComponent({
             onValueChange={(newValue) => {
                 setValue(newValue)
                 if (submitValue) {
-                    submitValue(element.id, newValue?.toString() || "");
+                    requiredValidation(newValue?.toString() ?? "");
+                    submitValue(element.id, newValue?.toString() ?? "");
                 }
                 setKey(+new Date()); // To force re-render if needed
             }}
             placeholder={PLACEHOLDER}
         />
+        {errors && (<FieldErrors errors={errors} />)}
     </div>
     );
 }
