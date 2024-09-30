@@ -14,6 +14,9 @@ import LabelProperty from "./common/LabelProperty";
 import DescriptionProperty from "./common/DescriptionProperty";
 import RequiredProperty from "./common/RequiredProperty";
 import { Form } from "@/components/ui/form";
+import { useFileUploadValidation } from "../hooks/useFileUploadValidation";
+import { FieldErrors } from "./FieldErrors";
+import { fileTypes } from "./fileTypes";
 
 const type: ElementsType = "FileUploadField";
 
@@ -87,39 +90,42 @@ function FormComponent({
     submitValue?: SubmitFunction;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, helperText } = element.extraAttributes;
-    const [file, setFile] = useState<File | null>(null);
+    const { label, required, helperText, validation } = element.extraAttributes;
+    const acceptSpecificTypes = validation.acceptSpecificTypes;
+    const selectedFileTypes = validation.selectedFileTypes;
+    const maxFileSize = validation.maxFileSize;
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const uploadedFile = event.target.files?.[0] || null;
-        setFile(uploadedFile);
-        if (uploadedFile && submitValue) {
-            submitValue(element.id, uploadedFile);
+    const {
+        file,
+        isValid,
+        errorMessage,
+        handleFileChange
+    } = useFileUploadValidation({
+        required,
+        acceptSpecificTypes,
+        selectedFileTypes,
+        maxFileSize
+    });
+
+    useEffect(() => {
+        if (file && isValid && submitValue) {
+            submitValue(element.id, file);
         }
-    };
+    }, [file, isValid]);
 
     return (
         <div className="flex flex-col gap-2 w-full">
             <InputLabel label={label} required={required} />
             {helperText && <InputDescription description={helperText} />}
-            <Input
-                type="file"
-                onChange={handleFileChange}
-            />
+            <Input type="file" onChange={(e) => {
+                handleFileChange(e.target.files?.[0]);
+            }} />
+            {!isValid && errorMessage && (
+                <FieldErrors errors={[errorMessage]} />)}
         </div>
     );
 }
 
-
-const fileTypes = [
-    { id: 'document', label: 'Document', description: 'doc, docx, pdf, txt' },
-    { id: 'spreadsheet', label: 'Spreadsheet', description: 'xls, xlsx, csv' },
-    { id: 'presentation', label: 'Presentation', description: 'ppt, pptx' },
-    { id: 'pdf', label: 'PDF', description: 'pdf' },
-    { id: 'image', label: 'Image', description: 'jpg, jpeg, png, gif, svg, tiff' },
-    { id: 'audio', label: 'Audio', description: 'mp3, m4a, wav, aac' },
-    { id: 'video', label: 'Video', description: 'mp4, mkv, mov, avi' },
-];
 
 function PropertiesComponent({
     elementInstance,
@@ -172,7 +178,7 @@ function PropertiesComponent({
                 ? prev.filter(type => type !== fileType)
                 : [...prev, fileType]
         )
-    }      
+    }
 
     // Apply changes to the element when selected file types or max file size changes
     useEffect(() => {
@@ -230,7 +236,9 @@ function PropertiesComponent({
                                         onCheckedChange={() => handleFileTypeChange(type.id)}
                                     />
                                     <Label htmlFor={type.id}>{type.label}
-                                        <div className="text-muted-foreground text-xs">{type.description}</div>
+                                        <div className="text-muted-foreground text-xs">
+                                            {type.format.extensions.join(", ")}
+                                        </div>
                                     </Label>
                                 </div>
                             ))}
