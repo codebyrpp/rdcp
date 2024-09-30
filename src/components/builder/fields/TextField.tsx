@@ -75,14 +75,13 @@ function FormComponent({
     const { label, required, helperText } = element.extraAttributes;
     const schema = element.extraAttributes.validation?.schema;
     const { errors, validateFieldFromSchema } = useFormValidation(required);
-
-    const [requiredError, setRequiredError] = useState(false);
     const [value, setValue] = useState("");
 
     return (<div className="flex flex-col gap-2 w-full">
         <InputLabel label={label} required={required} />
         {helperText && (<InputDescription description={helperText} />)}
         <Input
+            autoFocus={false}
             placeholder={PLACEHOLDER}
             value={value}
             onChange={(e) => setValue(e.target.value)}
