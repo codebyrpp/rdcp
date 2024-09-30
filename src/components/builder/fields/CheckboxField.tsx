@@ -6,6 +6,8 @@ import { selectExtraAttributes, SelectPropertiesComponent } from "./SelectField"
 import { InputDescription, InputLabel } from "./common/Input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useEffect, useState } from "react";
+import useFormValidation from "./validations/useFormValidation";
+import { FieldErrors } from "./FieldErrors";
 
 const type: ElementsType = "CheckboxField";
 const extraAttributes = {
@@ -66,6 +68,7 @@ function FormComponent({
     const element = elementInstance as CustomInstance;
     const { label, required, helperText, options } = element.extraAttributes;
     const [isSelected, setIsSelected] = useState<Record<string, boolean>>({});
+    const { errors, requiredValidation } = useFormValidation(required);
 
     useEffect(() => {
         const initialSelected: Record<string, boolean> = {};
@@ -77,9 +80,11 @@ function FormComponent({
 
     useEffect(() => {
         const selected = Object.keys(isSelected).filter((option) => isSelected[option]);
-        if(submitValue) {
-            submitValue(element.id, selected);
-        }
+        if (!submitValue) return;
+        const areValuesSelected = selected.length > 0;
+        const res = requiredValidation(areValuesSelected);
+        if (res) return;
+        submitValue(element.id, selected);
     }, [isSelected]);
 
     return (<div className="flex flex-col gap-2 w-full">
@@ -93,7 +98,7 @@ function FormComponent({
                     <Checkbox id={id} defaultChecked={false}
                         checked={isSelected[option]}
                         onCheckedChange={(checked) => {
-                            if(!submitValue) return;
+                            if (!submitValue) return;
                             setIsSelected({
                                 ...isSelected,
                                 [option]: checked.valueOf() as boolean,
@@ -104,6 +109,11 @@ function FormComponent({
                 </div>);
             })}
         </div>
+        {
+            errors && (
+                <FieldErrors errors={errors} />
+            )
+        }
     </div>);
 }
 
