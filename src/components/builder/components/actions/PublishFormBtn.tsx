@@ -13,6 +13,7 @@ import {
 import { useState, useTransition } from 'react';
 import { usePublishFormMutation } from '@/state/apiSlices/formsApi';
 import { useToast } from '@/components/ui/use-toast';
+import { Link } from 'react-router-dom';
 
 function PublishFormBtn({ id }: { id: string }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -26,6 +27,14 @@ function PublishFormBtn({ id }: { id: string }) {
             toast({
                 title: "Success",
                 description: "Your form is now available to the public",
+                action: (<Button asChild>
+                    <a href={`/forms/${id}/view`} target="_blank" rel="noreferrer">
+                        View Form
+                    </a>
+                </Button>
+                ),
+                variant: "success",
+                duration: 5000
             });
         } catch (error) {
             toast({
