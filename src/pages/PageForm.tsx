@@ -1,11 +1,13 @@
-import FormView from '@/components/builder/components/FormView';
+import FormView, { FormFieldValuesType, FormValueType } from '@/components/builder/components/FormView';
 import Brand from '@/components/common/Brand';
-import { useGetFormQuery } from '@/state/apiSlices/formsApi';
+import { useGetFormQuery, useSubmitFormMutation } from '@/state/apiSlices/formsApi';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom'
 
 const PageForm = () => {
 
-  const formId = useParams<{ formId: string }>().formId
+  const { formId } = useParams<{ formId: string }>()
+
   // RTK Query hook to get the form settings
   const { data: form, isLoading: isDataLoading, isSuccess } = useGetFormQuery({
     formId: formId ?? '',
@@ -13,6 +15,32 @@ const PageForm = () => {
   }, {
     skip: !formId
   });
+
+  // submit form mutation
+  const [submitForm, { isLoading, isSuccess: isSubmissionSuccess }] = useSubmitFormMutation()
+
+  useEffect(() => {
+    if (isSubmissionSuccess) {
+      //TODO: Redirect to success page
+      alert('Form submitted successfully')
+    }
+  }, [isSubmissionSuccess])
+
+  const sendFormData = (formId: string, values: FormFieldValuesType): void => {
+    
+    // prepare form data
+    let formData = new FormData();
+    Object.keys(values).forEach(key => {
+      const value = values[key] as string | Blob;
+      if (value) {
+        formData.append(key, value);
+      } else {
+        console.error(`Value for ${key} is undefined or null.`);
+      }
+    });
+
+    submitForm({ formId: formId, formData: formData });
+  };
 
   return (
     <div className='overflow-y-hidden min-h-screen flex flex-col justify-between gap-2'>
@@ -26,7 +54,7 @@ const PageForm = () => {
         !form && <div>Form not found</div>
       }
       {
-        form && <FormView form={form!} />
+        form && <FormView form={form!} submitFormHandler={sendFormData} />
       }
       <div className="mt-12">
         <Footer />
