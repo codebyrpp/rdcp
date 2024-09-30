@@ -73,8 +73,9 @@ function FormComponent({
 }) {
     const element = elementInstance as CustomInstance;
     const { label, required, helperText } = element.extraAttributes;
+    const schema = element.extraAttributes.validation?.schema;
     const [value, setValue] = useState("");
-    const { errors, validateField } = useFormValidation(required, element.extraAttributes.validation?.schema);
+    const { errors, validateFieldFromSchema } = useFormValidation(required);
 
     return (<div className="flex flex-col gap-2 w-full flex-grow">
         <Label className="font-semibold">
@@ -87,7 +88,7 @@ function FormComponent({
             onChange={(e) => setValue(e.target.value)}
             onBlur={(e) => {
                 if (!submitValue) return;
-                const isValid = validateField(e.target.value);
+                const isValid = validateFieldFromSchema(e.target.value, schema);
                 if (isValid) {
                     submitValue(element.id, e.target.value);
                 }

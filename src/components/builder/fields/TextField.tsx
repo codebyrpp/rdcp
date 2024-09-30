@@ -73,9 +73,8 @@ function FormComponent({
 }) {
     const element = elementInstance as CustomInstance;
     const { label, required, helperText } = element.extraAttributes;
-    const { errors, validateField } = useFormValidation(
-        required,
-        element.extraAttributes.validation?.schema);
+    const schema = element.extraAttributes.validation?.schema;
+    const { errors, validateFieldFromSchema } = useFormValidation(required);
 
     const [requiredError, setRequiredError] = useState(false);
     const [value, setValue] = useState("");
@@ -91,7 +90,7 @@ function FormComponent({
                 if (!submitValue)
                     return;
                 const _value = e.target.value;
-                const isValid = validateField(_value);
+                const isValid = validateFieldFromSchema(_value, schema);
                 if (isValid) {
                     submitValue(element.id, _value);
                 }

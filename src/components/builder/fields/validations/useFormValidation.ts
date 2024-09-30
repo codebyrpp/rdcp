@@ -4,12 +4,11 @@ import { useAjvValidation } from "../../hooks/useAjvValidation";
 import { set } from "date-fns";
 
 function useFormValidation(
-  required: boolean,
-  schema?: any) {
+  required: boolean) {
   const [errors, setErrors] = useState<(string)[]>([]);
   const { validate } = useAjvValidation();
 
-  const validateField = (value: string | number) => {
+  const validateFieldFromSchema = (value: string | number, schema: any) => {
 
     if (!value && required) {
       // add required error
@@ -43,7 +42,7 @@ function useFormValidation(
     });
   }
 
-  return { errors, validateField, addError };
+  return { errors, validateFieldFromSchema, addError };
 }
 
 export default useFormValidation;

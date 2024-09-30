@@ -71,7 +71,8 @@ function FormComponent({
 }) {
     const element = elementInstance as CustomInstance;
     const { label, required, helperText } = element.extraAttributes;
-    const { errors, validateField } = useFormValidation(required, element.extraAttributes.validation?.schema);
+    const schema = element.extraAttributes.validation?.schema;
+    const { errors, validateFieldFromSchema } = useFormValidation(required);
     const [value, setValue] = useState<number>();
 
     return (<div className="flex flex-col gap-2 w-full">
@@ -86,7 +87,7 @@ function FormComponent({
                 const _value = e.target.value ? Number(e.target.value) : undefined;
                 if(!_value) return;
                 if (!submitValue) return;
-                const isValid = validateField(_value);
+                const isValid = validateFieldFromSchema(_value, schema);
                 if (isValid) {
                     submitValue(element.id, _value);
                 }
