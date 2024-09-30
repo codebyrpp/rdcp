@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom'
 import axios from 'axios';
 import useSubmitForm from '@/hooks/useSubmitForm';
+import Loading from '@/components/common/Loading';
 
 const PageForm = () => {
 
@@ -26,19 +27,7 @@ const PageForm = () => {
     }
   }, [success]);
 
-  const sendFormData = async (formId: string, values: FormFieldValuesType): Promise<void> => {
-
-    // prepare form data
-    let formData = new FormData();
-    Object.keys(values).forEach(key => {
-      const value = values[key] as string | Blob;
-      if (value) {
-        formData.append(key, value);
-      } else {
-        console.error(`Value for ${key} is undefined or null.`);
-      }
-    });
-
+  const sendFormDataCallback = async (formId: string, values: FormFieldValuesType): Promise<void> => {
     // Make the POST request
     try {
       await submitForm(formId, values);
@@ -51,7 +40,7 @@ const PageForm = () => {
   return (
     <div className='overflow-y-hidden min-h-screen flex flex-col justify-between gap-2'>
       {
-        isDataLoading && <div>Loading...</div>
+        isDataLoading && <Loading />
       }
       {
         !isSuccess && <div>Something went wrong</div>
@@ -60,7 +49,7 @@ const PageForm = () => {
         !form && <div>Form not found</div>
       }
       {
-        form && <FormView form={form!} submitFormHandler={sendFormData} />
+        form && <FormView form={form!} submitFormHandler={sendFormDataCallback} />
       }
       <div className="mt-12">
         <Footer />
