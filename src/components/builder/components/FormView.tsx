@@ -9,7 +9,7 @@ const FormView = ({ form, isPreview = false }: { form: FormWithSchema, isPreview
 
     const elements = isPreview ? form.draft : form.schema;
 
-    const formValues = useRef<{ [key: string]: string | number | string[] }>({});
+    const formValues = useRef<{ [key: string]: string | number | string[] | File }>({});
 
     const submitValue: SubmitFunction = (key, value) => {
         formValues.current[key] = value;
