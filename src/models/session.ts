@@ -2,7 +2,8 @@ import User from "./user";
 
 interface Session{
     user: User;
-    token: string;
+    accessToken: string;
+    refreshToken: string;
 }
 
 export default Session;

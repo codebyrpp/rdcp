@@ -5,14 +5,15 @@ interface LoginResponseDto {
     success: boolean;
     email: string;
     role: string;
-    jwt: string;
+    accessToken: string,
+    refreshToken: string
 }
 
 export const authApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         login: builder.mutation<LoginResponseDto, any>({
             query: (body) => ({
-                url: 'auth/login',
+                url: 'http://localhost:3000/v2/auth/login',
                 method: 'POST',
                 body,
             }),

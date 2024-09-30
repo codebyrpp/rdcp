@@ -38,7 +38,8 @@ export const useLoginFormViewModel = () => {
                     email: userData.email,
                     role: userData.role,
                 },
-                token: userData.jwt,
+                accessToken: userData.accessToken,
+                refreshToken: userData.refreshToken
             });
 
         } catch (error) {
