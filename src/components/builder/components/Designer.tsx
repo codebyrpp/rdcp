@@ -39,11 +39,11 @@ function Designer() {
         return;
       }
 
-      const isDroppingOverDesignerElemnetTopHalf = over.data?.current?.isTopHalfDesignerElement;
-      const isDroppingOverDesignerElemnetBottomHalf = over.data?.current?.isBottomHalfDesignerElement;
-      const isDroppingOverDesignerElemnet = isDroppingOverDesignerElemnetTopHalf || isDroppingOverDesignerElemnetBottomHalf;
+      const isDroppingOverDesignerElementTopHalf = over.data?.current?.isTopHalfDesignerElement;
+      const isDroppingOverDesignerElementBottomHalf = over.data?.current?.isBottomHalfDesignerElement;
+      const isDroppingOverDesignerElement = isDroppingOverDesignerElementTopHalf || isDroppingOverDesignerElementBottomHalf;
 
-      const droppingSidebarBtnOverDesignerElement = isDesignerBtnElement && isDroppingOverDesignerElemnet;
+      const droppingSidebarBtnOverDesignerElement = isDesignerBtnElement && isDroppingOverDesignerElement;
 
       if (droppingSidebarBtnOverDesignerElement) {
         const type = active.data?.current?.type;
@@ -57,7 +57,7 @@ function Designer() {
         }
 
         let indexForNewElement = overElementIndex;
-        if (isDroppingOverDesignerElemnetBottomHalf) {
+        if (isDroppingOverDesignerElementBottomHalf) {
           indexForNewElement = overElementIndex + 1;
         }
         addElement(indexForNewElement, newElement);
@@ -66,7 +66,7 @@ function Designer() {
 
       const isDraggingDesignerElement = active.data?.current?.isDesignerElement;
 
-      const draggingDesignerElementOverAnotherDesignerElement = isDraggingDesignerElement && isDroppingOverDesignerElemnet;
+      const draggingDesignerElementOverAnotherDesignerElement = isDraggingDesignerElement && isDroppingOverDesignerElement;
 
       if (draggingDesignerElementOverAnotherDesignerElement) {
         const activeId = active.data?.current?.elementId;
@@ -83,7 +83,7 @@ function Designer() {
         removeElement(activeId);
 
         let indexForNewElement = overElementIndex;
-        if (isDroppingOverDesignerElemnetBottomHalf) {
+        if (isDroppingOverDesignerElementBottomHalf) {
           indexForNewElement = overElementIndex + 1;
         }
         addElement(indexForNewElement, activeElement);
@@ -202,11 +202,12 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
       }}
     >
       <div ref={topHalf.setNodeRef} className="absolute w-full h-1/2 rounded-t-md" />
-      <div ref={bottomHalf.setNodeRef} className="absolute w-full h-1/2 rounded-b-md" />
+      <div ref={bottomHalf.setNodeRef} className="absolute bottom-0 w-full h-1/2 rounded-b-md" />
       {mouseIsOver && (
         <>
           <div className="absolute right-0 h-full group">
-            <Button className="flex justify-center h-full border rounded-md rounded-l-none bg-red-400 group-hover:bg-red-500"
+            <Button className="flex justify-center h-full border rounded-md rounded-l-none 
+            bg-red-400 group-hover:bg-red-500"
               variant={"outline"}
               onClick={(e) => {
                 e.stopPropagation();
