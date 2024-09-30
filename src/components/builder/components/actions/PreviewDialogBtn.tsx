@@ -6,7 +6,7 @@ import { FormWithSchema } from "@/models/forms";
 
 function PreviewDialogBtn({ form }: { form: FormWithSchema }) {
     return (
-        <Dialog>
+        <Dialog >
             <DialogTrigger asChild>
                 <Button variant={"outline"} className="gap-2">
                     Preview
@@ -14,7 +14,9 @@ function PreviewDialogBtn({ form }: { form: FormWithSchema }) {
             </DialogTrigger>
 
             {/* The Preview */}
-            <DialogContent className="w-[80vw] max-w-full flex flex-col h-[90vh] bg-slate-200">
+            <DialogContent 
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            className="w-[80vw] max-w-full flex flex-col h-[90vh] bg-slate-200">
                 <DialogTitle className="hidden">
                     Preview
                 </DialogTitle>
