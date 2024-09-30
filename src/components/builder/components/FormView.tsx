@@ -13,12 +13,10 @@ const FormView = ({ form, isPreview = false }: { form: FormWithSchema, isPreview
 
     const submitValue: SubmitFunction = (key, value) => {
         formValues.current[key] = value;
-        console.log("Form Values...", formValues.current);
     };
 
     const submitForm = () => {
         console.log("Submitting form...");
-        console.log("Form Values...", formValues.current);
     }
 
     return (

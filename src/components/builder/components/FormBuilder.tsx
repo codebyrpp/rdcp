@@ -10,9 +10,9 @@ import PreviewDialogBtn from "./actions/PreviewDialogBtn";
 import DiscardChangesButton from "./actions/DiscardChangesBtn";
 import useSaveShortcut from "../hooks/useSaveShortcut";
 import useFormLock from "../hooks/useFormLock";
+import PublishFormBtn from "./actions/PublishFormBtn";
 
 const FormBuilder = ({ form }: { form: FormWithSchema }) => {
-
     const mouseSensor = useSensor(MouseSensor, {
         activationConstraint: {
             distance: 10,
@@ -59,8 +59,9 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
                                 <PreviewDialogBtn key={previewKey} form={{
                                     ...form,
                                     draft: elements
-                                }}/>
+                                }} />
                                 <SaveFormBtn action={saveAction} />
+                                <PublishFormBtn id={form.id!} />
                                 <DiscardChangesButton />
                             </div>
                         </div>

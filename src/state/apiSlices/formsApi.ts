@@ -60,7 +60,7 @@ export const formsApiSlice = apiSlice.injectEndpoints({
         publishForm: builder.mutation<Form, { formId: string }>({
             query: ({ formId }) => ({
                 url: `forms/${formId}/publish`,
-                method: 'POST',
+                method: 'PATCH',
             }),
         }),
         keepAlive: builder.mutation<Form, { formId: string }>({
