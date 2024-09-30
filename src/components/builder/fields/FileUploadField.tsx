@@ -22,7 +22,14 @@ export const FileUploadFieldFormElement: FormElement = {
     construct: (id: string) => ({
         id,
         type,
-        extraAttributes: baseExtraAttributes,
+        extraAttributes: {
+            ...baseExtraAttributes,
+            validation: {
+                acceptSpecificTypes: false,
+                selectedFileTypes: [],
+                maxFileSize: 5,
+            }
+        },
     }),
     designerBtnElement: {
         label: "File Upload",
@@ -35,10 +42,11 @@ export const FileUploadFieldFormElement: FormElement = {
 
 type CustomInstance = FormElementInstance & {
     extraAttributes: typeof baseExtraAttributes & {
-        acceptSpecificTypes: boolean;
-        selectedFileTypes: string[];
-        maxFiles: number;
-        maxFileSize: number;
+        validation: {
+            acceptSpecificTypes: boolean;
+            selectedFileTypes?: string[] | undefined;
+            maxFileSize?: number | undefined;
+        }
     };
 };
 
@@ -48,12 +56,22 @@ function DesignerComponent({
     elementInstance: FormElementInstance;
 }) {
     const element = elementInstance as CustomInstance;
-    const { label, required, helperText } = element.extraAttributes;
+    const { label, required, helperText, validation } = element.extraAttributes;
+    const { acceptSpecificTypes, selectedFileTypes, maxFileSize } = validation;
     return (
         <div className="flex flex-col gap-2 w-full">
             <InputLabel label={label} required={required} />
             {helperText && <InputDescription description={helperText} />}
             <Input type="file" disabled />
+            {acceptSpecificTypes && selectedFileTypes && selectedFileTypes?.length > 0 && (
+                <div className="text-muted-foreground text-sm">
+                    Accepts: {selectedFileTypes?.join(", ")}
+                </div>
+            )}
+            {maxFileSize && (
+                <div className="text-muted-foreground text-sm">
+                    Max File Size: {maxFileSize} MB
+                </div>)}
         </div>
     );
 }
@@ -111,7 +129,11 @@ function PropertiesComponent({
     const form = useForm<basePropertiesSchemaType>({
         resolver: zodResolver(basePropertiesSchema),
         mode: "onChange",
-        defaultValues: element.extraAttributes,
+        defaultValues: {
+            label: element.extraAttributes.label,
+            helperText: element.extraAttributes.helperText,
+            required: element.extraAttributes.required,
+        },
     });
 
     useEffect(() => {
@@ -127,7 +149,11 @@ function PropertiesComponent({
                 label,
                 helperText,
                 required,
-                // validation: validationInstance
+                validation: {
+                    acceptSpecificTypes,
+                    selectedFileTypes,
+                    maxFileSize,
+                }
             },
         });
     }
@@ -142,7 +168,25 @@ function PropertiesComponent({
                 ? prev.filter(type => type !== fileType)
                 : [...prev, fileType]
         )
-    }
+    }      
+
+    // Apply changes to the element when selected file types or max file size changes
+    useEffect(() => {
+        updateElement(element.id, {
+            id: element.id,
+            type: element.type,
+            extraAttributes: {
+                label: element.extraAttributes.label,
+                helperText: element.extraAttributes.helperText,
+                required: element.extraAttributes.required,
+                validation: {
+                    acceptSpecificTypes,
+                    selectedFileTypes,
+                    maxFileSize,
+                }
+            },
+        });
+    }, [selectedFileTypes, maxFileSize, acceptSpecificTypes])
 
     return (
         <div className="flex flex-col gap-4">
