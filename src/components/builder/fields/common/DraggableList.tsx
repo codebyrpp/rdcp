@@ -55,6 +55,11 @@ function SortableItem({ id, index, value, onRemove, onChangeItem }: SortableItem
                 onBlur={() => {
                     onChangeItem(inputValue);
                 }}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault(); // Prevent form submission on Enter key press
+                    }
+                }}
             />
             <Button
                 variant={"outline"}

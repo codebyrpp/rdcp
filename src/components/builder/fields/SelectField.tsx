@@ -100,7 +100,7 @@ function FormComponent({
     const { label, required, helperText, options } = element.extraAttributes;
     const [value, setValue] = useState<string | undefined>(undefined);
     const [key, setKey] = useState(+new Date());
-    const {errors, requiredValidation} = useFormValidation(required);
+    const { errors, requiredValidation } = useFormValidation(required);
 
     return (<div className="flex flex-col gap-2 w-full">
         <InputLabel label={label} required={required} />
@@ -199,13 +199,7 @@ export function SelectPropertiesComponent({
                                 variant={"outline"}
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    // filter the options to remove empty strings
-                                    const options = form.getValues().options.filter((option: string) => option.trim() !== "");
-                                    if (options.length !== 0) {
-                                        form.setValue("options", options);
-                                    }
-                                    applyChanges(form.getValues());
-                                    form.setValue("options", [...field.value, ""]);
+                                    handleAddOption(e, field, form);
                                 }}
                             >
                                 <AiOutlinePlus className="h-4 mr-2" />
@@ -217,5 +211,15 @@ export function SelectPropertiesComponent({
             </form>
         </Form>
     );
+
+    function handleAddOption(e: any, field: any, form: any) {
+        // filter the options to remove empty strings
+        const options = form.getValues().options.filter((option: string) => option.trim() !== "");
+        if (options.length !== 0) {
+            form.setValue("options", options);
+        }
+        applyChanges(form.getValues());
+        form.setValue("options", [...field.value, ""]);
+    }
 }
 
