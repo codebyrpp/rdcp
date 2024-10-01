@@ -88,9 +88,12 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="flex w-full flex-grow 
+                    <div className="flex flex-grow 
                 items-center justify-center relative overflow-y-auto
-                 bg-accent bg-slate-200 bg-center">
+                 bg-accent bg-slate-200 bg-center w-screen">
+                    {
+                        locked && <div className="absolute z-[10] w-full h-screen bg-black/20"/>
+                    }
                         <Designer />
                     </div>
                 </div>
