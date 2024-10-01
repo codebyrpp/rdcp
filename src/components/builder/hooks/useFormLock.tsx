@@ -58,27 +58,38 @@ const useFormLock = (
             if (!response.success) {
                 // Another user has the lock
                 setLockInfo({ locked: true, owner: response.user! });
-                return false;
+                return {
+                    locked: true,
+                    owner: response.user!,
+                };
             }
             // Current user has successfully acquired the lock
             setLockInfo({ locked: false, owner: null });
-            return true;
+            return {
+                locked: false,
+                owner: null,
+            };
         } catch (error) {
             console.error('Failed to acquire lock:', error);
         }
-        return false;
+        return {
+            locked: false,
+            owner: null,
+        };
     };
 
     const { toast } = useToast();
 
     useEffect(() => {
         // First try to acquire the lock
-        acquireLock().then((success) => {
-            if (!success) {
+        acquireLock().then((res) => {
+            const { locked, owner } = res;
+
+            if (locked) {
                 toast({
                     title: 'Editing Session in Progress',
                     variant: 'warning',
-                    description: `The form is currently locked by ${lockInfo.owner}`,
+                    description: `The form is currently locked by ${owner}`,
                 });
 
                 // if the lock is not acquired,  no need to setup heartbeat and idle timer
