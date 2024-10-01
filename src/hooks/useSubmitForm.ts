@@ -16,11 +16,11 @@ const useSubmitForm = () => {
     const formData = new FormData();
     
     Object.keys(values).forEach((key) => {
-      const value = values[key] as string | Blob;
-      if (value) {
+      const value = values[key];
+      if (value instanceof File) {
         formData.append(key, value);
       } else {
-        console.error(`Value for ${key} is undefined or null.`);
+        formData.append(key, JSON.stringify(value));
       }
     });
 
