@@ -8,13 +8,15 @@ const useSubmitForm = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const submitForm = async (formId: string, values: Record<string, any>): Promise<void> => {
+  const submitForm = async (formId: string, values: Record<string, any>): Promise<{
+    success: boolean;
+  }> => {
     setLoading(true); // Set loading to true
     setError(null); // Reset error state
     setSuccess(false); // Reset success state
 
     const formData = new FormData();
-    
+
     Object.keys(values).forEach((key) => {
       const value = values[key];
       if (value instanceof File) {
@@ -27,14 +29,15 @@ const useSubmitForm = () => {
     try {
       const response = await axiosInstance.post(`/responses/${formId}/submit`, formData);
       setSuccess(true); // Set success state to true
-      return response.data; // Return response if needed
+      return { success: true };
     } catch (error: any) {
       console.error('Error submitting form:', error);
       setError(error.message || 'An error occurred while submitting the form.'); // Set error state
-      throw error; // Re-throw the error to handle it in the component if needed
     } finally {
       setLoading(false); // Set loading to false after the request is complete
     }
+
+    return { success: false };
   };
 
   return { submitForm, loading, error, success };
