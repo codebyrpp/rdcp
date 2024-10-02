@@ -43,7 +43,7 @@ const PageForm = () => {
   if(isDataLoading) return <Loading />
 
   return (
-    <div className='overflow-y-hidden min-h-screen flex flex-col justify-between gap-2'>
+    <div className='overflow-y-hidden overflow-x-hidden min-h-screen flex flex-col justify-between gap-2'>
       {
         !isSuccess && <div>Something went wrong</div>
       }
