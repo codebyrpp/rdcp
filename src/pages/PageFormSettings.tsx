@@ -28,8 +28,7 @@ const PageFormSettings = () => {
                     <DeleteForm />
                 </div>
                 <div className="flex flex-col gap-3">
-                    {/* Search and Add Collaborator */}
-                    <ViewParticipants/>
+                     {projectId && formId && <ViewParticipants projectId={projectId} formId={formId} />}
                 </div>
             </div>
 

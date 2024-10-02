@@ -13,6 +13,7 @@ import { DataTable } from './collaborators/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { FaTimesCircle, FaEllipsisH as MoreHorizontal } from 'react-icons/fa';
+import { useFetchParticipantsQuery, useAddParticipantsMutation, useRemoveParticipantMutation } from '../../state/apiSlices/participantsApi';
 
 const dummyParticipants = [
     { email: "participant1@rdcp.com", id: "1" },
@@ -26,12 +27,29 @@ interface Participant {
     id: string;
 }
 
-const ViewParticipants = () => {
+interface ViewParticipantsProps {
+    projectId: string;
+    formId: string;
+}
+
+const ViewParticipants = ({ projectId, formId }: ViewParticipantsProps) => {
     const [search, setSearch] = useState<string>("");
-    //const [showSearchBar, setShowSearchBar] = useState(false);
     const [participants, setParticipants] = useState<Participant[]>([]);
     const [selectedParticipants, setSelectedParticipants] = useState<Participant[]>([]);
     const [tableData, setTableData] = useState<Participant[]>([]);
+
+    const { data: fetchedParticipants = [], refetch } = useFetchParticipantsQuery({ projectId, formId });
+    const [addParticipants] = useAddParticipantsMutation();
+    const [removeParticipant] = useRemoveParticipantMutation();
+
+    useEffect(() => {
+        const storedParticipants = localStorage.getItem('participants');
+        if (storedParticipants) {
+            setTableData(JSON.parse(storedParticipants));
+        } else if (fetchedParticipants.length > 0) {
+            setTableData(fetchedParticipants);
+        }
+    }, [fetchedParticipants]);
 
     useEffect(() => {
         if (search.length > 0) {
@@ -60,8 +78,12 @@ const ViewParticipants = () => {
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem
-                            onClick={() => {
-                                setTableData(tableData.filter((c) => c.id !== row.original.id));
+                            onClick={async () => {
+                                await removeParticipant({ projectId, formId, participantId: row.original.id }).unwrap();
+                                const updatedTableData = tableData.filter((c) => c.id !== row.original.id);
+                                setTableData(updatedTableData);
+                                localStorage.setItem('participants', JSON.stringify(updatedTableData));
+                                refetch();
                             }}
                         >
                             Remove
@@ -73,14 +95,19 @@ const ViewParticipants = () => {
         },
     ];
 
-    const handleAddParticipant = () => {
+    const handleAddParticipant = async () => {
         const newParticipants = selectedParticipants.filter(
             (participant) => !tableData.find((p) => p.id === participant.id)
         );
-        setTableData([...tableData, ...newParticipants]);
-        console.log('New Participants Added:', newParticipants.map(p => p.email)); // Log the new participants' emails
+        const emails = newParticipants.map(p => p.email);
+        await addParticipants({ projectId, formId, emails }).unwrap();
+        const updatedTableData = [...tableData, ...newParticipants];
+        setTableData(updatedTableData);
+        localStorage.setItem('participants', JSON.stringify(updatedTableData));
+        console.log('New Participants Added:', emails); // Log the new participants' emails
         setSelectedParticipants([]);
         setSearch("");
+        refetch();
     };
 
     const handleSelectParticipant = (participant: Participant) => {

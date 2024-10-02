@@ -80,12 +80,16 @@ const InviteMembers: React.FC <InviteMembersProps> = ({projectId}) => {
           email,
           roles: selectedRoles as ProjectRole[],
         }));
-
-        await addCollaborators({
-          projectId,  
-          emails: emailList,
-          roles: selectedRoles,
-        }).unwrap();
+        
+        try {
+          await addCollaborators({
+            projectId,
+            emails: emailList,
+            roles: selectedRoles,
+          }).unwrap();
+        } catch (err) {
+          console.error("Failed to add collaborators:", err);
+        }
 
         setTableData([...tableData, ...newCollaborators]);
         console.log('New Collaborators Added:', newCollaborators); 
