@@ -2,14 +2,20 @@ import { useState, useCallback } from 'react';
 import { debounce } from 'lodash';
 import axiosInstance from '@/state/axiosInstance';
 
+type UserSuggestion = {
+  id: string;
+  email: string;
+};
+
 const useEmailSearch = () => {
-  const [suggestions, setSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState<UserSuggestion[]>([]);
 
   // Function to fetch suggestions
   const fetchSuggestions = async (email: string) => {
     try {
       const response = await axiosInstance.get('/users/search', { params: { email } });
-      setSuggestions(response.data);
+      const results = response.data as UserSuggestion[];
+      setSuggestions(results);
     } catch (error) {
       console.error('Error fetching suggestions:', error);
       setSuggestions([]);
