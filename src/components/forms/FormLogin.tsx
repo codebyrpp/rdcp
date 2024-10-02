@@ -36,9 +36,9 @@ export default function LoginForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="This is your public display name." {...field} />
+                  <Input placeholder="This is your public display name." {...field} data-testid="email-input" />
                 </FormControl>
-                <FormMessage />
+                <FormMessage data-testid="email-input-message" />
               </FormItem>
             )}
           />
@@ -49,7 +49,7 @@ export default function LoginForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="********" type="password" {...field} />
+                  <Input placeholder="********" type="password" {...field} data-testid="password-input"/>
                 </FormControl>
                 <FormDescription>
 
@@ -59,12 +59,12 @@ export default function LoginForm() {
             )}
           />
 
-          <Button className="flex w-full" type="submit" disabled={isLoading}>
+          <Button className="flex w-full" type="submit" disabled={isLoading} data-testid="login-button">
             {isLoading ? 'Logging in...' : 'Login'}
           </Button>
 
           {isError && (
-            <p className="text-red-500 mt-2 text-sm">
+            <p className="text-red-500 mt-2 text-sm" data-testid="error-message">
               {errorMessage || 'Failed to login. Please try again.'}
             </p>
           )}
