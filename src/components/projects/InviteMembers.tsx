@@ -13,18 +13,199 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { SectionWrapper } from '../common/wrapper';
 import { useAddCollaboratorsMutation, useUpdateCollaboratorRolesMutation, useRemoveCollaboratorMutation, useFetchCollaboratorsQuery } from '@/state/apiSlices/collaboratorsApi';
 
+interface InviteCollaboratorsSectionProps {
+  emails: string;
+  setEmails: (emails: string) => void;
+  invitedMembers: string[];
+  setInvitedMembers: (members: string[]) => void;
+  emailError: string | null;
+  setEmailError: (error: string | null) => void;
+  suggestions: string[];
+  handleAddEmails: () => void;
+  handleRemoveEmail: (email: string) => void;
+}
+
+const InviteCollaboratorsSection: React.FC<InviteCollaboratorsSectionProps> = ({
+  emails,
+  setEmails,
+  invitedMembers,
+  setInvitedMembers,
+  emailError,
+  setEmailError,
+  suggestions,
+  handleAddEmails,
+  handleRemoveEmail,
+}) => (
+  <div className="mb-4">
+    <Label htmlFor="emails">1. Invite Collaborators</Label>
+    <p className="text-muted-foreground text-sm">
+      Invite collaborators to access all or specific forms in this project.
+    </p>
+    <div className="flex items-center gap-2 mt-2">
+      <Input
+        id="emails"
+        placeholder="Enter email addresses separated by commas"
+        value={emails}
+        onChange={(e) => setEmails(e.target.value)}
+        className="mt-2"
+      />
+      <Button onClick={handleAddEmails} className="mt-2">
+        + Add Email
+      </Button>
+    </div>
+    {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
+    {suggestions.length > 0 && (
+      <div className="mt-2 bg-white text-sm border border-gray-300 rounded shadow-lg">
+        {suggestions.map((suggestion, index) => (
+          <div
+            key={index}
+            className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+            onClick={() => setEmails(suggestion)}
+          >
+            {suggestion}
+          </div>
+        ))}
+      </div>
+    )}
+    <div className="flex flex-wrap gap-2 mt-2">
+      {invitedMembers.map((member) => (
+        <div key={member} className="flex items-center gap-2 bg-gray-200 px-2 py-1 rounded">
+          <span className="text-sm">{member}</span>
+          <FaTimesCircle
+            className="cursor-pointer text-sm"
+            onClick={() => handleRemoveEmail(member)}
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+interface CollaboratorRolesSectionProps {
+  invitedMembers: string[];
+  selectedRoles: ProjectRole[];
+  setSelectedRoles: (roles: ProjectRole[]) => void;
+  handleAddToTable: () => void;
+  handleRoleChange: (role: ProjectRole) => void;
+}
+
+const CollaboratorRolesSection: React.FC<CollaboratorRolesSectionProps> = ({
+  invitedMembers,
+  selectedRoles,
+  setSelectedRoles,
+  handleAddToTable,
+  handleRoleChange,
+}) => {
+
+  return (
+    <div>
+      <div className={`${invitedMembers.length === 0 ? 'opacity-50 pointer-events-none' : ''}`}>
+        <Label className="mb-4">2. Collaborator Roles</Label>
+        <p className="text-muted-foreground text-sm mb-6">
+          Select the roles to be assigned for the collaborator /collaborators.
+        </p>
+        <div className="grid grid-cols-2 gap-2 mt-2">
+          {Object.values(ProjectRole).map((role) => (
+            <div key={role} className="flex space-x-2">
+              <Checkbox
+                checked={selectedRoles.includes(role)}
+                onCheckedChange={() => handleRoleChange(role)}
+              />
+              <div>
+                <span className="text-sm">{getRoleName(role)}</span>
+                <p className="text-xs font-medium text-muted-foreground">
+                  {getRolePermissions(role)}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mt-4">
+        <Button
+          onClick={handleAddToTable}
+          disabled={selectedRoles.length === 0}
+          className="mt-2"
+        >
+          + Add Collaborators
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+interface CollaboratorsListSectionProps {
+  columns: ColumnDef<{ id: string; email: string; roles: string[] }>[];
+  tableData: { id: string; email: string; roles: string[] }[];
+  isEditing: boolean;
+  setIsEditing: (isEditing: boolean) => void;
+  editingEmail: string | null;
+  selectedRoles: ProjectRole[];
+  setSelectedRoles: (roles: ProjectRole[]) => void;
+  handleSaveRoles: () => void;
+  handleRoleChange: (role: ProjectRole) => void;
+}
+
+const CollaboratorsListSection: React.FC<CollaboratorsListSectionProps> = ({
+  columns,
+  tableData,
+  isEditing,
+  setIsEditing,
+  editingEmail,
+  selectedRoles,
+  setSelectedRoles,
+  handleSaveRoles,
+  handleRoleChange,
+}) => (
+  <div>
+    <div className="mt-4">
+      <p className="text-sm font-semibold">Invited Collaborators List</p>
+      <DataTable columns={columns} data={tableData} />
+    </div>
+    {isEditing && (
+      <Dialog open={isEditing} onOpenChange={setIsEditing}>
+        <DialogContent aria-describedby="edit-roles-description">
+          <DialogHeader>
+            <DialogTitle>Edit Roles for {editingEmail}</DialogTitle>
+            <p id="edit-roles-description" className="text-sm text-muted-foreground">
+              Select the roles you want to assign to the collaborator.
+            </p>
+          </DialogHeader>
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            {Object.values(ProjectRole).map((role) => (
+              <div key={role} className="flex space-x-2">
+                <Checkbox
+                  checked={selectedRoles.includes(role)}
+                  onCheckedChange={() => handleRoleChange(role)}
+                />
+                <div>
+                  <span className="text-sm">{getRoleName(role)}</span>
+                  <p className="text-xs font-medium text-muted-foreground">
+                    {getRolePermissions(role)}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setIsEditing(false)} variant="ghost">
+              Cancel
+            </Button>
+            <Button onClick={handleSaveRoles}>
+              Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    )}
+  </div>
+);
+
 interface InviteMembersProps {
   projectId: string;
 }
 
-const dummyCollaborators = [
-  { email: "user1@rdcp.com", id: "1", roles: ['owner'] },
-  { email: "user2@rdcp.com", id: "2", roles: ['editor'] },
-  { email: "user3@rdcp.com", id: "3", roles: ['viewer'] },
-  { email: "user4@rdcp.com", id: "4", roles: ['editor'] },
-];
-
-const InviteMembers: React.FC <InviteMembersProps> = ({projectId}) => {
+const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
   const [emails, setEmails] = useState<string>('');  
   const [invitedMembers, setInvitedMembers] = useState<string[]>([]);
   const [emailError, setEmailError] = useState<string | null>(null);
@@ -40,6 +221,13 @@ const InviteMembers: React.FC <InviteMembersProps> = ({projectId}) => {
   const [removeCollaborator] = useRemoveCollaboratorMutation();
   const { data: collaborators, refetch } = useFetchCollaboratorsQuery({ projectId });
 
+  const dummyCollaborators = [
+    { email: "user1@rdcp.com", id: "1", roles: ['owner'] },
+    { email: "user2@rdcp.com", id: "2", roles: ['editor'] },
+    { email: "user3@rdcp.com", id: "3", roles: ['viewer'] },
+    { email: "user4@rdcp.com", id: "4", roles: ['editor'] },
+  ];
+
   useEffect(() => {
     if (collaborators) {
       setTableData(collaborators.map(collaborator => ({
@@ -50,13 +238,11 @@ const InviteMembers: React.FC <InviteMembersProps> = ({projectId}) => {
     }
   }, [collaborators]);
 
-  // Validate the email format
   const validateEmail = (email: string) => {
     const regex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     return regex.test(email);
   };
 
-  // Handle adding emails after validation
   const handleAddEmails = () => {
     const emailList = emails.split(',').map(email => email.trim());
     const invalidEmails = emailList.filter(email => !validateEmail(email));
@@ -110,13 +296,10 @@ const InviteMembers: React.FC <InviteMembersProps> = ({projectId}) => {
     }
   };
 
-  // Remove email from invited list and table
   const handleRemoveEmail = async (idToRemove: string) => {
     try {
-      // Find the collaborator's email in the tableData
       const collaborator = tableData.find(data => data.id === idToRemove);
       if (collaborator) {
-        // API call to remove collaborator
         await removeCollaborator({
           projectId,
           collaboratorId: collaborator.id,
@@ -131,7 +314,6 @@ const InviteMembers: React.FC <InviteMembersProps> = ({projectId}) => {
     }
   };
 
-  // Handle role selection (checkbox changes)
   const handleRoleChange = (role: string) => {
     setSelectedRoles((prevSelectedRoles) =>
       prevSelectedRoles.includes(role as ProjectRole)
@@ -140,46 +322,43 @@ const InviteMembers: React.FC <InviteMembersProps> = ({projectId}) => {
     );
   };
 
-  // Handle opening the edit dialog
   const handleEditRoles = (id: string, email: string) => {
     const collaborator = tableData.find((data) => data.id === id);
     if (collaborator) {
-      setSelectedRoles(collaborator.roles as ProjectRole[]);
+      const rolesAsProjectRoles = collaborator.roles.map(role => role as ProjectRole);
+      setSelectedRoles(rolesAsProjectRoles);
       setEditingEmail(email);
       setEditingId(id); 
       setIsEditing(true);
     }
   };
 
-  // Handle saving the edited roles
   const handleSaveRoles = async () => {
-  try {
-    if (editingId) {
-      // API call to update collaborator roles
-      await updateCollaboratorRoles({
-        projectId,
-        collaboratorId: editingId,
-        roles: selectedRoles,
-      }).unwrap();
+    try {
+      if (editingId) {
+        await updateCollaboratorRoles({
+          projectId,
+          collaboratorId: editingId,
+          roles: selectedRoles,
+        }).unwrap();
 
-      setTableData(prevTableData =>
-        prevTableData.map(data =>
-          data.id === editingId ? { ...data, roles: selectedRoles } : data
-        )
-      );
+        setTableData(prevTableData =>
+          prevTableData.map(data =>
+            data.id === editingId ? { ...data, roles: selectedRoles } : data
+          )
+        );
+      }
+      setIsEditing(false);
+      setEditingEmail(null);
+      setEditingId(null);
+      setSelectedRoles([]);
+      refetch();
+    } catch (error) {
+      console.error("Failed to update collaborator roles:", error);
+      setEmailError('Failed to update collaborator roles.');
     }
-    setIsEditing(false);
-    setEditingEmail(null);
-    setEditingId(null);
-    setSelectedRoles([]);
-    refetch();
-  } catch (error) {
-    console.error("Failed to update collaborator roles:", error);
-    setEmailError('Failed to update collaborator roles.');
-  }
-};
+  };
 
-  // Handle search input change
   useEffect(() => {
     if (emails.length > 0) {
       const filteredSuggestions = dummyCollaborators
@@ -191,7 +370,6 @@ const InviteMembers: React.FC <InviteMembersProps> = ({projectId}) => {
     }
   }, [emails]);
 
-  // Define columns for DataTable
   const columns: ColumnDef<{ id: string; email: string; roles: string[] }>[] = [
     {
       accessorKey: 'email',
@@ -238,133 +416,36 @@ const InviteMembers: React.FC <InviteMembersProps> = ({projectId}) => {
         <h5 className='text-lg my-2 font-bold'>
           Collaborators
         </h5>
-        {/* Invite Collaborators Section */}
-        <div className="mb-4">
-          <Label htmlFor="emails">1. Invite Collaborators</Label>
-          <p className="text-muted-foreground text-sm">
-            Invite collaborators to access all or specific forms in this project.
-          </p>
-          <div className="flex items-center gap-2 mt-2">
-            <Input
-              id="emails"
-              placeholder="Enter email addresses separated by commas"
-              value={emails}
-              onChange={(e) => setEmails(e.target.value)} // Update emails on input
-              className="mt-2"
-            />
-            <Button onClick={handleAddEmails} className="mt-2">
-              + Add Email
-            </Button>
-          </div>
-          {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
-          {/* Display suggestions */}
-          {suggestions.length > 0 && (
-            <div className="mt-2 bg-white text-sm border border-gray-300 rounded shadow-lg">
-              {suggestions.map((suggestion, index) => (
-                <div
-                  key={index}
-                  className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-                  onClick={() => setEmails(suggestion)}
-                >
-                  {suggestion}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Display invited members */}
-        <div className="flex flex-wrap gap-2 mt-2">
-          {invitedMembers.map((member) => (
-            <div key={member} className="flex items-center gap-2 bg-gray-200 px-2 py-1 rounded">
-              <span className="text-sm">{member}</span>
-              <FaTimesCircle
-                className="cursor-pointer text-sm"
-                onClick={() => handleRemoveEmail(member)}
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Collaborator Roles Section */}
-        <div className={`${invitedMembers.length === 0 ? 'opacity-50 pointer-events-none' : ''}`}>
-          <Label className="mb-4">2. Collaborator Roles</Label>
-          <p className="text-muted-foreground text-sm mb-6">
-            Select the roles to be assigned for the collaborator /collaborators.
-          </p>
-          <div className="grid grid-cols-2 gap-2 mt-2">
-            {Object.values(ProjectRole).map((role) => (
-              <div key={role} className="flex space-x-2">
-                <Checkbox
-                  checked={selectedRoles.includes(role)}
-                  onCheckedChange={() => handleRoleChange(role)}
-                />
-                <div>
-                  <span className="text-sm">{getRoleName(role)}</span>
-                  <p className="text-xs font-medium text-muted-foreground">
-                    {getRolePermissions(role)}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Add to Table Button */}
-        <div className="mt-4">
-          <Button
-            onClick={handleAddToTable}
-            disabled={selectedRoles.length === 0}
-            className="mt-2"
-          >
-            + Add Collaborators
-          </Button>
-        </div>
-
-        {/* Collaborators List Table */}
-        <div className="mt-4">
-          <p className="text-sm font-semibold">Invited Collaborators List</p>
-          <DataTable columns={columns} data={tableData} />
-        </div>
+        <InviteCollaboratorsSection
+          emails={emails}
+          setEmails={setEmails}
+          invitedMembers={invitedMembers}
+          setInvitedMembers={setInvitedMembers}
+          emailError={emailError}
+          setEmailError={setEmailError}
+          suggestions={suggestions}
+          handleAddEmails={handleAddEmails}
+          handleRemoveEmail={handleRemoveEmail}
+        />
+        <CollaboratorRolesSection
+          invitedMembers={invitedMembers}
+          selectedRoles={selectedRoles}
+          setSelectedRoles={setSelectedRoles}
+          handleAddToTable={handleAddToTable}
+          handleRoleChange={handleRoleChange}
+        />
+        <CollaboratorsListSection
+          columns={columns}
+          tableData={tableData}
+          isEditing={isEditing}
+          setIsEditing={setIsEditing}
+          editingEmail={editingEmail}
+          selectedRoles={selectedRoles}
+          setSelectedRoles={setSelectedRoles}
+          handleSaveRoles={handleSaveRoles}
+          handleRoleChange={handleRoleChange}
+        />
       </SectionWrapper>
-
-      {/* Edit Roles Dialog */}
-      {isEditing && (
-        <Dialog open={isEditing} onOpenChange={setIsEditing}>
-          <DialogContent aria-describedby="edit-roles-description">
-            <DialogHeader>
-              <DialogTitle>Edit Roles for {editingEmail}</DialogTitle>
-              <p id="edit-roles-description" className="text-sm text-muted-foreground">
-                Select the roles you want to assign to the collaborator.
-              </p>
-            </DialogHeader>
-            <div className="grid grid-cols-2 gap-2 mt-2">
-              {Object.values(ProjectRole).map((role) => (
-                <div key={role} className="flex space-x-2">
-                  <Checkbox
-                    checked={selectedRoles.includes(role)}
-                    onCheckedChange={() => handleRoleChange(role)}
-                  />
-                  <div>
-                    <span className="text-sm">{getRoleName(role)}</span>
-                    <p className="text-xs font-medium text-muted-foreground">
-                      {getRolePermissions(role)}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <DialogFooter>
-              <Button onClick={() => setIsEditing(false)} variant="ghost">
-                Cancel
-              </Button>
-              <Button onClick={handleSaveRoles}>
-                Save
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
     </div>
   );
 };
