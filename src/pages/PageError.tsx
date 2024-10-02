@@ -3,13 +3,6 @@ import { Button } from '@/components/ui/button';
 import { useEffect } from 'react'
 
 const PageError = () => {
-
-    useEffect(() => {
-        setTimeout(() => {
-            window.history.back();
-        }, 8000);
-    }, [])
-
     return (
         <div className='flex flex-col justify-between items-center h-screen p-24'>
             <div className="">
@@ -20,9 +13,6 @@ const PageError = () => {
                 <p className='text-lg text-slate-500 text-center'>
                     An error occurred while processing your request. <br />
                     Go back and try again.
-                </p>
-                <p className='mt-8'>
-                    Returning to the previous page soon...
                 </p>
                 <Button asChild variant={"ghost"}>
                     <button onClick={() => window.history.back()} className='underline text-slate-900'>Go Back</button>

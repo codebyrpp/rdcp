@@ -1,11 +1,16 @@
-import FormView from '@/components/builder/components/FormView';
+import FormView, { FormFieldValuesType, FormValueType } from '@/components/builder/components/FormView';
 import Brand from '@/components/common/Brand';
 import { useGetFormQuery } from '@/state/apiSlices/formsApi';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom'
+import axios from 'axios';
+import useSubmitForm from '@/hooks/useSubmitForm';
+import Loading from '@/components/common/Loading';
 
 const PageForm = () => {
 
-  const formId = useParams<{ formId: string }>().formId
+  const { formId } = useParams<{ formId: string }>()
+
   // RTK Query hook to get the form settings
   const { data: form, isLoading: isDataLoading, isSuccess } = useGetFormQuery({
     formId: formId ?? '',
@@ -14,10 +19,28 @@ const PageForm = () => {
     skip: !formId
   });
 
+  const { submitForm, loading, error, success } = useSubmitForm();
+
+  useEffect(() => {
+    if (success) {
+      alert('Form submitted successfully!');
+    }
+  }, [success]);
+
+  const sendFormDataCallback = async (formId: string, values: FormFieldValuesType): Promise<void> => {
+    // Make the POST request
+    try {
+      await submitForm(formId, values);
+      // Handle success, such as showing a message or redirecting
+    } catch (err) {
+      console.error('Submission error:', err);
+    }
+  };
+
   return (
     <div className='overflow-y-hidden min-h-screen flex flex-col justify-between gap-2'>
       {
-        isDataLoading && <div>Loading...</div>
+        isDataLoading && <Loading />
       }
       {
         !isSuccess && <div>Something went wrong</div>
@@ -26,7 +49,7 @@ const PageForm = () => {
         !form && <div>Form not found</div>
       }
       {
-        form && <FormView form={form!} />
+        form && <FormView form={form!} submitFormHandler={sendFormDataCallback} />
       }
       <div className="mt-12">
         <Footer />

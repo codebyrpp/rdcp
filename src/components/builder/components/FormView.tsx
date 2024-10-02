@@ -3,13 +3,22 @@ import { FormElements, SubmitFunction } from "./FormElements";
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 
-const FormView = ({ form, isPreview = false }: { form: FormWithSchema, isPreview?: boolean }) => {
+export type FormValueType = string | number | string[] | File;
+export type FormFieldValuesType = { [key: string]: FormValueType };
+
+type FormViewProps = { 
+    form: FormWithSchema, 
+    isPreview?: boolean,
+    submitFormHandler?: (formId: string, values: FormFieldValuesType) => void
+}
+
+const FormView = ({ form, isPreview = false, submitFormHandler }:FormViewProps) => {
 
     if (!form) return null;
 
     const elements = isPreview ? form.draft : form.schema;
 
-    const formValues = useRef<{ [key: string]: string | number | string[] | File }>({});
+    const formValues = useRef<FormFieldValuesType>({});
 
     const submitValue: SubmitFunction = (key, value) => {
         formValues.current[key] = value;
@@ -17,6 +26,10 @@ const FormView = ({ form, isPreview = false }: { form: FormWithSchema, isPreview
 
     const submitForm = () => {
         console.log("Submitting form...");
+        //TODO: Validation
+
+        // Call the submitFormHandler if it exists - the form submission happens here
+        submitFormHandler?.(form.id!, formValues.current);
     }
 
     return (

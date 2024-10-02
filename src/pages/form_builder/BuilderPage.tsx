@@ -1,6 +1,9 @@
 import FormBuilder from "@/components/builder/components/FormBuilder";
+import Loading from "@/components/common/Loading";
 import { useGetFormQuery } from "@/state/apiSlices/formsApi";
 import { useParams } from "react-router-dom";
+import BuilderError from "./BuilderError";
+import BuilderLoading from "./BuilderLoading";
 
 export default function BuilderPage() {
 
@@ -15,15 +18,14 @@ export default function BuilderPage() {
     });
 
     if (isDataLoading) {
-        return <div>Loading...</div>
+        return <BuilderLoading />
     }
 
-    if (!isSuccess) {
-        return <div>Something went wrong</div>
-    }
+    if (!isSuccess)
+        return <BuilderError error={new Error("Something went wrong!")} />
 
     if (!form) {
-        return <div>Form not found</div>
+        return <BuilderError error={new Error("Form not found!")} />
     }
 
     return <FormBuilder form={form!} />;

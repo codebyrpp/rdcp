@@ -1,3 +1,4 @@
+import Loading from '@/components/common/Loading'
 import CreateProject from '@/components/projects/CreateProject'
 import ProjectListItem from '@/components/projects/ListItemProject'
 import { Input } from '@/components/ui/input'
@@ -45,6 +46,10 @@ const PageDashboard = () => {
     });
   };
 
+  if (isLoading) {
+    return <Loading />
+  }
+
   return (
     <div className=''>
       {/* Top */}
@@ -89,7 +94,7 @@ const PageDashboard = () => {
       {/* Content */}
       {
         isLoading ? (
-          <div>Loading...</div>
+          <Loading />
         ) : isError ? (
           // @ts-ignore
           <div>{error?.data?.message}</div>

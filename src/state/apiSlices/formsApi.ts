@@ -85,12 +85,12 @@ export const formsApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+    // form management
     useCreateFormMutation,
     useGetFormQuery,
     useUpdateFormMutation,
     useDeleteFormMutation,
 
-    // The following mutations are used for form editing
     useSaveFormMutation,
     usePublishFormMutation,
     useKeepAliveMutation,

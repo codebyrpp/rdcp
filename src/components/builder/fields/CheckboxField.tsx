@@ -99,7 +99,6 @@ function FormComponent({
                     <Checkbox id={id} defaultChecked={false}
                         checked={isSelected[option]}
                         onCheckedChange={(checked) => {
-                            if (!submitValue) return;
                             const newSelected = {
                                 ...isSelected,
                                 [option]: checked.valueOf() as boolean,
@@ -108,7 +107,14 @@ function FormComponent({
                             processInput(newSelected);
                         }}
                     />
-                    <Label htmlFor={id}>{option}</Label>
+                    <Label htmlFor={id} onClick={()=>{
+                        const newSelected = {
+                            ...isSelected,
+                            [option]: !isSelected[option],
+                        };
+                        setIsSelected(newSelected);
+                        processInput(newSelected);
+                    }}>{option}</Label>
                 </div>);
             })}
         </div>
