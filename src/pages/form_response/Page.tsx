@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import useProjectNavigation from "@/hooks/useProjectNavigation";
 import { useParams } from "react-router-dom";
+import Loading from "@/components/common/Loading";
 
 export default function Page() {
   const [data, setData] = useState<User[]>([]);
@@ -22,7 +23,7 @@ export default function Page() {
     fetchData();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading/>;
 
   return (
     <section className="">

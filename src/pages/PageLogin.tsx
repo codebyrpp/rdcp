@@ -3,15 +3,18 @@ import LoginForm from '../components/forms/FormLogin'
 import Brand from '@/components/common/Brand'
 import useSession from '@/hooks/useSession'
 import { PROJECTS_ROUTE } from '@/constants/routes'
+import Loading from '@/components/common/Loading'
+import { useNavigate } from 'react-router-dom'
 
 const LoginPage = () => {
 
     const { user } = useSession();
+    const navigate = useNavigate();
 
     useEffect(() => {
         // if user is already logged in, redirect to the projects dashboard
         if (user) {
-            window.location.href = PROJECTS_ROUTE;
+            navigate(PROJECTS_ROUTE);
         }
     }, [])
 

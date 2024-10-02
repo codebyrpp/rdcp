@@ -1,4 +1,5 @@
 import BreadCrumbs from '@/components/common/BreadCrumbs';
+import Loading from '@/components/common/Loading';
 import CreateForm from '@/components/feats/forms/CreateForm';
 import FormListItem from '@/components/feats/forms/ListItemForm';
 import { Badge } from '@/components/ui/badge';
@@ -24,6 +25,9 @@ const PageProject = () => {
     });
 
     const searchInputRef = useSearchRef();
+
+    if(isLoading) 
+        return <Loading />;
 
     return (
         <>
@@ -64,7 +68,7 @@ const PageProject = () => {
             <div className="flex flex-col gap-2">
                 {/* <FormListItem form={form} /> */}
                 {
-                    isLoading ? <p>Loading...</p> :
+                    isLoading ? <Loading/> :
                         // @ts-ignore
                         isError ? <p>{error?.message}</p> :
                             forms?.length === 0 ? <p className='m-5 text-muted-foreground'>No forms found</p> :
