@@ -1,12 +1,11 @@
 import FormView, { FormFieldValuesType, FormValueType } from '@/components/builder/components/FormView';
 import Brand from '@/components/common/Brand';
 import { useGetFormQuery } from '@/state/apiSlices/formsApi';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom'
 import useSubmitForm from '@/hooks/useSubmitForm';
 import Loading from '@/components/common/Loading';
 import { Form } from '@/models/forms';
-import { Button } from '@/components/ui/button';
 
 const PageForm = () => {
 
@@ -22,12 +21,6 @@ const PageForm = () => {
 
   const { submitForm, loading, error, success } = useSubmitForm();
   const [showForm, setShowForm] = useState<boolean>(true);
-
-  useEffect(() => {
-    if (success) {
-      alert('Form submitted successfully!');
-    }
-  }, [success]);
 
   const sendFormDataCallback = async (formId: string, values: FormFieldValuesType): Promise<void> => {
     // Make the POST request
@@ -47,11 +40,10 @@ const PageForm = () => {
       setShowForm(true);
     }} />
 
+  if(isDataLoading) return <Loading />
+
   return (
     <div className='overflow-y-hidden min-h-screen flex flex-col justify-between gap-2'>
-      {
-        isDataLoading && <Loading />
-      }
       {
         !isSuccess && <div>Something went wrong</div>
       }
