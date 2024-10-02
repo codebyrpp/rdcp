@@ -4,7 +4,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState = {
     user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) as User : null,
-    token: localStorage.getItem('token') ? localStorage.getItem('token') : null,
+    accessToken: localStorage.getItem('accessToken') || null,
+    refreshToken: localStorage.getItem('refreshToken') || null,
 };
 
 export const sessionSlice = createSlice({
@@ -12,20 +13,29 @@ export const sessionSlice = createSlice({
     initialState: initialState,
     reducers: {
         setSession: (state, action: PayloadAction<Session>) => {
-            const { user, token } = action.payload;
+            const { user, accessToken, refreshToken } = action.payload;
             state.user = user;
-            state.token = token;
+            state.accessToken = accessToken;
+            state.refreshToken = refreshToken;
             localStorage.setItem('user', JSON.stringify(user));
-            localStorage.setItem('token', token);
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
         },
         revokeSession: (state) => {
             state.user = null;
-            state.token = null;
+            state.accessToken = null;
+            state.refreshToken = null;
             localStorage.removeItem('user');
-            localStorage.removeItem('token');
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+        },
+        refreshSession: (state, action: PayloadAction<{ accessToken: string }>) => {
+            const { accessToken } = action.payload;
+            state.accessToken = accessToken;
+            localStorage.setItem('accessToken', accessToken);
         }
     },
 });
 
-export const { setSession, revokeSession } = sessionSlice.actions;
+export const { setSession, revokeSession, refreshSession } = sessionSlice.actions;
 export default sessionSlice.reducer;

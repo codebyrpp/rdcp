@@ -1,32 +1,31 @@
 import FormBuilder from "@/components/builder/components/FormBuilder";
-import { useGetFormMutation } from "@/state/formMockApi";
-import { useEffect, useState } from "react";
+import { useGetFormQuery } from "@/state/apiSlices/formsApi";
 import { useParams } from "react-router-dom";
-
-
 
 export default function BuilderPage() {
 
     const formId = useParams<{ formId: string }>().formId;
-    const { getForm } = useGetFormMutation();
 
-    const [form, setForm] = useState<any>();
+    // RTK Query hook to get the form settings
+    const { data: form, isLoading: isDataLoading, isSuccess } = useGetFormQuery({
+        formId: formId ?? '',
+        schema: true
+    }, {
+        skip: !formId
+    });
 
-    useEffect(() => {
-        if(formId){
-            console.log('formId', formId)
-            getForm(formId).then((data: any) => {
-                console.log('data', data)
-                setForm(data)
-            })
-        }
-        
-    }, [formId])
-
-    if (!form) {
+    if (isDataLoading) {
         return <div>Loading...</div>
     }
 
-    return <FormBuilder form={form} />;
+    if (!isSuccess) {
+        return <div>Something went wrong</div>
+    }
+
+    if (!form) {
+        return <div>Form not found</div>
+    }
+
+    return <FormBuilder form={form!} />;
 
 }

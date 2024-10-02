@@ -1,6 +1,7 @@
 import { EmailValidation } from "./EmailValidation";
 import { PhoneNumberValidation } from "./PhoneNumberValidation";
 import { LengthValidation } from "./LengthValidation";
+import { BaseFieldValidation } from "../base";
 
 export type TextFieldValidationType = "email" | "phoneNumber" | "length";
 
@@ -9,22 +10,17 @@ export type TextFieldValidationInstance = {
     schema: unknown;
 };
 
-export type TextFieldValidation = {
+export type TextFieldValidation = BaseFieldValidation<TextFieldValidationInstance> & {
     type: TextFieldValidationType;
-    name: string;
-    schema: unknown;
-    propertiesComponent: React.FC<{
-        validationInstance: TextFieldValidationInstance;
-        update: (validation: TextFieldValidationInstance) => void;
-    }>;
 };
 
-type TextValidationTypes ={
-    [key in TextFieldValidationType] : TextFieldValidation;
-}
-
-export const TextValidations: TextValidationTypes = {
+export const TextValidations = {
     email: EmailValidation,
     phoneNumber: PhoneNumberValidation,
     length: LengthValidation
 }; 
+
+export const TextAreaValidations = {
+    length: LengthValidation
+};
+

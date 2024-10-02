@@ -6,11 +6,12 @@ import { SelectFieldFormElement } from "../fields/SelectField";
 import { CheckboxFieldFormElement } from "../fields/CheckboxField";
 import { ReactNode } from "react";
 import { TitleDescFieldFormElement } from "../fields/TitleDescField";
+import { FileUploadFieldFormElement } from "../fields/FileUploadField";
 
 export type ElementsType = "TextField" | "TitleDescField" | "NumberField" | "TextAreaField" | "DateField" 
-                            | "SelectField" | "CheckboxField";
+                            | "SelectField" | "CheckboxField" | "FileUploadField";
 
-export type SubmitFunction = (key: string, value: string) => void;
+export type SubmitFunction = (key: string, value: string | number | string[] | File) => void;
 
 export type FormElement = {
     type: ElementsType;
@@ -48,9 +49,10 @@ type FormElementsType = {
 export const FormElements: FormElementsType = {
     TitleDescField: TitleDescFieldFormElement,
     TextField: TextFieldFormElement,
-    NumberField: NumberFieldFormElement,
     TextAreaField: TextAreaFieldFormElement,
+    NumberField: NumberFieldFormElement,
     DateField: DateFieldFormElement,
     SelectField: SelectFieldFormElement,
     CheckboxField: CheckboxFieldFormElement,
+    FileUploadField: FileUploadFieldFormElement
 };
