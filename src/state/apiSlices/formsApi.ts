@@ -84,7 +84,7 @@ export const formsApiSlice = apiSlice.injectEndpoints({
 
         viewForm: builder.query<Form, { formId: string }>({
             query: ({ formId }) => ({
-                url: `responses/${formId}`,
+                url: `submissions/form/${formId}`,
                 method: 'GET',
             }),
         }),

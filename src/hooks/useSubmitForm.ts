@@ -27,7 +27,7 @@ const useSubmitForm = () => {
     });
 
     try {
-      const response = await axiosInstance.post(`/responses/${formId}/submit`, formData);
+      const response = await axiosInstance.post(`/submissions/form/${formId}`, formData);
       setSuccess(true); // Set success state to true
       return { success: true };
     } catch (error: any) {
