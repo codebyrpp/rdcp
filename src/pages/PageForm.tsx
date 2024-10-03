@@ -1,20 +1,20 @@
 import FormView, { FormFieldValuesType, FormValueType } from '@/components/builder/components/FormView';
 import Brand from '@/components/common/Brand';
-import { useGetFormQuery } from '@/state/apiSlices/formsApi';
+import { useGetFormQuery, useViewFormQuery } from '@/state/apiSlices/formsApi';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom'
 import useSubmitForm from '@/hooks/useSubmitForm';
 import Loading from '@/components/common/Loading';
 import { Form } from '@/models/forms';
+import { PageError } from './PageError';
 
 const PageForm = () => {
 
   const { formId } = useParams<{ formId: string }>()
 
   // RTK Query hook to get the form settings
-  const { data: form, isLoading: isDataLoading, isSuccess } = useGetFormQuery({
+  const { data: form, isLoading: isDataLoading, isSuccess } = useViewFormQuery({
     formId: formId ?? '',
-    schema: true
   }, {
     skip: !formId
   });
@@ -40,16 +40,13 @@ const PageForm = () => {
       setShowForm(true);
     }} />
 
-  if(isDataLoading) return <Loading />
+  if (isDataLoading) return <Loading />
+
+  if (!isSuccess)
+    return <PageError />
 
   return (
     <div className='overflow-y-hidden overflow-x-hidden min-h-screen flex flex-col justify-between gap-2'>
-      {
-        !isSuccess && <div>Something went wrong</div>
-      }
-      {
-        !form && <div>Form not found</div>
-      }
       {
         showForm && form && <FormView form={form!} submitFormHandler={sendFormDataCallback} />
       }
