@@ -54,7 +54,7 @@ export default function LoginForm() {
                 <FormDescription>
 
                 </FormDescription>
-                <FormMessage />
+                <FormMessage data-testid="password-input-message"/>
               </FormItem>
             )}
           />
@@ -64,7 +64,7 @@ export default function LoginForm() {
           </Button>
 
           {isError && (
-            <p className="text-red-500 mt-2 text-sm" data-testid="error-message">
+            <p className="text-red-500 mt-2 text-sm" data-testid="invalid-credentials-message">
               {errorMessage || 'Failed to login. Please try again.'}
             </p>
           )}
@@ -72,7 +72,7 @@ export default function LoginForm() {
       </Form>
       {/* TODO: Add forget password link */}
       <div className="flex justify-center">
-        <Button onClick={handleForgetPassword} className="mt-3" variant={"link"}>
+        <Button onClick={handleForgetPassword} className="mt-3" variant={"link"} data-testid="forgot-passsword">
           Forgot your password?
         </Button>
       </div>

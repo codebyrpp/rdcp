@@ -50,6 +50,7 @@ export default function ForgotPasswordPage() {
     <div className="flex flex-col gap-y-4 h-screen justify-center items-center">
       <Brand />
       <FormWrapper
+        data-testid="forgot-password-form"
         title="Forgot Password"
         description="Enter your email to receive a one-time password."
       >
@@ -69,13 +70,14 @@ export default function ForgotPasswordPage() {
                       placeholder="Enter your email address"
                       type="email"
                       {...field}
+                      data-testid="email-input"
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage  data-testid="email-input-message" />
                 </FormItem>
               )}
             />
-            <Button className="flex w-full" type="submit">
+            <Button className="flex w-full" type="submit" >
               Send OTP
             </Button>
           </form>
