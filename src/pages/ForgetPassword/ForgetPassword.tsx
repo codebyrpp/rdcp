@@ -47,10 +47,9 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="flex flex-col gap-y-4 h-screen justify-center items-center">
+    <div className="flex flex-col gap-y-4 h-screen justify-center items-center" data-testid="forgot-password-form">
       <Brand />
       <FormWrapper
-        data-testid="forgot-password-form"
         title="Forgot Password"
         description="Enter your email to receive a one-time password."
       >
@@ -73,11 +72,11 @@ export default function ForgotPasswordPage() {
                       data-testid="email-input"
                     />
                   </FormControl>
-                  <FormMessage  data-testid="email-input-message" />
+                  <FormMessage  data-testid="otp-email-input-message" />
                 </FormItem>
               )}
             />
-            <Button className="flex w-full" type="submit" >
+            <Button className="flex w-full" type="submit" data-testid="otp-send-button">
               Send OTP
             </Button>
           </form>
