@@ -13,7 +13,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { SectionWrapper } from '../common/wrapper';
 import { useAddCollaboratorsMutation, useUpdateCollaboratorRolesMutation, useRemoveCollaboratorMutation, useFetchCollaboratorsQuery } from '@/state/apiSlices/collaboratorsApi';
 import useEmailSearch from '../../../src/hooks/useEmailSearch';
-import { set } from 'lodash';
 
 interface InviteCollaboratorsSectionProps {
   selectedEmail: string | null;
@@ -246,10 +245,15 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
 
   const handleAddEmails = () => {
     if (selectedEmail && suggestions.some(suggestion => suggestion.email === selectedEmail)) {
-      const newInvitedMembers = [selectedEmail].filter(email => !invitedMembers.includes(email));
-      setInvitedMembers([...invitedMembers, ...newInvitedMembers]);
-      setSelectedEmail(null); // Clear the input after adding
-      setEmailError(null); // Clear any previous error
+      // Check if the email is already in the tableData
+      if (!tableData.some(data => data.email === selectedEmail)) {
+        const newInvitedMembers = [selectedEmail].filter(email => !invitedMembers.includes(email));
+        setInvitedMembers([...invitedMembers, ...newInvitedMembers]);
+        setSelectedEmail(null); // Clear the input after adding
+        setEmailError(null); // Clear any previous error
+      } else {
+        setEmailError('This email is already in the table.');
+      }
     } else {
       setEmailError('Please select a valid email from the suggestions.');
     }
