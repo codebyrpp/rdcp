@@ -7,7 +7,7 @@ import useDesigner from "../hooks/useDesigner";
 import { useCallback, useEffect, useState } from "react";
 import FormLoading from "./FormLoading";
 import PreviewDialogBtn from "./actions/PreviewDialogBtn";
-import {LeaveEditorButton} from "./actions/DiscardChangesBtn";
+import { LeaveEditorButton } from "./actions/DiscardChangesBtn";
 import useSaveShortcut from "../hooks/useSaveShortcut";
 import useFormLock from "../hooks/useFormLock";
 import PublishFormBtn from "./actions/PublishFormBtn";
@@ -31,10 +31,10 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
     }, [form, elements]);
 
     const [isReady, setIsReady] = useState(false);
-    
-    const saveAction = useCallback(() => {
+
+    const saveAction = () => {
         saveFormChanges(form.id!);
-    },[]);
+    };
 
     useSaveShortcut(saveAction);
 
@@ -84,9 +84,9 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
                                             <PublishFormBtn id={form.id!} />
                                         </>
                                     }
-                                    <LeaveEditorButton 
-                                    projectId={form.projectId!}
-                                    saveChanges={saveAction} />
+                                    <LeaveEditorButton
+                                        projectId={form.projectId!}
+                                        saveChanges={saveAction} />
                                 </div>
                             </div>
                         </div>
