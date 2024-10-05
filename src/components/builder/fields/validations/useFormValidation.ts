@@ -12,9 +12,9 @@ function useFormValidation(required: boolean) {
   const validateFieldFromSchema = (value: string | number, schema: any) => {
 
     if (requiredValidation(value))
-      return;
+      return false;
 
-    if (!schema) return;
+    if (!schema) return true; // no need for validation so return true
 
     const result = validate(value, schema);
     if (!result.isValid) {

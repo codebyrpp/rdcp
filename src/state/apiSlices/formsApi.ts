@@ -81,6 +81,13 @@ export const formsApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
             }),
         }),
+
+        viewForm: builder.query<Form, { formId: string }>({
+            query: ({ formId }) => ({
+                url: `submissions/form/${formId}`,
+                method: 'GET',
+            }),
+        }),
     }),
 });
 
@@ -95,5 +102,7 @@ export const {
     usePublishFormMutation,
     useKeepAliveMutation,
     useAcquireLockMutation,
-    useReleaseLockMutation
+    useReleaseLockMutation,
+
+    useViewFormQuery
 } = formsApiSlice;

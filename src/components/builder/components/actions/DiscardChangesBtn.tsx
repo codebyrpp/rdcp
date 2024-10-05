@@ -11,19 +11,29 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { AlertTriangle, X } from 'lucide-react'
+import useProjectNavigation from '@/hooks/useProjectNavigation'
 
-export default function DiscardChangesButton() {
+type LeaveEditorButtonProps = {
+  projectId: string;
+  saveChanges: () => void;
+}
+
+export function LeaveEditorButton({ saveChanges, projectId }: LeaveEditorButtonProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const { navigateToProject } = useProjectNavigation();
 
-  const handleDiscard = () => {
-    setIsOpen(false)
-    // Add your discard logic here
-    console.log("Changes discarded")
+  const handleLeave = () => {
+    navigateToProject(projectId);
+  }
+
+  const handleSaveAndLeave = () => {
+    saveChanges();
+    navigateToProject(projectId);
   }
 
   return (
     <div>
-      <Button variant="secondary" size={"icon"} 
+      <Button variant="secondary" size={"icon"}
         onClick={() => setIsOpen(true)}>
         <X className="h-5 w-5" />
       </Button>
@@ -32,26 +42,34 @@ export default function DiscardChangesButton() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-yellow-500" />
-              Confirm Discard
+              Leaving Designer
             </DialogTitle>
             <DialogDescription>
-              All changes will be lost. This action cannot be undone.
+              You might have unsaved changes. Are you sure you want to leave?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="sm:justify-start">
             <Button
               type="button"
               variant="destructive"
-              onClick={handleDiscard}
+              onClick={handleLeave}
             >
-              Discard Changes
+              Leave without saving
+            </Button>
+            <Button
+              type="button"
+              variant="success"
+              onClick={handleSaveAndLeave}
+              className='font-bold'
+            >
+              Save and Exit
             </Button>
             <Button
               type="button"
               variant="outline"
               onClick={() => setIsOpen(false)}
             >
-              Cancel
+              Go Back
             </Button>
           </DialogFooter>
         </DialogContent>

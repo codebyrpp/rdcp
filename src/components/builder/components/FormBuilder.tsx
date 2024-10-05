@@ -4,10 +4,10 @@ import Designer from "./Designer";
 import DragOverlayWrapper from "./DragOverlayWrapper";
 import SaveFormBtn from "./actions/SaveFormBtn";
 import useDesigner from "../hooks/useDesigner";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import FormLoading from "./FormLoading";
 import PreviewDialogBtn from "./actions/PreviewDialogBtn";
-import DiscardChangesButton from "./actions/DiscardChangesBtn";
+import { LeaveEditorButton } from "./actions/DiscardChangesBtn";
 import useSaveShortcut from "../hooks/useSaveShortcut";
 import useFormLock from "../hooks/useFormLock";
 import PublishFormBtn from "./actions/PublishFormBtn";
@@ -31,6 +31,7 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
     }, [form, elements]);
 
     const [isReady, setIsReady] = useState(false);
+
     const saveAction = () => {
         saveFormChanges(form.id!);
     };
@@ -83,7 +84,9 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
                                             <PublishFormBtn id={form.id!} />
                                         </>
                                     }
-                                    <DiscardChangesButton />
+                                    <LeaveEditorButton
+                                        projectId={form.projectId!}
+                                        saveChanges={saveAction} />
                                 </div>
                             </div>
                         </div>
@@ -91,10 +94,13 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
                     <div className="flex flex-grow 
                 items-center justify-center relative overflow-y-hidden
                  bg-accent bg-slate-200 bg-center w-screen">
-                    {
-                        locked && <div className="absolute z-[10] w-full h-screen bg-black/20"/>
-                    }
-                        <Designer />
+                        {
+                            locked && <div className="absolute z-[10] w-full h-screen bg-black/20" />
+                        }
+                        <Designer form={{
+                            name: form.name!,
+                            description: form.description!,
+                        }} />
                     </div>
                 </div>
                 <DragOverlayWrapper />
