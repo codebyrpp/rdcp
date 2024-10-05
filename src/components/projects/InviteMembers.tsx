@@ -12,74 +12,87 @@ import { FaEllipsisH as MoreHorizontal } from 'react-icons/fa';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../ui/dialog';
 import { SectionWrapper } from '../common/wrapper';
 import { useAddCollaboratorsMutation, useUpdateCollaboratorRolesMutation, useRemoveCollaboratorMutation, useFetchCollaboratorsQuery } from '@/state/apiSlices/collaboratorsApi';
+import useEmailSearch from '../../../src/hooks/useEmailSearch';
+import { set } from 'lodash';
 
 interface InviteCollaboratorsSectionProps {
-  emails: string;
-  setEmails: (emails: string) => void;
+  selectedEmail: string | null;
+  setSelectedEmail: (email: string | null) => void;
   invitedMembers: string[];
   setInvitedMembers: (members: string[]) => void;
   emailError: string | null;
   setEmailError: (error: string | null) => void;
-  suggestions: string[];
   handleAddEmails: () => void;
   handleRemoveEmail: (email: string) => void;
 }
 
 const InviteCollaboratorsSection: React.FC<InviteCollaboratorsSectionProps> = ({
-  emails,
-  setEmails,
+  selectedEmail,
+  setSelectedEmail,
   invitedMembers,
   setInvitedMembers,
   emailError,
   setEmailError,
-  suggestions,
   handleAddEmails,
   handleRemoveEmail,
-}) => (
-  <div className="mb-4">
-    <Label htmlFor="emails">1. Invite Collaborators</Label>
-    <p className="text-muted-foreground text-sm">
-      Invite collaborators to access all or specific forms in this project.
-    </p>
-    <div className="flex items-center gap-2 mt-2">
-      <Input
-        id="emails"
-        placeholder="Enter email addresses separated by commas"
-        value={emails}
-        onChange={(e) => setEmails(e.target.value)}
-        className="mt-2"
-      />
-      <Button onClick={handleAddEmails} className="mt-2">
-        + Add Email
-      </Button>
-    </div>
-    {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
-    {suggestions.length > 0 && (
-      <div className="mt-2 bg-white text-sm border border-gray-300 rounded shadow-lg">
-        {suggestions.map((suggestion, index) => (
-          <div
-            key={index}
-            className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-            onClick={() => setEmails(suggestion)}
-          >
-            {suggestion}
+}) => {
+  const { suggestions, debouncedFetchSuggestions } = useEmailSearch();
+
+  useEffect(() => {
+    if (selectedEmail) {
+      debouncedFetchSuggestions(selectedEmail);
+    }
+  }, [selectedEmail, debouncedFetchSuggestions]);
+  
+  return(
+    <div className="mb-4">
+      <Label htmlFor="emails">1. Invite Collaborators</Label>
+      <p className="text-muted-foreground text-sm">
+        Invite collaborators to access all or specific forms in this project.
+      </p>
+      <div className="flex items-center gap-2 mt-2">
+        <Input
+          id="emails"
+          placeholder="Enter email addresses"
+          value={selectedEmail || ''}
+          onChange={(e) => {
+            setSelectedEmail(e.target.value);
+            debouncedFetchSuggestions(e.target.value);
+          }}
+          className="mt-2"
+        />
+        <Button onClick={handleAddEmails} className="mt-2" disabled={!selectedEmail}>
+          + Add Email
+        </Button>
+      </div>
+      {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
+      {suggestions.length > 0 && (
+        <div className="mt-2 bg-white text-sm border border-gray-300 rounded shadow-lg">
+          {suggestions.map((suggestion) => (
+            <div
+              key={suggestion.id}
+              className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+              onClick={() => setSelectedEmail(suggestion.email)}
+            >
+              {suggestion.email}
+            </div>
+          ))}
+        </div>
+      )}
+      <div className="flex flex-wrap gap-2 mt-2">
+        {invitedMembers.map((member) => (
+          <div key={member} className="flex items-center gap-2 bg-gray-200 px-2 py-1 rounded">
+            <span className="text-sm">{member}</span>
+            <FaTimesCircle
+              className="cursor-pointer text-sm"
+              onClick={() => handleRemoveEmail(member)}
+            />
           </div>
         ))}
       </div>
-    )}
-    <div className="flex flex-wrap gap-2 mt-2">
-      {invitedMembers.map((member) => (
-        <div key={member} className="flex items-center gap-2 bg-gray-200 px-2 py-1 rounded">
-          <span className="text-sm">{member}</span>
-          <FaTimesCircle
-            className="cursor-pointer text-sm"
-            onClick={() => handleRemoveEmail(member)}
-          />
-        </div>
-      ))}
     </div>
-  </div>
-);
+  );
+};
 
 interface CollaboratorRolesSectionProps {
   invitedMembers: string[];
@@ -206,7 +219,7 @@ interface InviteMembersProps {
 }
 
 const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
-  const [emails, setEmails] = useState<string>('');  
+  const [selectedEmail, setSelectedEmail] = useState<string | null>(null);
   const [invitedMembers, setInvitedMembers] = useState<string[]>([]);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [selectedRoles, setSelectedRoles] = useState<ProjectRole[]>([]);
@@ -214,19 +227,12 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editingEmail, setEditingEmail] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const { suggestions, debouncedFetchSuggestions } = useEmailSearch();
 
   const [addCollaborators] = useAddCollaboratorsMutation();
   const [updateCollaboratorRoles] = useUpdateCollaboratorRolesMutation();
   const [removeCollaborator] = useRemoveCollaboratorMutation();
   const { data: collaborators, refetch } = useFetchCollaboratorsQuery({ projectId });
-
-  const dummyCollaborators = [
-    { email: "user1@rdcp.com", id: "1", roles: ['owner'] },
-    { email: "user2@rdcp.com", id: "2", roles: ['editor'] },
-    { email: "user3@rdcp.com", id: "3", roles: ['viewer'] },
-    { email: "user4@rdcp.com", id: "4", roles: ['editor'] },
-  ];
 
   useEffect(() => {
     if (collaborators) {
@@ -238,27 +244,19 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
     }
   }, [collaborators]);
 
-  const validateEmail = (email: string) => {
-    const regex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-    return regex.test(email);
-  };
-
   const handleAddEmails = () => {
-    const emailList = emails.split(',').map(email => email.trim());
-    const invalidEmails = emailList.filter(email => !validateEmail(email));
-    if (invalidEmails.length > 0) {
-      setEmailError(`Invalid email(s): ${invalidEmails.join(', ')}`);
-      return;
+    if (selectedEmail && suggestions.some(suggestion => suggestion.email === selectedEmail)) {
+      const newInvitedMembers = [selectedEmail].filter(email => !invitedMembers.includes(email));
+      setInvitedMembers([...invitedMembers, ...newInvitedMembers]);
+      setSelectedEmail(null); // Clear the input after adding
+      setEmailError(null); // Clear any previous error
+    } else {
+      setEmailError('Please select a valid email from the suggestions.');
     }
-
-    const newInvitedMembers = emailList.filter(email => !invitedMembers.includes(email));
-    setInvitedMembers([...invitedMembers, ...newInvitedMembers]);
-    setEmails(''); // Clear the input after adding
-    setEmailError(null); // Clear any previous error
   };
 
   const handleAddToTable = async () => {
-    const emailList = invitedMembers.filter(email => validateEmail(email));
+    const emailList = invitedMembers;
     if (emailList.length > 0 && selectedRoles.length > 0) {
       try {
         const newCollaborators = emailList.map((email, index) => ({
@@ -360,15 +358,10 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
   };
 
   useEffect(() => {
-    if (emails.length > 0) {
-      const filteredSuggestions = dummyCollaborators
-        .filter(collaborator => collaborator.email.includes(emails))
-        .map(collaborator => collaborator.email);
-      setSuggestions(filteredSuggestions);
-    } else {
-      setSuggestions([]);
+    if (selectedEmail) {
+    debouncedFetchSuggestions(selectedEmail);
     }
-  }, [emails]);
+  }, [selectedEmail, debouncedFetchSuggestions]);
 
   const columns: ColumnDef<{ id: string; email: string; roles: string[] }>[] = [
     {
@@ -417,13 +410,12 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
           Collaborators
         </h5>
         <InviteCollaboratorsSection
-          emails={emails}
-          setEmails={setEmails}
+          selectedEmail={selectedEmail || ''}
+          setSelectedEmail={setSelectedEmail}
           invitedMembers={invitedMembers}
           setInvitedMembers={setInvitedMembers}
           emailError={emailError}
           setEmailError={setEmailError}
-          suggestions={suggestions}
           handleAddEmails={handleAddEmails}
           handleRemoveEmail={handleRemoveEmail}
         />
