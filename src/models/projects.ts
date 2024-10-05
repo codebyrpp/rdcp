@@ -10,8 +10,8 @@ export interface Project {
     id: string,
     name: string,
     description: string,
-    createdAt: string,
-    updated_at: string,
+    createdAt: Date,
+    updatedAt: Date,
     roles: ProjectRole[];
     forms?: Form[];
     collaborators?: Collaborator[];

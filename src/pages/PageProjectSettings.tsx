@@ -1,4 +1,5 @@
 import BreadCrumbs from "@/components/common/BreadCrumbs"
+import Loading from "@/components/common/Loading";
 import FormUpdateProjectSettings from "@/components/forms/FormUpdateProjectSettings";
 import DeleteProject from "@/components/projects/DeleteProject";
 import InviteMembers from "@/components/projects/InviteMembers";
@@ -11,6 +12,9 @@ const PageProjectSettings = () => {
 
     const { projectId } = useParams<{ projectId: string }>()
     const { project, isLoading } = useProjectInfoViewModel({ projectId });
+
+    if (isLoading)
+        return <Loading />
 
     return (
         <div className="">
@@ -36,8 +40,8 @@ const PageProjectSettings = () => {
                     }
                 </div>
                 {
-                    project?.id ? <InviteMembers projectId={project.id} /> :  <Skeleton className="h-full w-full" />
-                }       
+                    project?.id ? <InviteMembers projectId={project.id} /> : <Skeleton className="h-full w-full" />
+                }
             </div>
 
         </div>
