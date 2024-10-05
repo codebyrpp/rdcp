@@ -4,10 +4,10 @@ import Designer from "./Designer";
 import DragOverlayWrapper from "./DragOverlayWrapper";
 import SaveFormBtn from "./actions/SaveFormBtn";
 import useDesigner from "../hooks/useDesigner";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import FormLoading from "./FormLoading";
 import PreviewDialogBtn from "./actions/PreviewDialogBtn";
-import DiscardChangesButton from "./actions/DiscardChangesBtn";
+import {LeaveEditorButton} from "./actions/DiscardChangesBtn";
 import useSaveShortcut from "../hooks/useSaveShortcut";
 import useFormLock from "../hooks/useFormLock";
 import PublishFormBtn from "./actions/PublishFormBtn";
@@ -31,9 +31,10 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
     }, [form, elements]);
 
     const [isReady, setIsReady] = useState(false);
-    const saveAction = () => {
+    
+    const saveAction = useCallback(() => {
         saveFormChanges(form.id!);
-    };
+    },[]);
 
     useSaveShortcut(saveAction);
 
@@ -83,7 +84,9 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
                                             <PublishFormBtn id={form.id!} />
                                         </>
                                     }
-                                    <DiscardChangesButton />
+                                    <LeaveEditorButton 
+                                    projectId={form.projectId!}
+                                    saveChanges={saveAction} />
                                 </div>
                             </div>
                         </div>
