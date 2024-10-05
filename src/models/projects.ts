@@ -22,7 +22,7 @@ export enum ProjectRole {
     MANAGER = 'manager',
     EDITOR = 'editor',
     DATA_ANALYST = 'data_analyst',
-    DATA_ANALYST_VIEW_ONLY = 'data_analyst_view_only',
+    // DATA_ANALYST_VIEW_ONLY = 'data_analyst_view_only',
 }
 
 const _roleNameMap = {
@@ -30,17 +30,17 @@ const _roleNameMap = {
     [ProjectRole.MANAGER]: 'Manager',
     [ProjectRole.EDITOR]: 'Editor',
     [ProjectRole.DATA_ANALYST]: 'Data Analyst',
-    [ProjectRole.DATA_ANALYST_VIEW_ONLY]: 'Data Analyst (View Only)',
+    // [ProjectRole.DATA_ANALYST_VIEW_ONLY]: 'Data Analyst (View Only)',
 }
 
 const _rolePermissions = {
     [ProjectRole.OWNER]: "Owners can do anything",
-    [ProjectRole.MANAGER]: "Managers can create, edit, and delete forms, view and edit project data, and manage collaborators",
+    [ProjectRole.MANAGER]: "Managers can create, edit, and delete forms, view and edit project data, and manage form participants",
     [ProjectRole.EDITOR]:
         "Editors can view project data and forms",
     [ProjectRole.DATA_ANALYST]:
-        "Data Analysts can view project data and forms",
-    [ProjectRole.DATA_ANALYST_VIEW_ONLY]: "Data Analysts (View Only) can view project data and forms",
+        "Data Analysts can view project data and forms"
+    // [ProjectRole.DATA_ANALYST_VIEW_ONLY]: "Data Analysts (View Only) can view project data and forms",
 }
 
 
