@@ -42,7 +42,8 @@ const useProjectNavigation = () => {
     const navigateToForm = (formId: string) => {
         // Open the form
         const route = FORM_VIEW_ROUTE.replace(':formId', formId)
-        navigate(route);
+        // open in new tab
+        window.open(route, '_blank');
     }
 
     const navigateToFormDesigner = (projectId: string, formId: string) => {

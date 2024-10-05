@@ -5,10 +5,10 @@ import AuthGuard from './AuthGuard'
 const RootLayout = () => {
 
     return (
-        <AuthGuard>
+        <>
             <Outlet />
             <Toaster />
-        </AuthGuard>
+        </>
     )
 }
 

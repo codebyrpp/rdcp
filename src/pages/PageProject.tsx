@@ -26,11 +26,11 @@ const PageProject = () => {
 
     const searchInputRef = useSearchRef();
 
-    if(isLoading) 
+    if (isLoading)
         return <Loading />;
 
     return (
-        <>
+        <div className='flex flex-col gap-3 overflow-hidden'>
             <div className="flex justify-between">
 
                 <div className="flex gap-2 items-center">
@@ -40,35 +40,29 @@ const PageProject = () => {
                 </div>
 
                 <div className="flex gap-2">
+                    {/* Search and Filter */}
+                    <Input
+                        ref={searchInputRef}
+                        placeholder={"Type '/' to search form by name"} className='w-3/4'
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    {/* End of Search and Filter */}
+                    <CreateForm />
                     <Button variant={"secondary"}
-                        size={"icon"}
                         onClick={() => {
                             // navigate to project settings
                             navigateToProjectSettings(projectId!);
                         }}>
-                        <FaCog className='text-lg text-slate-800' />
+                        Project Settings
+                        <FaCog className='ml-2 text-lg text-slate-800' />
                     </Button>
-                    <CreateForm />
                 </div>
             </div>
-            {/* top */}
-            <div className="flex gap-2 justify-end my-2">
-                {/* Search and Filter */}
-                <Input
-                    ref={searchInputRef}
-                    placeholder={"Type '/' to search form by name"} className='w-1/4'
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                {/* End of Search and Filter */}
-
-            </div>
-            {/* end of top */}
-
             {/* List of forms */}
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 overflow-y-auto">
                 {/* <FormListItem form={form} /> */}
                 {
-                    isLoading ? <Loading/> :
+                    isLoading ? <Loading /> :
                         // @ts-ignore
                         isError ? <p>{error?.message}</p> :
                             forms?.length === 0 ? <p className='m-5 text-muted-foreground'>No forms found</p> :
@@ -79,7 +73,7 @@ const PageProject = () => {
                                 })
                 }
             </div>
-        </>
+        </div>
     );
 };
 

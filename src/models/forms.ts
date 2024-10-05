@@ -9,6 +9,7 @@ export type Form = {
     updatedAt: string,
     isPrivate?: boolean,
     isPublished?: boolean,
+    hasChanges?: boolean,
     multipleResponses?: boolean,
     responseMessage?: string,
 }

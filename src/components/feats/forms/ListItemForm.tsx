@@ -7,6 +7,7 @@ import { ProjectRole } from '@/models/projects'
 import useProjectNavigation from '@/hooks/useProjectNavigation'
 import { ListItem, ListItemTitle } from '@/components/common/ListItems'
 import { FaCog } from 'react-icons/fa'
+import { Eye, FileIcon, View } from 'lucide-react'
 
 interface FormListItemProps {
     form: Form
@@ -105,29 +106,27 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
                     </Button>
                 }
                 {
-                    buttonVisibility.responses && <Button variant={"secondary"} size={"sm"}
+                    buttonVisibility.responses && <Button variant={"success"} size={"sm"}
                         onClick={handleCheckResponses} className='flex gap-2'>
                         Responses
                     </Button>
                 }
-                {
+                {/* {
                     buttonVisibility.dashboard && <Button variant={"gray"} size={"sm"}
                         onClick={handleViewDashboard} className='flex gap-2'>
                         Dashboard
+                    </Button>
+                } */}
+                {
+                    <Button onClick={() => { navigateToForm(form.id) }}
+                        variant={"icon"} size={"icon"} className='flex gap-2'>
+                        <View />
                     </Button>
                 }
                 {
                     buttonVisibility.settings && <Button variant={"icon"} size={"icon"}
                         onClick={handleEditSettings} className='flex gap-2'>
                         <FaCog />
-                    </Button>
-                }
-                {
-                    <Button onClick={() => {
-                        navigateToForm(form.id)
-                    }}
-                        variant={"secondary"} size={"sm"} className='flex gap-2'>
-                        View
                     </Button>
                 }
             </div>
