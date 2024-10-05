@@ -42,10 +42,6 @@ const PageForm = () => {
 
   if (isDataLoading) return <Loading />
 
-  if(isError && error){
-    return <PageError title={""} description={error} />
-  }
-
   if (!isSuccess)
     return <PageError />
 
