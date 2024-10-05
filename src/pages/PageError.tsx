@@ -23,7 +23,15 @@ const BaseErrorPage = ({ title, description }: BaseErrorPageProps) => {
     )
 }
 
-const PageError = () => {
+type PageErrorProps = {
+    title?: string;
+    description?: string;
+}
+
+const PageError = (props:PageErrorProps) => {
+    if (props.title && props.description) {
+        return <BaseErrorPage title={props.title} description={props.description} />
+    }
     return <BaseErrorPage title="Something went wrong 😢" description="An error occurred while processing your request." />
 }
 

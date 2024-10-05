@@ -13,7 +13,7 @@ const PageForm = () => {
   const { formId } = useParams<{ formId: string }>()
 
   // RTK Query hook to get the form settings
-  const { data: form, isLoading: isDataLoading, isSuccess } = useViewFormQuery({
+  const { data: form, isLoading: isDataLoading, isSuccess, isError, error: viewError } = useViewFormQuery({
     formId: formId ?? '',
   }, {
     skip: !formId
@@ -41,6 +41,10 @@ const PageForm = () => {
     }} />
 
   if (isDataLoading) return <Loading />
+
+  if(isError && error){
+    return <PageError title={""} description={error} />
+  }
 
   if (!isSuccess)
     return <PageError />
