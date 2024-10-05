@@ -8,11 +8,11 @@ const CreateProject = () => {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className='flex gap-2'>New Project
+                <Button className='flex gap-2' data-testid="new-project-button">New Project
                     <FaPlus className='text-lg' />
                 </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent data-testid="create-project-dialog">
                 <DialogHeader>
                     <DialogTitle asChild>
                         <h4 className="text-xl font-bold">

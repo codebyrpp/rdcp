@@ -32,7 +32,7 @@ export default function CreateProjectForm({ buttonWrapper }: FormCreateFormProps
                             <FormItem>
                                 <FormLabel>Name</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Project Name is Required." {...field} />
+                                    <Input data-testid="project-name-input" placeholder="Project Name is Required." {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -46,7 +46,7 @@ export default function CreateProjectForm({ buttonWrapper }: FormCreateFormProps
                                 <FormLabel>Description</FormLabel>
                                 <FormControl>
                                     {/* TextArea */}
-                                    <Textarea {...field} placeholder="Description is Optional." />
+                                    <Textarea data-testid="project-description-input" {...field} placeholder="Description is Optional." />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -56,7 +56,7 @@ export default function CreateProjectForm({ buttonWrapper }: FormCreateFormProps
                     <div className="flex justify-end space-x-2">
                         {
                             buttonWrapper(
-                                <Button type="submit" disabled={isLoading}
+                                <Button data-testid="create-project-button" type="submit" disabled={isLoading}
                                 >Create</Button>
                             )
                         }
