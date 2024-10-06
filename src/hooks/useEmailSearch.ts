@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { debounce } from 'lodash';
 import axiosInstance from '@/state/axiosInstance';
 
-type UserSuggestion = {
+export type UserSuggestion = {
   id: string;
   email: string;
 };

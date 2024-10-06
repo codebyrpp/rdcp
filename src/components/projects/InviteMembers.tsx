@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
-import { Checkbox } from '../ui/checkbox'; 
+import { Checkbox } from '../ui/checkbox';
 import { FaTimesCircle } from 'react-icons/fa';
-import { getRoleName, getRolePermissions, ProjectRole } from '@/models/projects'; 
+import { getRoleName, getRolePermissions, ProjectRole } from '@/models/projects';
 import { DataTable } from './collaborators/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
@@ -12,38 +12,47 @@ import { FaEllipsisH as MoreHorizontal } from 'react-icons/fa';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../ui/dialog';
 import { SectionWrapper } from '../common/wrapper';
 import { useAddCollaboratorsMutation, useUpdateCollaboratorRolesMutation, useRemoveCollaboratorMutation, useFetchCollaboratorsQuery } from '@/state/apiSlices/collaboratorsApi';
-import useEmailSearch from '../../../src/hooks/useEmailSearch';
+import useEmailSearch, { UserSuggestion } from '../../../src/hooks/useEmailSearch';
 
 interface InviteCollaboratorsSectionProps {
-  selectedEmail: string | null;
-  setSelectedEmail: (email: string | null) => void;
-  invitedMembers: string[];
-  setInvitedMembers: (members: string[]) => void;
   emailError: string | null;
-  setEmailError: (error: string | null) => void;
-  handleAddEmails: () => void;
-  handleRemoveEmail: (email: string) => void;
+  updateInvitesCallback: (invites: UserSuggestion[]) => void;
 }
 
 const InviteCollaboratorsSection: React.FC<InviteCollaboratorsSectionProps> = ({
-  selectedEmail,
-  setSelectedEmail,
-  invitedMembers,
-  setInvitedMembers,
   emailError,
-  setEmailError,
-  handleAddEmails,
-  handleRemoveEmail,
+  updateInvitesCallback
 }) => {
   const { suggestions, debouncedFetchSuggestions } = useEmailSearch();
+  const [searchText, setSearchText] = useState<string>('');
+  const [selectedInvites, setSelectedInvites] = useState<UserSuggestion[]>([]);
 
   useEffect(() => {
-    if (selectedEmail) {
-      debouncedFetchSuggestions(selectedEmail);
+    updateInvitesCallback(selectedInvites);
+  }, [selectedInvites, updateInvitesCallback]);
+
+  const selectSuggestion = (suggestion: UserSuggestion) => {
+    // add to selectedSuggestions without duplicates
+    if (!selectedInvites.some(s => s.id === suggestion.id)) {
+      setSelectedInvites([...selectedInvites, suggestion]);
     }
-  }, [selectedEmail, debouncedFetchSuggestions]);
-  
-  return(
+    // clear the search text
+    setSearchText('');
+    // clear the suggestions
+    debouncedFetchSuggestions('');
+  }
+
+  const removeInvitation = (id: string) => {
+    setSelectedInvites(selectedInvites.filter(suggestion => suggestion.id !== id));
+  }
+
+  useEffect(() => {
+    if (searchText) {
+      debouncedFetchSuggestions(searchText);
+    }
+  }, [searchText, debouncedFetchSuggestions]);
+
+  return (
     <div className="mb-4">
       <Label htmlFor="emails">1. Invite Collaborators</Label>
       <p className="text-muted-foreground text-sm">
@@ -53,16 +62,13 @@ const InviteCollaboratorsSection: React.FC<InviteCollaboratorsSectionProps> = ({
         <Input
           id="emails"
           placeholder="Enter email addresses"
-          value={selectedEmail || ''}
+          value={searchText || ''}
           onChange={(e) => {
-            setSelectedEmail(e.target.value);
+            setSearchText(e.target.value);
             debouncedFetchSuggestions(e.target.value);
           }}
           className="mt-2"
         />
-        <Button onClick={handleAddEmails} className="mt-2" disabled={!selectedEmail}>
-          + Add Email
-        </Button>
       </div>
       {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
       {suggestions.length > 0 && (
@@ -71,7 +77,7 @@ const InviteCollaboratorsSection: React.FC<InviteCollaboratorsSectionProps> = ({
             <div
               key={suggestion.id}
               className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-              onClick={() => setSelectedEmail(suggestion.email)}
+              onClick={() => selectSuggestion(suggestion)}
             >
               {suggestion.email}
             </div>
@@ -79,12 +85,12 @@ const InviteCollaboratorsSection: React.FC<InviteCollaboratorsSectionProps> = ({
         </div>
       )}
       <div className="flex flex-wrap gap-2 mt-2">
-        {invitedMembers.map((member) => (
-          <div key={member} className="flex items-center gap-2 bg-gray-200 px-2 py-1 rounded">
-            <span className="text-sm">{member}</span>
+        {selectedInvites.map((member) => (
+          <div key={member.id} className="flex items-center gap-2 bg-gray-200 px-2 py-1 rounded">
+            <span className="text-sm">{member.email}</span>
             <FaTimesCircle
               className="cursor-pointer text-sm"
-              onClick={() => handleRemoveEmail(member)}
+              onClick={() => removeInvitation(member.id)}
             />
           </div>
         ))}
@@ -223,9 +229,11 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
   const [emailError, setEmailError] = useState<string | null>(null);
   const [selectedRoles, setSelectedRoles] = useState<ProjectRole[]>([]);
   const [tableData, setTableData] = useState<{ id: string; email: string, roles: string[] }[]>([]);
+
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editingEmail, setEditingEmail] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+
   const { suggestions, debouncedFetchSuggestions } = useEmailSearch();
 
   const [addCollaborators] = useAddCollaboratorsMutation();
@@ -252,7 +260,7 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
         setSelectedEmail(null); // Clear the input after adding
         setEmailError(null); // Clear any previous error
       } else {
-        setEmailError('This email is already in the table.');
+        setEmailError('This user is already a collaborator');
       }
     } else {
       setEmailError('Please select a valid email from the suggestions.');
@@ -264,11 +272,11 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
     if (emailList.length > 0 && selectedRoles.length > 0) {
       try {
         const newCollaborators = emailList.map((email, index) => ({
-          id: (tableData.length + index + 1).toString(),  
+          id: (tableData.length + index + 1).toString(),
           email,
           roles: selectedRoles as ProjectRole[],
         }));
-        
+
         try {
           await addCollaborators({
             projectId,
@@ -280,10 +288,10 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
         }
 
         setTableData([...tableData, ...newCollaborators]);
-        console.log('New Collaborators Added:', newCollaborators); 
-        setInvitedMembers([]); 
-        setSelectedRoles([]); 
-        setEmailError(null); 
+        console.log('New Collaborators Added:', newCollaborators);
+        setInvitedMembers([]);
+        setSelectedRoles([]);
+        setEmailError(null);
         refetch();
       } catch (error) {
         console.error("Failed to add collaborators:", error);
@@ -306,7 +314,7 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
           projectId,
           collaboratorId: collaborator.id,
         }).unwrap();
-  
+
         setTableData(tableData.filter((data) => data.id !== idToRemove));
         refetch();
       }
@@ -330,7 +338,7 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
       const rolesAsProjectRoles = collaborator.roles.map(role => role as ProjectRole);
       setSelectedRoles(rolesAsProjectRoles);
       setEditingEmail(email);
-      setEditingId(id); 
+      setEditingId(id);
       setIsEditing(true);
     }
   };
@@ -363,7 +371,7 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
 
   useEffect(() => {
     if (selectedEmail) {
-    debouncedFetchSuggestions(selectedEmail);
+      debouncedFetchSuggestions(selectedEmail);
     }
   }, [selectedEmail, debouncedFetchSuggestions]);
 
@@ -407,6 +415,11 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
     },
   ];
 
+  const [invitations, setInvitations] = useState<UserSuggestion[]>([]);
+  const updateInvites = useCallback((invites: UserSuggestion[]) => {
+    setInvitations(invites);
+  }, []);
+
   return (
     <div className='h-[80vh]'>
       <SectionWrapper>
@@ -414,14 +427,8 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
           Collaborators
         </h5>
         <InviteCollaboratorsSection
-          selectedEmail={selectedEmail || ''}
-          setSelectedEmail={setSelectedEmail}
-          invitedMembers={invitedMembers}
-          setInvitedMembers={setInvitedMembers}
           emailError={emailError}
-          setEmailError={setEmailError}
-          handleAddEmails={handleAddEmails}
-          handleRemoveEmail={handleRemoveEmail}
+          updateInvitesCallback={updateInvites}
         />
         <CollaboratorRolesSection
           invitedMembers={invitedMembers}
