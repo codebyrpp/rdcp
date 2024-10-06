@@ -1,30 +1,20 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, Delete } from "lucide-react";
+import { formatDate } from "@/utils";
 
-export const columns: ColumnDef<any>[] = [
+export const defaultColumns: ColumnDef<any>[] = [
+  // {
+  //   id:"Submitted By",
+  //   accessorKey: "userId",
+  //   header: "Submitted By",
+  // },
   {
-    accessorKey: "name",
-    header: "Name",
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
-    accessorKey: "age",
-    header: "Age",
-  },
-  {
-    accessorKey: "url",
-    header: "URL",
-  },
-  {
+    id: "Submitted At",
     accessorKey: "submittedTime",
-    header: "Submitted Time",
+    header: "Submitted At",
     cell: ({ row }) => {
-      const date = new Date(row.getValue("submittedTime"));
-      const formatted = date.toLocaleDateString();
+      const formatted = formatDate(row.getValue("submittedTime"))
       return <div className="font-medium">{formatted}</div>;
     },
   },
@@ -33,7 +23,7 @@ export const columns: ColumnDef<any>[] = [
     header: "Remove",
     cell: ({ row }) => {
       const user = row.original;
-      return <Button size={"icon"}>
+      return <Button size={"icon"} variant={"icon"}>
         <Delete className="text-red-500" />
       </Button>
     },
