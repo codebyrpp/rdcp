@@ -25,7 +25,6 @@ import PageProjectSettings from "./pages/PageProjectSettings";
 import PageFormSettings from "./pages/PageFormSettings";
 import PageForgetPassword from "./pages/ForgetPassword/ForgetPassword";
 import PageVerfiyOTP from "./pages/ForgetPassword/OTPPage";
-import PageFormResponses from "./pages/form_response/Page.tsx";
 import FormResponseSummary from "./pages/response_summary/FormResponseSummary.tsx";
 import BuilderLayout from "./pages/form_builder/BuilderLayout.tsx";
 import BuilderError from "./pages/form_builder/BuilderError.tsx";
@@ -35,6 +34,7 @@ import FormLayout from "./layouts/FormLayout.tsx";
 import PageForm from "./pages/PageForm.tsx";
 import AuthGuard from "./layouts/AuthGuard.tsx";
 import { PageError, PageNotFound, PageUnAuthorized } from "./pages/PageError.tsx";
+import { PageResponses } from "./pages/PageReponses.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -56,7 +56,7 @@ const router = createBrowserRouter(
           <Route path={PROJECT_ROUTE} element={<PageProject />} />
           <Route path={PROJECT_SETTINGS_ROUTE} element={<PageProjectSettings />} />
           <Route path={FORM_SETTINGS_ROUTE} element={<PageFormSettings />} />
-          <Route path={FORM_RESPONSES_ROUTE} element={<PageFormResponses />} />
+          <Route path={FORM_RESPONSES_ROUTE} element={<PageResponses />} />
           <Route path={FORM_RESPONSES_SUMMARY_ROUTE} element={<FormResponseSummary />} />
         </Route>
         {/* Form Builder */}
