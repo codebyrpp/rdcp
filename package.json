@@ -42,6 +42,7 @@
     "cmdk": "1.0.0",
     "date-fns": "^3.6.0",
     "debounce": "^2.1.1",
+    "export-to-csv": "^1.4.0",
     "html2pdf.js": "^0.10.2",
     "input-otp": "^1.2.4",
     "lodash": "^4.17.21",

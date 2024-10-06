@@ -10,7 +10,7 @@ export const defaultColumns: ColumnDef<any>[] = [
   //   header: "Submitted By",
   // },
   {
-    id: "Submitted At",
+    id: "submittedTime",
     accessorKey: "submittedTime",
     header: "Submitted At",
     cell: ({ row }) => {

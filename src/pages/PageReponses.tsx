@@ -55,7 +55,7 @@ export function PageResponses() {
           if (!field.field || !field.value) return;
           // @ts-ignore
           acc.push({
-            id: field.label,
+            id: field.field,
             accessorKey: field.field, header: field.label
           });
         }
@@ -90,9 +90,6 @@ export function PageResponses() {
         <div className="flex gap-2">
           <Button variant={"outline"}>
             Export History
-          </Button>
-          <Button>
-            Export Data to CSV
           </Button>
         </div>
       </div>

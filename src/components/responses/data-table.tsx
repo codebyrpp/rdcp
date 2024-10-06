@@ -13,6 +13,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
+  Row,
 } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import {
@@ -31,6 +32,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { exportCSV } from "./csv_confg";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -63,12 +65,25 @@ export function DataTable<TData, TValue>({
     onColumnVisibilityChange: setColumnVisibility,
   });
 
+
+
+  const handleExport = () => {
+    const {rows} = table.getRowModel();
+    exportCSV(rows, table.getAllColumns().map((column) => ({
+      key: column.id.toString(),
+      displayLabel: column.columnDef.header?.toString()!
+    })));
+  }
+
   return (
     <>
       <div className="flex justify-end gap-2 py-2">
+        <Button variant={"outline"} onClick={handleExport}>
+          Export Data to CSV
+        </Button>
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="secondary" className="ml-auto">
               Filter Columns
             </Button>
           </DropdownMenuTrigger>
@@ -83,7 +98,7 @@ export function DataTable<TData, TValue>({
                   checked={column.getIsVisible()}
                   onCheckedChange={(value) => column.toggleVisibility(!!value)}
                 >
-                  {column.id}
+                  {column.columnDef.header?.toString()}
                 </DropdownMenuCheckboxItem>
               ))}
           </DropdownMenuContent>
