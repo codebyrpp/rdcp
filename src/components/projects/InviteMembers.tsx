@@ -9,7 +9,7 @@ import { DataTable } from './collaborators/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { FaEllipsisH as MoreHorizontal } from 'react-icons/fa';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription, DialogTrigger } from '../ui/dialog';
 import { SectionWrapper } from '../common/wrapper';
 import { useAddCollaboratorsMutation, useUpdateCollaboratorRolesMutation, useRemoveCollaboratorMutation, useFetchCollaboratorsQuery } from '@/state/apiSlices/collaboratorsApi';
 import useEmailSearch, { UserSuggestion } from '../../../src/hooks/useEmailSearch';
@@ -36,10 +36,10 @@ const InviteCollaboratorsSection: React.FC<InviteCollaboratorsSectionProps> = ({
     if (!selectedInvites.some(s => s.id === suggestion.id)) {
       setSelectedInvites([...selectedInvites, suggestion]);
     }
-    // clear the search text
-    setSearchText('');
     // clear the suggestions
-    debouncedFetchSuggestions('');
+    debouncedFetchSuggestions('');    // clear the search text
+    setSearchText('');
+
   }
 
   const removeInvitation = (id: string) => {
@@ -54,14 +54,14 @@ const InviteCollaboratorsSection: React.FC<InviteCollaboratorsSectionProps> = ({
 
   return (
     <div className="mb-4">
-      <Label htmlFor="emails">1. Invite Collaborators</Label>
+      <Label htmlFor="emails">1. Select Users</Label>
       <p className="text-muted-foreground text-sm">
-        Invite collaborators to access all or specific forms in this project.
+        Search for existing users in the organization
       </p>
       <div className="flex items-center gap-2 mt-2">
         <Input
           id="emails"
-          placeholder="Enter email addresses"
+          placeholder="Search users by email address"
           value={searchText || ''}
           onChange={(e) => {
             setSearchText(e.target.value);
@@ -100,18 +100,16 @@ const InviteCollaboratorsSection: React.FC<InviteCollaboratorsSectionProps> = ({
 };
 
 interface CollaboratorRolesSectionProps {
-  invitedMembers: string[];
+  invitedMembers: UserSuggestion[];
   selectedRoles: ProjectRole[];
-  setSelectedRoles: (roles: ProjectRole[]) => void;
-  handleAddToTable: () => void;
+  handleAddCollaborators: () => void;
   handleRoleChange: (role: ProjectRole) => void;
 }
 
 const CollaboratorRolesSection: React.FC<CollaboratorRolesSectionProps> = ({
   invitedMembers,
   selectedRoles,
-  setSelectedRoles,
-  handleAddToTable,
+  handleAddCollaborators,
   handleRoleChange,
 }) => {
 
@@ -141,9 +139,10 @@ const CollaboratorRolesSection: React.FC<CollaboratorRolesSectionProps> = ({
       </div>
       <div className="mt-4">
         <Button
-          onClick={handleAddToTable}
+          onClick={handleAddCollaborators}
           disabled={selectedRoles.length === 0}
           className="mt-2"
+          variant={"secondary"}
         >
           + Add Collaborators
         </Button>
@@ -224,8 +223,6 @@ interface InviteMembersProps {
 }
 
 const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
-  const [selectedEmail, setSelectedEmail] = useState<string | null>(null);
-  const [invitedMembers, setInvitedMembers] = useState<string[]>([]);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [selectedRoles, setSelectedRoles] = useState<ProjectRole[]>([]);
   const [tableData, setTableData] = useState<{ id: string; email: string, roles: string[] }[]>([]);
@@ -234,13 +231,12 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
   const [editingEmail, setEditingEmail] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  const { suggestions, debouncedFetchSuggestions } = useEmailSearch();
-
   const [addCollaborators] = useAddCollaboratorsMutation();
   const [updateCollaboratorRoles] = useUpdateCollaboratorRolesMutation();
   const [removeCollaborator] = useRemoveCollaboratorMutation();
-  const { data: collaborators, refetch } = useFetchCollaboratorsQuery({ projectId });
 
+  /// Fetch the existing collaborators
+  const { data: collaborators, refetch } = useFetchCollaboratorsQuery({ projectId });
   useEffect(() => {
     if (collaborators) {
       setTableData(collaborators.map(collaborator => ({
@@ -250,61 +246,6 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
       })));
     }
   }, [collaborators]);
-
-  const handleAddEmails = () => {
-    if (selectedEmail && suggestions.some(suggestion => suggestion.email === selectedEmail)) {
-      // Check if the email is already in the tableData
-      if (!tableData.some(data => data.email === selectedEmail)) {
-        const newInvitedMembers = [selectedEmail].filter(email => !invitedMembers.includes(email));
-        setInvitedMembers([...invitedMembers, ...newInvitedMembers]);
-        setSelectedEmail(null); // Clear the input after adding
-        setEmailError(null); // Clear any previous error
-      } else {
-        setEmailError('This user is already a collaborator');
-      }
-    } else {
-      setEmailError('Please select a valid email from the suggestions.');
-    }
-  };
-
-  const handleAddToTable = async () => {
-    const emailList = invitedMembers;
-    if (emailList.length > 0 && selectedRoles.length > 0) {
-      try {
-        const newCollaborators = emailList.map((email, index) => ({
-          id: (tableData.length + index + 1).toString(),
-          email,
-          roles: selectedRoles as ProjectRole[],
-        }));
-
-        try {
-          await addCollaborators({
-            projectId,
-            emails: emailList,
-            roles: selectedRoles,
-          }).unwrap();
-        } catch (err) {
-          console.error("Failed to add collaborators:", err);
-        }
-
-        setTableData([...tableData, ...newCollaborators]);
-        console.log('New Collaborators Added:', newCollaborators);
-        setInvitedMembers([]);
-        setSelectedRoles([]);
-        setEmailError(null);
-        refetch();
-      } catch (error) {
-        console.error("Failed to add collaborators:", error);
-        setEmailError('Failed to add collaborators.');
-      }
-    } else {
-      if (emailList.length === 0) {
-        setEmailError('Please enter valid email addresses.');
-      } else if (selectedRoles.length === 0) {
-        setEmailError('Please select at least one role.');
-      }
-    }
-  };
 
   const handleRemoveEmail = async (idToRemove: string) => {
     try {
@@ -369,12 +310,6 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
     }
   };
 
-  useEffect(() => {
-    if (selectedEmail) {
-      debouncedFetchSuggestions(selectedEmail);
-    }
-  }, [selectedEmail, debouncedFetchSuggestions]);
-
   const columns: ColumnDef<{ id: string; email: string; roles: string[] }>[] = [
     {
       accessorKey: 'email',
@@ -420,23 +355,86 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
     setInvitations(invites);
   }, []);
 
+  const resetForm = () => {
+    setInvitations([]);
+    setSelectedRoles([]);
+    setEmailError(null);
+  }
+
+
+  const handleAddCollaborators = async () => {
+    // if no invites, return
+    if (invitations.length === 0) return;
+
+    // if no roles selected, return
+    if (selectedRoles.length === 0) return;
+
+    // check if invites already exist in table
+    const existingEmails = tableData.map((data) => data.email);
+    const newEmails = invitations.map((invite) => invite.email);
+    const duplicateEmails = newEmails.filter((email) => existingEmails.includes(email));
+
+    if (duplicateEmails.length > 0) {
+      setEmailError(`The following email(s) already exist in the list: ${duplicateEmails.join(', ')}`);
+      return;
+    }
+
+    try {
+      await addCollaborators({
+        projectId,
+        users: invitations,
+        roles: selectedRoles
+      });
+    } catch (err) {
+      console.error('Failed to add collaborators:', err);
+    }
+
+    // add to table
+    const newCollaborators = invitations.map((user, index) => ({
+      id: user.id,
+      email: user.email,
+      roles: selectedRoles as ProjectRole[],
+    }));
+
+    setTableData([...tableData, ...newCollaborators]);
+
+    resetForm();
+
+  };
+
+
   return (
     <div className='h-[80vh]'>
       <SectionWrapper>
         <h5 className='text-lg my-2 font-bold'>
           Collaborators
         </h5>
-        <InviteCollaboratorsSection
-          emailError={emailError}
-          updateInvitesCallback={updateInvites}
-        />
-        <CollaboratorRolesSection
-          invitedMembers={invitedMembers}
-          selectedRoles={selectedRoles}
-          setSelectedRoles={setSelectedRoles}
-          handleAddToTable={handleAddToTable}
-          handleRoleChange={handleRoleChange}
-        />
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant={"outline"} className="gap-2">
+              Add Collaborators
+            </Button>
+          </DialogTrigger>
+
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add Collaborators</DialogTitle>
+              <DialogDescription>
+                Invite collaborators to access all or specific forms in this project.
+              </DialogDescription>
+            </DialogHeader>
+            <InviteCollaboratorsSection
+              emailError={emailError}
+              updateInvitesCallback={updateInvites}
+            />
+            <CollaboratorRolesSection
+              invitedMembers={invitations}
+              selectedRoles={selectedRoles}
+              handleAddCollaborators={handleAddCollaborators}
+              handleRoleChange={handleRoleChange}
+            />
+          </DialogContent>
+        </Dialog>
         <CollaboratorsListSection
           columns={columns}
           tableData={tableData}
