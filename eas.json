@@ -7,13 +7,13 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_DOMAIN": "ttps://rdcp-server.greenpond-49de0879.australiaeast.azurecontainerapps.io"
+        "EXPO_PUBLIC_API_DOMAIN": "https://rdcp-server.greenpond-49de0879.australiaeast.azurecontainerapps.io"
       }
     },
     "preview": {
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_DOMAIN": "ttps://rdcp-server.greenpond-49de0879.australiaeast.azurecontainerapps.io"
+        "EXPO_PUBLIC_API_DOMAIN": "https://rdcp-server.greenpond-49de0879.australiaeast.azurecontainerapps.io"
       }
     },
     "production": {
@@ -21,7 +21,7 @@
         "image": "latest"
       },
       "env": {
-        "EXPO_PUBLIC_API_DOMAIN": "ttps://rdcp-server.greenpond-49de0879.australiaeast.azurecontainerapps.io"
+        "EXPO_PUBLIC_API_DOMAIN": "https://rdcp-server.greenpond-49de0879.australiaeast.azurecontainerapps.io"
       }
     }
   },
