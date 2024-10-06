@@ -17,24 +17,21 @@ import useEmailSearch, { UserSuggestion } from '../../../src/hooks/useEmailSearc
 interface InviteCollaboratorsSectionProps {
   emailError: string | null;
   updateInvitesCallback: (invites: UserSuggestion[]) => void;
+  selectedInvites: UserSuggestion[];
 }
 
 const InviteCollaboratorsSection: React.FC<InviteCollaboratorsSectionProps> = ({
   emailError,
-  updateInvitesCallback
+  updateInvitesCallback,
+  selectedInvites,
 }) => {
   const { suggestions, debouncedFetchSuggestions } = useEmailSearch();
   const [searchText, setSearchText] = useState<string>('');
-  const [selectedInvites, setSelectedInvites] = useState<UserSuggestion[]>([]);
-
-  useEffect(() => {
-    updateInvitesCallback(selectedInvites);
-  }, [selectedInvites, updateInvitesCallback]);
 
   const selectSuggestion = (suggestion: UserSuggestion) => {
     // add to selectedSuggestions without duplicates
     if (!selectedInvites.some(s => s.id === suggestion.id)) {
-      setSelectedInvites([...selectedInvites, suggestion]);
+      updateInvitesCallback([...selectedInvites, suggestion]);
     }
     // clear the suggestions
     debouncedFetchSuggestions('');    // clear the search text
@@ -43,7 +40,7 @@ const InviteCollaboratorsSection: React.FC<InviteCollaboratorsSectionProps> = ({
   }
 
   const removeInvitation = (id: string) => {
-    setSelectedInvites(selectedInvites.filter(suggestion => suggestion.id !== id));
+    updateInvitesCallback(selectedInvites.filter(suggestion => suggestion.id !== id));
   }
 
   useEffect(() => {
@@ -175,8 +172,7 @@ const CollaboratorsListSection: React.FC<CollaboratorsListSectionProps> = ({
   handleRoleChange,
 }) => (
   <div>
-    <div className="mt-4">
-      <p className="text-sm font-semibold">Invited Collaborators List</p>
+    <div className="py-2">
       <DataTable columns={columns} data={tableData} />
     </div>
     {isEditing && (
@@ -406,35 +402,38 @@ const InviteMembers: React.FC<InviteMembersProps> = ({ projectId }) => {
   return (
     <div className='h-[80vh]'>
       <SectionWrapper>
-        <h5 className='text-lg my-2 font-bold'>
-          Collaborators
-        </h5>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant={"outline"} className="gap-2">
-              Add Collaborators
-            </Button>
-          </DialogTrigger>
+        <div className="flex justify-between">
+          <h5 className='text-lg my-2 font-bold'>
+            Collaborators
+          </h5>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant={"secondary"} className="gap-2">
+                Add Collaborators
+              </Button>
+            </DialogTrigger>
 
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add Collaborators</DialogTitle>
-              <DialogDescription>
-                Invite collaborators to access all or specific forms in this project.
-              </DialogDescription>
-            </DialogHeader>
-            <InviteCollaboratorsSection
-              emailError={emailError}
-              updateInvitesCallback={updateInvites}
-            />
-            <CollaboratorRolesSection
-              invitedMembers={invitations}
-              selectedRoles={selectedRoles}
-              handleAddCollaborators={handleAddCollaborators}
-              handleRoleChange={handleRoleChange}
-            />
-          </DialogContent>
-        </Dialog>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add Collaborators</DialogTitle>
+                <DialogDescription>
+                  Invite collaborators to access all or specific forms in this project.
+                </DialogDescription>
+              </DialogHeader>
+              <InviteCollaboratorsSection
+                selectedInvites={invitations}
+                emailError={emailError}
+                updateInvitesCallback={updateInvites}
+              />
+              <CollaboratorRolesSection
+                invitedMembers={invitations}
+                selectedRoles={selectedRoles}
+                handleAddCollaborators={handleAddCollaborators}
+                handleRoleChange={handleRoleChange}
+              />
+            </DialogContent>
+          </Dialog>
+        </div>
         <CollaboratorsListSection
           columns={columns}
           tableData={tableData}
