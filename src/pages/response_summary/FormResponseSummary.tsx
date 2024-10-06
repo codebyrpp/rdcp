@@ -17,7 +17,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { dummyData } from "./data";
 import { Button } from "@/components/ui/button";
-import { BackToProjectButton } from "../form_response/Page";
 
 ChartJS.register(
   CategoryScale,
@@ -107,7 +106,7 @@ const FormResponseSummary: React.FC = () => {
 
   return (
     <>
-      <BackToProjectButton />
+      {/* <BackToProjectButton /> */}
 
       <div className="flex flex-1 gap-2 overflow-hidden h-[88vh]">
         {/* Main Content */}
