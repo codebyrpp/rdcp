@@ -10,22 +10,18 @@ export const defaultColumns: ColumnDef<any>[] = [
   //   header: "Submitted By",
   // },
   {
-    id: "submittedTime",
-    accessorKey: "submittedTime",
+    id: "submittedAt",
+    accessorKey: "submittedAt",
     header: "Submitted At",
-    cell: ({ row }) => {
-      const formatted = formatDate(row.getValue("submittedTime"))
-      return <div className="font-medium">{formatted}</div>;
-    },
   },
-  {
-    id: "actions",
-    header: "Remove",
-    cell: ({ row }) => {
-      const user = row.original;
-      return <Button size={"icon"} variant={"icon"}>
-        <Delete className="text-red-500" />
-      </Button>
-    },
-  },
+  // {
+  //   id: "actions",
+  //   header: "Remove",
+  //   cell: ({ row }) => {
+  //     const user = row.original;
+  //     return <Button size={"icon"} variant={"icon"}>
+  //       <Delete className="text-red-500" />
+  //     </Button>
+  //   },
+  // },
 ];

@@ -31,7 +31,7 @@ export function PageResponses() {
   const processData = (records: FormRecord[]) => {
     const data = records.map((record) => {
       return {
-        submittedTime: formatDate(record.createdAt),
+        submittedAt: formatDate(record.createdAt),
         ...record.record.reduce((acc, field) => {
           //@ts-ignore
           acc[field.field] = field.value;
