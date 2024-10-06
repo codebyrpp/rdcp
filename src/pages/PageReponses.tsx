@@ -87,11 +87,6 @@ export function PageResponses() {
     <section className="">
       <div className="flex justify-between">
         <BackToProjectButton />
-        <div className="flex gap-2">
-          <Button variant={"outline"}>
-            Export History
-          </Button>
-        </div>
       </div>
       <DataTable columns={columns} data={data} />
     </section>
