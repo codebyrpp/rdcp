@@ -10,7 +10,10 @@ interface AddCollaboratorDTO {
 
 interface AddCollaboratorsRequest {
   projectId: string;
-  emails: string[];
+  users: {
+    id: string;
+    email: string;
+  }[];
   roles: ProjectRole[];
 }
 
@@ -32,10 +35,10 @@ interface FetchCollaboratorsRequest {
 export const inviteMembersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     addCollaborators: builder.mutation<AddCollaboratorDTO[], AddCollaboratorsRequest>({
-      query: ({ projectId, emails, roles }) => ({
+      query: ({ projectId, users, roles }) => ({
         url: `projects/${projectId}/collaborators`, 
         method: 'POST',
-        body: { emails, roles }, 
+        body: { users, roles }, 
       }),
     }),
 

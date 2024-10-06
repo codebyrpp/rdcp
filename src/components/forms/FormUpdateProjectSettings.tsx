@@ -53,7 +53,9 @@ const FormUpdateProjectSettings = () => {
                                 )}
                             />
                             <div className="flex justify-end">
-                                <Button type="submit" className='ml-auto'>Save Changes</Button>
+                                <Button type="submit"
+                                variant={"success"}
+                                 className='ml-auto'>Save Changes</Button>
                             </div>
                         </form>
                     </Form>
