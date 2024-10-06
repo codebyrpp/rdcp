@@ -104,7 +104,7 @@ export function DataTable<TData, TValue>({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Table className="!border border-slate-300 !rounded">
+      <Table className="!border border-slate-300 !rounded max-w-[98vw] overflow-x-auto">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id} className="bg-slate-700 hover:bg-slate-700">
