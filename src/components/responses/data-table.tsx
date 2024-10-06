@@ -66,18 +66,10 @@ export function DataTable<TData, TValue>({
   return (
     <>
       <div className="flex justify-end gap-2 py-2">
-        <Input
-          placeholder="Filter names..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
-          className="max-w-md"
-        />
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Button variant="outline" className="ml-auto">
-              Columns
+              Filter Columns
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
