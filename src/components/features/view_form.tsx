@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, Text, Image, Button, ScrollView } from "react-native";
+import { View, TextInput, Text, Image, Button, ScrollView, Pressable, ActivityIndicator } from "react-native";
 import ImageFileInput from "../ui/form-elements/form-image-input";
 import TextInputForm from "../ui/form-elements/form-text-input";
 import VideoFileInput from "../ui/form-elements/form-video-input";
@@ -15,6 +15,33 @@ const ViewForm = () => {
     { id: "2", label: "Option 2", value: "option2" },
     { id: "3", label: "Option 3", value: "option3" },
   ];
+
+  const [submitted, setSubmitted] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const handleSubmit = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setSubmitted(true);
+    }, 2000);
+  }
+
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#000000" />
+      </View>
+    );
+  }
+
+  if (submitted) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <Text className="text-slate-900 text-2xl">Form submitted successfully!</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView>
@@ -78,6 +105,14 @@ const ViewForm = () => {
           question="Pick an audio"
           description="This is an audio input field."
         />
+        {/* Submit Button */}
+
+        <Pressable onPress={handleSubmit}>
+          <View className="bg-slate-900 text-slate-50 p-3 rounded-lg">
+            <Text className="text-center text-slate-50">Submit</Text>
+          </View>
+        </Pressable>
+        <View className="mb-10" />
       </View>
     </ScrollView>
   );
