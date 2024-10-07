@@ -10,8 +10,12 @@ import { Button } from "@/components/ui/button";
 import { BiSolidTrash } from "react-icons/bi";
 import { DesignerFormElementsPanel, DesignerPropertiesPanel } from "./DesignerSidebar";
 
-
-function Designer() {
+function Designer({ form }: {
+  form: {
+    name: string,
+    description: string,
+  }
+}) {
   const { elements, addElement, selectedElement, setSelectedElement, removeElement } = useDesigner();
 
   const droppable = useDroppable({
@@ -100,8 +104,8 @@ function Designer() {
         }}>
           <div className="max-w-[800px] flex-1 px-4">
             <div className="w-full bg-background p-4 rounded-md border-t-slate-500 border-t-[6px]">
-              <p className="text-xl font-bold">Form Title</p>
-              <p className="text-sm">Form Description</p>
+              <p className="text-xl font-bold">{form.name}</p>
+              <p className="text-sm">{form.description}</p>
             </div>
           </div>
         </div>

@@ -1,29 +1,20 @@
 import Brand from '@/components/common/Brand'
 import { Button } from '@/components/ui/button';
-import { useEffect } from 'react'
 
-const PageError = () => {
+type BaseErrorPageProps = {
+    title: string;
+    description: string;
+}
 
-    useEffect(() => {
-        setTimeout(() => {
-            window.history.back();
-        }, 8000);
-    }, [])
-
+const BaseErrorPage = ({ title, description }: BaseErrorPageProps) => {
     return (
         <div className='flex flex-col justify-between items-center h-screen p-24'>
             <div className="">
                 <Brand />
             </div>
             <div className='mt-12 flex flex-col gap-2 justify-center items-center flex-1'>
-                <h1 className='text-4xl font-bold'>Something went wrong 😢</h1>
-                <p className='text-lg text-slate-500 text-center'>
-                    An error occurred while processing your request. <br />
-                    Go back and try again.
-                </p>
-                <p className='mt-8'>
-                    Returning to the previous page soon...
-                </p>
+                <h1 className='text-4xl font-bold'>{title}</h1>
+                <p className='text-lg text-slate-600'>{description}</p>
                 <Button asChild variant={"ghost"}>
                     <button onClick={() => window.history.back()} className='underline text-slate-900'>Go Back</button>
                 </Button>
@@ -32,4 +23,24 @@ const PageError = () => {
     )
 }
 
-export default PageError
+type PageErrorProps = {
+    title?: string;
+    description?: string;
+}
+
+const PageError = (props:PageErrorProps) => {
+    if (props.title && props.description) {
+        return <BaseErrorPage title={props.title} description={props.description} />
+    }
+    return <BaseErrorPage title="Something went wrong 😢" description="An error occurred while processing your request." />
+}
+
+const PageNotFound = () => {
+    return <BaseErrorPage title="404 | Page Not Found" description="The page you are looking for does not exist." />
+}
+
+const PageUnAuthorized = () => {
+    return <BaseErrorPage title="Unauthorized" description="You are not authorized to view this page." />
+}
+
+export { PageError, PageNotFound, PageUnAuthorized }

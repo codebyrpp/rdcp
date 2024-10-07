@@ -3,13 +3,22 @@ import { FormElements, SubmitFunction } from "./FormElements";
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 
-const FormView = ({ form, isPreview = false }: { form: FormWithSchema, isPreview?: boolean }) => {
+export type FormValueType = string | number | string[] | File;
+export type FormFieldValuesType = { [key: string]: FormValueType };
+
+type FormViewProps = { 
+    form: FormWithSchema, 
+    isPreview?: boolean,
+    submitFormHandler?: (formId: string, values: FormFieldValuesType) => void
+}
+
+const FormView = ({ form, isPreview = false, submitFormHandler }:FormViewProps) => {
 
     if (!form) return null;
 
     const elements = isPreview ? form.draft : form.schema;
 
-    const formValues = useRef<{ [key: string]: string | number | string[] | File }>({});
+    const formValues = useRef<FormFieldValuesType>({});
 
     const submitValue: SubmitFunction = (key, value) => {
         formValues.current[key] = value;
@@ -17,11 +26,15 @@ const FormView = ({ form, isPreview = false }: { form: FormWithSchema, isPreview
 
     const submitForm = () => {
         console.log("Submitting form...");
+        //TODO: Validation
+
+        // Call the submitFormHandler if it exists - the form submission happens here
+        submitFormHandler?.(form.id!, formValues.current);
     }
 
     return (
         <div className="flex-1 max-h-full h-full flex-grow w-screen flex justify-center">
-            <div className="flex flex-col items-center gap-2 w-1/2
+            <div className="flex flex-col items-center gap-2 md:w-1/2 px-2
             bg-slate-200 rounded-md  pt-5 
             h-full">
                 <div className="bg-white w-full p-4 rounded-md border-t-[6px] border-t-slate-500">
@@ -40,7 +53,7 @@ const FormView = ({ form, isPreview = false }: { form: FormWithSchema, isPreview
                         </div>
                     );
                 })}
-                <div className="flex mt-2 justify-start w-full">
+                <div className="flex mt-2 justify-end md:justify-start w-full">
                     <Button onClick={submitForm}>
                         Submit Form
                     </Button>

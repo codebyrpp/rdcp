@@ -7,6 +7,9 @@ import { ProjectRole } from '@/models/projects'
 import useProjectNavigation from '@/hooks/useProjectNavigation'
 import { ListItem, ListItemTitle } from '@/components/common/ListItems'
 import { FaCog } from 'react-icons/fa'
+import { ExternalLinkIcon, Eye, FileIcon, ShareIcon, View } from 'lucide-react'
+import { Link1Icon } from '@radix-ui/react-icons'
+import { useToast } from '@/components/ui/use-toast'
 
 interface FormListItemProps {
     form: Form
@@ -39,7 +42,7 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
     }
 
     const canCheckResponses = (roles: ProjectRole[]) => {
-        return canDo(roles, [ProjectRole.OWNER, ProjectRole.DATA_ANALYST, ProjectRole.DATA_ANALYST_VIEW_ONLY])
+        return canDo(roles, [ProjectRole.OWNER, ProjectRole.DATA_ANALYST])
     }
     const handleCheckResponses = (e: any) => {
         e.stopPropagation()
@@ -73,6 +76,8 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
         })
     }, [roles])
 
+    const { toast } = useToast()
+
     return (
         <ListItem onClick={() => {
             // Redirect to the form
@@ -105,29 +110,42 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
                     </Button>
                 }
                 {
-                    buttonVisibility.responses && <Button variant={"secondary"} size={"sm"}
+                    buttonVisibility.responses && <Button variant={"success"} size={"sm"}
                         onClick={handleCheckResponses} className='flex gap-2'>
                         Responses
                     </Button>
                 }
-                {
+                {/* {
                     buttonVisibility.dashboard && <Button variant={"gray"} size={"sm"}
                         onClick={handleViewDashboard} className='flex gap-2'>
                         Dashboard
                     </Button>
+                } */}
+                {
+                    <Button onClick={() => { navigateToForm(form.id) }}
+                        variant={"icon"} size={"icon"} className='flex gap-2'>
+                        <View />
+                    </Button>
                 }
+                {/* Copy Link */}
+                <Button
+                    onClick={() => {
+                        navigator.clipboard.writeText(`${window.location.origin}/forms/${form.id}/view`)
+                        toast({
+                            title: 'Link Copied',
+                            description: 'Form link copied to clipboard',
+                            variant: 'success',
+                            duration: 2000
+                        })
+                    }}
+                    variant={"icon"} size={"icon"} className='flex gap-2'>
+                    {/* Link Icon */}
+                    <ShareIcon />
+                </Button>
                 {
                     buttonVisibility.settings && <Button variant={"icon"} size={"icon"}
                         onClick={handleEditSettings} className='flex gap-2'>
                         <FaCog />
-                    </Button>
-                }
-                {
-                    <Button onClick={() => {
-                        navigateToForm(form.id)
-                    }}
-                        variant={"secondary"} size={"sm"} className='flex gap-2'>
-                        View
                     </Button>
                 }
             </div>

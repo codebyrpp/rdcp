@@ -13,6 +13,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
+  Row,
 } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import {
@@ -31,6 +32,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { exportCSV } from "./csv_confg";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -63,21 +65,26 @@ export function DataTable<TData, TValue>({
     onColumnVisibilityChange: setColumnVisibility,
   });
 
+
+
+  const handleExport = () => {
+    const {rows} = table.getRowModel();
+    exportCSV(rows, table.getAllColumns().map((column) => ({
+      key: column.id.toString(),
+      displayLabel: column.columnDef.header?.toString()!
+    })));
+  }
+
   return (
     <>
       <div className="flex justify-end gap-2 py-2">
-        <Input
-          placeholder="Filter names..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
-          className="max-w-md"
-        />
+        <Button variant={"outline"} onClick={handleExport}>
+          Export Data to CSV
+        </Button>
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <Button variant="outline" className="ml-auto">
-              Columns
+            <Button variant="secondary" className="ml-auto">
+              Filter Columns
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -91,13 +98,13 @@ export function DataTable<TData, TValue>({
                   checked={column.getIsVisible()}
                   onCheckedChange={(value) => column.toggleVisibility(!!value)}
                 >
-                  {column.id}
+                  {column.columnDef.header?.toString()}
                 </DropdownMenuCheckboxItem>
               ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Table className="!border border-slate-300 !rounded">
+      <Table className="!border border-slate-300 !rounded max-w-[98vw] overflow-x-auto">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id} className="bg-slate-700 hover:bg-slate-700">
@@ -114,9 +121,9 @@ export function DataTable<TData, TValue>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id} className="border-b-slate-300">
+            <TableRow key={row.id} className="border-slate-300">
               {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id} className="py-2">
+                <TableCell key={cell.id} className="py-2 border-slate-300">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>
               ))}

@@ -81,19 +81,28 @@ export const formsApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
             }),
         }),
+
+        viewForm: builder.query<Form, { formId: string }>({
+            query: ({ formId }) => ({
+                url: `submissions/form/${formId}`,
+                method: 'GET',
+            }),
+        }),
     }),
 });
 
 export const {
+    // form management
     useCreateFormMutation,
     useGetFormQuery,
     useUpdateFormMutation,
     useDeleteFormMutation,
 
-    // The following mutations are used for form editing
     useSaveFormMutation,
     usePublishFormMutation,
     useKeepAliveMutation,
     useAcquireLockMutation,
-    useReleaseLockMutation
+    useReleaseLockMutation,
+
+    useViewFormQuery
 } = formsApiSlice;
