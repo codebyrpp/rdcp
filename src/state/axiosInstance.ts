@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { store } from './store'; // Import your Redux store
 import { refreshSession, revokeSession } from './slices/session'; // Adjust based on your session slice
 
-const baseUrl = import.meta.env.VITE_APP_API_BASE_URL;
+const baseUrl = `${import.meta.env.VITE_APP_API_BASE}/v1`;
 
 const axiosInstance = axios.create({
   baseURL: baseUrl,

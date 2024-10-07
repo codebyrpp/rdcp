@@ -2,7 +2,7 @@ import { BaseQueryFn, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@re
 import { RootState } from './store';
 import { refreshSession, revokeSession } from './slices/session';
 
-const baseUrl = import.meta.env.VITE_APP_API_BASE_URL;
+const baseUrl = `${import.meta.env.VITE_APP_API_BASE}/v1`;
 
 const baseQuery = fetchBaseQuery({
     baseUrl,
