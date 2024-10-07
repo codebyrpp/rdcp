@@ -34,7 +34,7 @@ const FormView = ({ form, isPreview = false, submitFormHandler }:FormViewProps) 
 
     return (
         <div className="flex-1 max-h-full h-full flex-grow w-screen flex justify-center">
-            <div className="flex flex-col items-center gap-2 w-1/2
+            <div className="flex flex-col items-center gap-2 md:w-1/2 px-2
             bg-slate-200 rounded-md  pt-5 
             h-full">
                 <div className="bg-white w-full p-4 rounded-md border-t-[6px] border-t-slate-500">
@@ -53,7 +53,7 @@ const FormView = ({ form, isPreview = false, submitFormHandler }:FormViewProps) 
                         </div>
                     );
                 })}
-                <div className="flex mt-2 justify-start w-full">
+                <div className="flex mt-2 justify-end md:justify-start w-full">
                     <Button onClick={submitForm}>
                         Submit Form
                     </Button>

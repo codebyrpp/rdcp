@@ -60,7 +60,7 @@ const PageForm = () => {
 const Footer = () => {
   return (
     <div className='w-full border-t border-gray-300'>
-      <div className='container mx-auto py-4'>
+      <div className='container mx-auto py-0 md:py-4'>
         <div className="transform scale-50">
           <Brand />
         </div>
