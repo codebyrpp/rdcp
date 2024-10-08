@@ -36,6 +36,7 @@ import PageForm from "./pages/PageForm.tsx";
 import AuthGuard from "./layouts/AuthGuard.tsx";
 import { PageError, PageNotFound, PageUnAuthorized } from "./pages/PageError.tsx";
 import { PageResponses } from "./pages/PageResponses.tsx";
+import AdminPage from "./pages/PageAdmin.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
