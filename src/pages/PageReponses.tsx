@@ -8,12 +8,14 @@ import { DataTable } from "@/components/responses/data-table";
 import { useGetResponsesMutation } from "@/state/apiSlices/responsesApi";
 import { defaultColumns } from "@/components/responses/columns";
 import { formatDate } from "@/utils";
+import { ElementsType } from "@/components/builder/components/FormElements";
 
 
 type FormRecordData = {
   field: string;
   label: string;
   value: string | undefined;
+  type: ElementsType;
 }
 
 type FormRecord = {
@@ -33,8 +35,9 @@ export function PageResponses() {
       return {
         submittedAt: formatDate(record.createdAt),
         ...record.record.reduce((acc, field) => {
+          let value = field.value;
           //@ts-ignore
-          acc[field.field] = field.value;
+          acc[field.field] = value;
           return acc;
         }, {}),
         userId: record.userId,
@@ -53,10 +56,39 @@ export function PageResponses() {
         // @ts-ignore
         if (!acc.find((col) => col.accessorKey === field.field)) {
           if (!field.field || !field.value) return;
+          if (field.type === "DateField") {
+            // @ts-ignore
+            acc.push({
+              id: field.field,
+              accessorKey: field.field,
+              header: field.label,
+              cell: ({ value }: { value: string }) => formatDate(value)
+            });
+            return acc;
+          }
+
+          if (field.type === "FileUploadField") {
+            // @ts-ignore
+            acc.push({
+              id: field.field,
+              accessorKey: field.field,
+              header: field.label,
+              cell: ({ row }: any) => {
+                const value = row.original[field.field];
+                if (!value) return null;
+                return <Button variant="link" onClick={() => {
+                  window.open(value, "_blank");
+                }}>View</Button>
+              }
+            });
+            return acc;
+          }
+
           // @ts-ignore
           acc.push({
             id: field.field,
-            accessorKey: field.field, header: field.label
+            accessorKey: field.field,
+            header: field.label
           });
         }
       });
@@ -72,8 +104,6 @@ export function PageResponses() {
     getResponses({ formId }).unwrap().then((res) => {
       const data = processData(res.responses.items as FormRecord[]);
       const columns = prepareColumns(res.responses.items as FormRecord[]);
-      console.log("Columns", columns);
-      console.log("Data", data);
       // @ts-ignore
       setData(data);
       setColumns(columns);
