@@ -1,6 +1,7 @@
 # Welcome to Research Data Collector Platform Documentation
 
-Welcome to the official documentation for Research Data Collector Platform. Here you will find all the necessary information to get started, user guides, and troubleshooting tips.
+Welcome to the official documentation for Research Data Collector Platform. 
+Here you will find all the necessary information to get started, user guides, and troubleshooting tips.
 
 ## Get Started
 
