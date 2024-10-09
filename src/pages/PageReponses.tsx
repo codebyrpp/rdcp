@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import useProjectNavigation from "@/hooks/useProjectNavigation";
 import { useParams } from "react-router-dom";
@@ -53,45 +53,44 @@ export function PageResponses() {
     // columns is an array of objects with accessor and header
     const columns = records.reduce((acc, record) => {
       record.record.forEach((field) => {
-        // @ts-ignore
-        if (!acc.find((col) => col.accessorKey === field.field)) {
-          if (!field.field || !field.value) return;
-          if (field.type === "DateField") {
-            // @ts-ignore
-            acc.push({
-              id: field.field,
-              accessorKey: field.field,
-              header: field.label,
-              cell: ({ value }: { value: string }) => formatDate(value)
-            });
-            return acc;
-          }
 
-          if (field.type === "FileUploadField") {
-            // @ts-ignore
-            acc.push({
-              id: field.field,
-              accessorKey: field.field,
-              header: field.label,
-              cell: ({ row }: any) => {
-                const value = row.original[field.field];
-                if (!value) return null;
-                return <Button variant="link" onClick={() => {
-                  window.open(value, "_blank");
-                }}>View</Button>
-              }
-            });
-            return acc;
-          }
+        //@ts-ignore
+        if (acc.find((col) => col.accessorKey === field.field))
+          return acc;
 
-          // @ts-ignore
-          acc.push({
-            id: field.field,
-            accessorKey: field.field,
-            header: field.label
-          });
+        if (!field.field || !field.value) return;
+
+        const col = {
+          id: field.field,
+          accessorKey: field.field,
+          header: field.label
+        };
+
+        let cell: any = ({ row }: any) => {
+          return <div className="w-[150px]">{row.original[field.field]}</div>;
+        };
+
+        if (field.type === "DateField") {
+          cell = ({ value }: { value: string }) => <div className="w-[150px]">
+            {formatDate(value)}
+          </div>;
+        } else if (field.type === "FileUploadField") {
+          cell = ({ row }: any) => {
+            const value = row.original[field.field];
+            if (!value) return null;
+            return <div className="w-[150px]">
+              <Button variant="link" onClick={() => {
+                window.open(value, "_blank");
+              }}>View</Button>
+            </div>
+          }
         }
+
+        // @ts-ignore
+        acc.push({ ...col, cell });
+
       });
+
       return acc;
     }, []);
 
@@ -109,7 +108,7 @@ export function PageResponses() {
       setColumns(columns);
     });
 
-  }, [formId, getResponses]);
+  }, [formId]);
 
   if (isLoading) return <Loading />;
 
@@ -118,7 +117,14 @@ export function PageResponses() {
       <div className="flex justify-between">
         <BackToProjectButton />
       </div>
-      <DataTable columns={columns} data={data} />
+      <div className="flex">
+        <div className="w-3/4">
+          <DataTable columns={columns} data={data} />
+        </div>
+        <div className="flex-1">
+          {/* Summary */}
+        </div>
+      </div>
     </section>
   );
 }
