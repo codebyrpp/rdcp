@@ -10,10 +10,6 @@ To get started with the project, follow the steps in the [Getting Started](getti
 
 Explore the various features of our project:
 
-- [Feature 1](features/feature1.md)
-- [Feature 2](features/feature2.md)
-- [Feature 3](features/feature3.md)
-
 For more detailed information, visit the [Features](./features.md) section.
 
 Happy coding!
