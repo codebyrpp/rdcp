@@ -29,8 +29,3 @@ dist-ssr
 
 # Ignore the package-lock.json file as yarn.lock is used
 package-lock.json
-
-# VitePress
-docs/.vitepress/dist
-docs/.vitepress/node_modules
-docs/.vitepress/cache
