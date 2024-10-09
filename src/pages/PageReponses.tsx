@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import useProjectNavigation from "@/hooks/useProjectNavigation";
 import { useParams } from "react-router-dom";
@@ -9,6 +9,9 @@ import { useGetResponsesMutation } from "@/state/apiSlices/responsesApi";
 import { defaultColumns } from "@/components/responses/columns";
 import { formatDate } from "@/utils";
 import { ElementsType } from "@/components/builder/components/FormElements";
+import { set } from "lodash";
+import ClearableSelect from "@/components/common/ClearableSelect";
+import ResponsesSummary, { isChartSupportedField } from "@/components/responses/summary";
 
 
 type FormRecordData = {
@@ -17,6 +20,8 @@ type FormRecordData = {
   value: string | undefined;
   type: ElementsType;
 }
+
+export type Field = Pick<FormRecordData, "field" | "label" | "type">;
 
 type FormRecord = {
   createdAt: string;
@@ -29,6 +34,7 @@ export function PageResponses() {
   const { formId } = useParams<{ formId: string }>();
   const [getResponses, { isLoading }] = useGetResponsesMutation();
   const [columns, setColumns] = useState<any>([]);
+  const [fields, setFields] = useState<Field[]>();
 
   const processData = (records: FormRecord[]) => {
     const data = records.map((record) => {
@@ -48,7 +54,7 @@ export function PageResponses() {
 
   // prepareColumns
   const prepareColumns = (records: FormRecord[]) => {
-
+    const _fields: Field[] = [];
     // create unique columns from the records data label
     // columns is an array of objects with accessor and header
     const columns = records.reduce((acc, record) => {
@@ -65,6 +71,8 @@ export function PageResponses() {
           accessorKey: field.field,
           header: field.label
         };
+
+        _fields.push({ field: field.field, type: field.type, label: field.label });
 
         let cell: any = ({ row }: any) => {
           return <div className="w-[150px]">{row.original[field.field]}</div>;
@@ -92,10 +100,15 @@ export function PageResponses() {
       });
 
       return acc;
+
+
     }, []);
+
+    setFields(_fields);
 
     return [...columns, ...defaultColumns];
   };
+
 
   useEffect(() => {
     if (!formId) return;
@@ -110,22 +123,28 @@ export function PageResponses() {
 
   }, [formId]);
 
+  const chartSupportFields = useMemo(() => {
+    return fields?.filter(isChartSupportedField);
+  }, [fields]);
+
   if (isLoading) return <Loading />;
 
   return (
-    <section className="">
+    <div className="h-full flex flex-col">
       <div className="flex justify-between">
         <BackToProjectButton />
       </div>
-      <div className="flex">
+      <div className="flex flex-1">
         <div className="w-3/4">
           <DataTable columns={columns} data={data} />
         </div>
-        <div className="flex-1">
-          {/* Summary */}
-        </div>
+        {
+          chartSupportFields && <div className="flex-1 ml-4 my-3 ">
+            <ResponsesSummary fields={chartSupportFields} />
+          </div>
+        }
       </div>
-    </section>
+    </div>
   );
 }
 
