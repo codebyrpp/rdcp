@@ -98,7 +98,7 @@ const FormResponseSummary: React.FC = () => {
         html2canvas: { scale: 2 },
         jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
       };
-      html2pdf().from(element).set(options).save();
+      // html2pdf().from(element).set(options).save();
     } else {
       console.error("Element to download not found");
     }

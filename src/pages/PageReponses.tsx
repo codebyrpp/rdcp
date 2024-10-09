@@ -100,8 +100,6 @@ export function PageResponses() {
       });
 
       return acc;
-
-
     }, []);
 
     setFields(_fields);
@@ -140,7 +138,9 @@ export function PageResponses() {
         </div>
         {
           chartSupportFields && <div className="flex-1 ml-4 my-3 ">
-            <ResponsesSummary fields={chartSupportFields} />
+            <ResponsesSummary
+              formId={formId!}
+              fields={chartSupportFields} />
           </div>
         }
       </div>

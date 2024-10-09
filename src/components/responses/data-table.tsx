@@ -84,7 +84,7 @@ export function DataTable<TData, TValue>({
           Export Data to CSV
         </Button>
         <DropdownMenu>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger asChild>
             <Button variant="secondary" className="ml-auto">
               Filter Columns
             </Button>
