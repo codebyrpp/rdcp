@@ -1,7 +1,7 @@
 import { FormWithSchema } from "@/models/forms"
 import { FormElements, SubmitFunction } from "./FormElements";
 import { Button } from "@/components/ui/button";
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
 export type FormValueType = string | number | string[] | File;
@@ -20,6 +20,7 @@ const FormView = ({ form, isPreview = false, submitFormHandler }: FormViewProps)
     const elements = isPreview ? form.draft : form.schema;
 
     const formValues = useRef<FormFieldValuesType>({});
+    // formErrors is used to store the error state of each field, initially all fields are invalid
     const formErrors = useRef<{ [key: string]: boolean }>({});
 
     const submitValue: SubmitFunction = (key, value, isValid) => {
@@ -29,21 +30,36 @@ const FormView = ({ form, isPreview = false, submitFormHandler }: FormViewProps)
         else {
             formErrors.current[key] = false
         }
-        if(isValid)
-            formValues.current[key] = value;
+        formValues.current[key] = value;
     };
 
     const { toast } = useToast();
 
+    const doRequiredValidation = useCallback(() => {
+        // Check if the element is required and set the formErrors state accordingly
+        let hasRequiredFields = false;
+        elements?.forEach((element) => {
+            if (element.extraAttributes?.required && !formValues.current[element.id]) {
+                formErrors.current[element.id] = true;
+                hasRequiredFields = true;
+            }
+        });
+        return hasRequiredFields;
+    }, []);
+
     const submitForm = () => {
-        // Check if all the fields are valid
-        const isValid = Object.values(formErrors.current).every((error) => !error);
+        // Check if each and every field in the elements is valid
+        const hasRequiredField =  doRequiredValidation();
+
+        const isValid = elements?.every((element) => {
+            return !formErrors.current[element.id];
+        });
 
         if (!isValid) {
             toast({
-                title: "Please check the form for errors",
-                description: "Some fields have errors",
-                variant: "destructive"
+                title: hasRequiredField ? "Please fill all required fields" : "Please fill all fields correctly",
+                variant: "destructive",
+                duration: 4000
             });
 
             return;
