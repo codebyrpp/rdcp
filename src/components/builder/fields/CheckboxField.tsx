@@ -82,10 +82,10 @@ function FormComponent({
         const selected = Object.keys(isSelected).filter((option) => isSelected[option]);
         if (!submitValue) return false;
         const areValuesSelected = selected.length > 0;
-        const res = requiredValidation(areValuesSelected);
-        if (res) return false;
-        submitValue(element.id, selected);
-        return true;
+        const isNotValid = requiredValidation(areValuesSelected);
+        const isValid = !isNotValid;
+        submitValue(element.id, selected, isValid);
+        return isValid;
     };
 
     return (<div className="flex flex-col gap-2 w-full">

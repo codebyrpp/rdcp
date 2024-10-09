@@ -93,7 +93,7 @@ function FormComponent({
                                 onClick={() => {
                                     setDate(undefined);
                                     if (submitValue) {
-                                        submitValue(element.id, "");
+                                        submitValue(element.id, "", required ? false : true);
                                     }
                                 }}>
                                 <X className="w-4"/>
@@ -115,7 +115,7 @@ function FormComponent({
                         setErrors(undefined);
                         setDate(date);
                         if (submitValue && date) {
-                            submitValue(element.id, date.toISOString());
+                            submitValue(element.id, date.toISOString(), true);
                         }
                     }}
                     initialFocus

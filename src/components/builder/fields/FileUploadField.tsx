@@ -108,8 +108,8 @@ function FormComponent({
     });
 
     useEffect(() => {
-        if (file && isValid && submitValue) {
-            submitValue(element.id, file);
+        if (submitValue) {
+            submitValue(element.id, file, isValid);
         }
     }, [file, isValid]);
 
