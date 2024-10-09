@@ -2,31 +2,52 @@ import { FormWithSchema } from "@/models/forms"
 import { FormElements, SubmitFunction } from "./FormElements";
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 export type FormValueType = string | number | string[] | File;
 export type FormFieldValuesType = { [key: string]: FormValueType };
 
-type FormViewProps = { 
-    form: FormWithSchema, 
+type FormViewProps = {
+    form: FormWithSchema,
     isPreview?: boolean,
     submitFormHandler?: (formId: string, values: FormFieldValuesType) => void
 }
 
-const FormView = ({ form, isPreview = false, submitFormHandler }:FormViewProps) => {
+const FormView = ({ form, isPreview = false, submitFormHandler }: FormViewProps) => {
 
     if (!form) return null;
 
     const elements = isPreview ? form.draft : form.schema;
 
     const formValues = useRef<FormFieldValuesType>({});
+    const formErrors = useRef<{ [key: string]: boolean }>({});
 
-    const submitValue: SubmitFunction = (key, value) => {
-        formValues.current[key] = value;
+    const submitValue: SubmitFunction = (key, value, isValid) => {
+        if (!isValid) {
+            formErrors.current[key] = true;
+        }
+        else {
+            formErrors.current[key] = false
+        }
+        if(isValid)
+            formValues.current[key] = value;
     };
 
+    const { toast } = useToast();
+
     const submitForm = () => {
-        console.log("Submitting form...");
-        //TODO: Validation
+        // Check if all the fields are valid
+        const isValid = Object.values(formErrors.current).every((error) => !error);
+
+        if (!isValid) {
+            toast({
+                title: "Please check the form for errors",
+                description: "Some fields have errors",
+                variant: "destructive"
+            });
+
+            return;
+        }
 
         // Call the submitFormHandler if it exists - the form submission happens here
         submitFormHandler?.(form.id!, formValues.current);

@@ -85,12 +85,10 @@ function FormComponent({
             onChange={(e) => setValue(e.target.value ? Number(e.target.value) : undefined)}
             onBlur={(e) => {
                 const _value = e.target.value ? Number(e.target.value) : undefined;
-                if(!_value) return;
+                if (!_value) return;
                 if (!submitValue) return;
                 const isValid = validateFieldFromSchema(_value, schema);
-                if (isValid) {
-                    submitValue(element.id, _value);
-                }
+                submitValue(element.id, _value, isValid);
             }} />
         {errors && (
             <FieldErrors errors={errors} />
