@@ -21,6 +21,12 @@ import { z } from "zod";
 import { toast } from "@/components/ui/use-toast";
 import FormWrapper from "@/components/forms/FormWrapper";
 import Brand from "@/components/common/Brand";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"; // Import Tooltip components
 
 const OTPFormSchema = z.object({
   pin: z.string().length(6, {
@@ -45,48 +51,64 @@ export default function OTPPage() {
   }
 
   return (
-    <div className="flex flex-col gap-y-4 h-screen justify-center items-center">
-      <Brand />
-      <FormWrapper
-        title="Enter OTP"
-        description="Enter the OTP sent to your email."
-      >
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-2 w-80"
-          >
-            <FormField
-              control={form.control}
-              name="pin"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>One-Time Password</FormLabel>
-                  <FormControl>
-                    <InputOTP maxLength={6} {...field}>
-                      <InputOTPGroup>
-                        <InputOTPSlot index={0} />
-                        <InputOTPSlot index={1} />
-                        <InputOTPSlot index={2} />
-                        <InputOTPSlot index={3} />
-                        <InputOTPSlot index={4} />
-                        <InputOTPSlot index={5} />
-                      </InputOTPGroup>
-                    </InputOTP>
-                  </FormControl>
-                  <FormDescription>
-                    Please enter the one-time password sent to your email.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button className="flex w-full" type="submit">
-              Submit
-            </Button>
-          </form>
-        </Form>
-      </FormWrapper>
-    </div>
+    <TooltipProvider>
+      <div className="flex flex-col gap-y-4 h-screen justify-center items-center">
+        <Brand />
+        <FormWrapper
+          title="Enter OTP"
+          description="Enter the OTP sent to your email."
+        >
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-2 w-80"
+            >
+              <FormField
+                control={form.control}
+                name="pin"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>One-Time Password</FormLabel>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <FormControl>
+                          <InputOTP maxLength={6} {...field}>
+                            <InputOTPGroup>
+                              <InputOTPSlot index={0} />
+                              <InputOTPSlot index={1} />
+                              <InputOTPSlot index={2} />
+                              <InputOTPSlot index={3} />
+                              <InputOTPSlot index={4} />
+                              <InputOTPSlot index={5} />
+                            </InputOTPGroup>
+                          </InputOTP>
+                        </FormControl>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Enter the 6-digit code sent to your email.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                    <FormDescription>
+                      Please enter the one-time password sent to your email.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button className="flex w-full" type="submit">
+                    Submit
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Click to verify the OTP and continue.</p>
+                </TooltipContent>
+              </Tooltip>
+            </form>
+          </Form>
+        </FormWrapper>
+      </div>
+    </TooltipProvider>
   );
 }
