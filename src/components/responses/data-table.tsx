@@ -68,7 +68,9 @@ export function DataTable<TData, TValue>({
 
 
   const handleExport = () => {
-    const {rows} = table.getRowModel();
+    // FIXME: This is a temporary solution to export data to CSV
+    // All responses should fetch for the export
+    const { rows } = table.getRowModel();
     exportCSV(rows, table.getAllColumns().map((column) => ({
       key: column.id.toString(),
       displayLabel: column.columnDef.header?.toString()!
@@ -82,7 +84,7 @@ export function DataTable<TData, TValue>({
           Export Data to CSV
         </Button>
         <DropdownMenu>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger asChild>
             <Button variant="secondary" className="ml-auto">
               Filter Columns
             </Button>
@@ -104,33 +106,38 @@ export function DataTable<TData, TValue>({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Table className="!border border-slate-300 !rounded max-w-[98vw] overflow-x-auto">
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="bg-slate-700 hover:bg-slate-700">
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id} className="text-slate-50">
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                </TableHead>
+      <div className="w-full">
+        <div className="overflow-x-auto">
+          <Table className="!border border-slate-300 !rounded">
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id} className="bg-slate-700 hover:bg-slate-700">
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id} className="text-slate-50 text-ellipsis wrap max-w-[100px]">
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                    </TableHead>
+                  ))}
+                </TableRow>
               ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id} className="border-slate-300">
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id} className="py-2 border-slate-300">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id} className="border-slate-300 bg-slate-50">
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id} className="py-1 border-slate-700">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
               ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"

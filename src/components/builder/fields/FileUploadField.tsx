@@ -253,6 +253,7 @@ function PropertiesComponent({
                             id="max-file-size"
                             type="number"
                             min="1"
+                            max="10" // Add as a guard to prevent large file uploads in the current stage
                             value={maxFileSize}
                             onChange={(e) => setMaxFileSize(parseInt(e.target.value) || 1)}
                         />

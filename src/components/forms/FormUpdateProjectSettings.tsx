@@ -1,20 +1,29 @@
-import { Button } from '../ui/button'
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '../ui/form'
-import { Input } from '../ui/input'
-import { Textarea } from '../ui/textarea'
-import { useProjectInfoViewModel } from '@/viewmodels/projects/single'
-import { useParams } from 'react-router-dom'
-import { Skeleton } from '../ui/skeleton'
-import { SectionWrapper } from '../common/wrapper'
-
+import { Button } from "../ui/button";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import { useProjectInfoViewModel } from "@/viewmodels/projects/single";
+import { useParams } from "react-router-dom";
+import { Skeleton } from "../ui/skeleton";
+import { SectionWrapper } from "../common/wrapper";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const FormUpdateProjectSettings = () => {
-
-    const { projectId } = useParams<{ projectId: string }>();
-    const {
-        projectForm: form,
-        handleProjectUpdate: handleSubmit
-    } = useProjectInfoViewModel({ projectId });
+  const { projectId } = useParams<{ projectId: string }>();
+  const { projectForm: form, handleProjectUpdate: handleSubmit } =
+    useProjectInfoViewModel({ projectId });
 
     return (
         <SectionWrapper>
@@ -65,4 +74,4 @@ const FormUpdateProjectSettings = () => {
     )
 }
 
-export default FormUpdateProjectSettings
+export default FormUpdateProjectSettings;

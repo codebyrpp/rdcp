@@ -21,6 +21,12 @@ import { z } from "zod";
 import { toast } from "@/components/ui/use-toast";
 import FormWrapper from "@/components/forms/FormWrapper";
 import Brand from "@/components/common/Brand";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"; // Import Tooltip components
 
 const OTPFormSchema = z.object({
   pin: z.string().length(6, {
@@ -62,18 +68,27 @@ export default function OTPPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>One-Time Password</FormLabel>
-                  <FormControl>
-                    <InputOTP maxLength={6} {...field}>
-                      <InputOTPGroup>
-                        <InputOTPSlot index={0} />
-                        <InputOTPSlot index={1} />
-                        <InputOTPSlot index={2} />
-                        <InputOTPSlot index={3} />
-                        <InputOTPSlot index={4} />
-                        <InputOTPSlot index={5} />
-                      </InputOTPGroup>
-                    </InputOTP>
-                  </FormControl>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <FormControl>
+                          <InputOTP maxLength={6} {...field}>
+                            <InputOTPGroup>
+                              <InputOTPSlot index={0} />
+                              <InputOTPSlot index={1} />
+                              <InputOTPSlot index={2} />
+                              <InputOTPSlot index={3} />
+                              <InputOTPSlot index={4} />
+                              <InputOTPSlot index={5} />
+                            </InputOTPGroup>
+                          </InputOTP>
+                        </FormControl>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Enter the 6-digit code sent to your email.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                   <FormDescription>
                     Please enter the one-time password sent to your email.
                   </FormDescription>

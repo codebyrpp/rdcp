@@ -5,6 +5,7 @@ import { getRoleName } from '@/models/projects'
 import { FaCog } from 'react-icons/fa'
 import { FaPen } from 'react-icons/fa6'
 import { ListItem, ListItemTitle } from '../common/ListItems'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 interface ProjectListItemProps {
     project: ProjectDTO
@@ -52,18 +53,30 @@ const ProjectListItem = ({ project }: ProjectListItemProps) => {
                     <div className='text-xs text-slate-600'>Created At</div>
                     <div className='text-xs text-slate-600'>{formatDate(project.createdAt)}</div>
                 </div>
-                <div className="flex gap-1 items-center">
-                    <div
-                        onClick={handleEditClick}
-                        className='flex cursor-pointer p-2 rounded-lg hover:bg-slate-200 h-full aspect-square'>
-                        <FaPen className='!text-slate-600' />
+                <TooltipProvider>
+                    <div className="flex gap-1 items-center">
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <div
+                                    onClick={handleEditClick}
+                                    className='flex cursor-pointer p-2 rounded-lg hover:bg-slate-200 h-full aspect-square'>
+                                    <FaPen className='!text-slate-600' />
+                                </div>
+                            </TooltipTrigger>
+                            <TooltipContent>View Project</TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <div
+                                    onClick={handleSettingsClick}
+                                    className='flex cursor-pointer p-2 rounded-lg hover:bg-slate-200 h-full aspect-square'>
+                                    <FaCog className='!text-slate-600' />
+                                </div>
+                            </TooltipTrigger>
+                            <TooltipContent>Project Settings</TooltipContent>
+                        </Tooltip>
                     </div>
-                    <div
-                        onClick={handleSettingsClick}
-                        className='flex cursor-pointer p-2 rounded-lg hover:bg-slate-200 h-full aspect-square'>
-                        <FaCog className='!text-slate-600' />
-                    </div>
-                </div>
+                </TooltipProvider>
             </div>
         </ListItem>
     )
