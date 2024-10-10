@@ -7,9 +7,11 @@ import { ProjectRole } from '@/models/projects'
 import useProjectNavigation from '@/hooks/useProjectNavigation'
 import { ListItem, ListItemTitle } from '@/components/common/ListItems'
 import { FaCog } from 'react-icons/fa'
-import { ExternalLinkIcon, Eye, FileIcon, ShareIcon, View } from 'lucide-react'
+import { ExternalLinkIcon, Eye, FileIcon, Link2Icon, Pen, ShareIcon, View } from 'lucide-react'
 import { Link1Icon } from '@radix-ui/react-icons'
 import { useToast } from '@/components/ui/use-toast'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { FaPen } from 'react-icons/fa6'
 
 interface FormListItemProps {
     form: Form
@@ -97,16 +99,30 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
                     <div className='text-xs text-slate-700'>{formatDate(form.updatedAt)}</div>
                 </div>
                 {
-                    buttonVisibility.edit && <Button size={"sm"} variant={"warning"}
-                        onClick={handleDesign} className='flex gap-2'>
-                        Edit
-                    </Button>
+                    buttonVisibility.edit && <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button size={"sm"} variant={"warning"}
+                                    onClick={handleDesign} className='flex gap-2'>
+                                    Edit
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Design Form using the Form Builder</TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                 }
                 {
-                    buttonVisibility.responses && <Button variant={"success"} size={"sm"}
-                        onClick={handleCheckResponses} className='flex gap-2'>
-                        Responses
-                    </Button>
+                    buttonVisibility.responses && <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button variant={"success"} size={"sm"}
+                                    onClick={handleCheckResponses} className='flex gap-2'>
+                                    Responses
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>View the form submissions</TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                 }
                 {/* {
                     buttonVisibility.dashboard && <Button variant={"gray"} size={"sm"}
@@ -115,31 +131,51 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
                     </Button>
                 } */}
                 {
-                    <Button onClick={() => { navigateToForm(form.id) }}
-                        variant={"icon"} size={"icon"} className='flex gap-2'>
-                        <View />
-                    </Button>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button onClick={() => { navigateToForm(form.id) }}
+                                    variant={"secondary"} size={"sm"} className='flex gap-2 text-sm'>
+                                    View
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>View Form</TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                 }
                 {/* Copy Link */}
-                <Button
-                    onClick={() => {
-                        navigator.clipboard.writeText(`${window.location.origin}/forms/${form.id}/view`)
-                        toast({
-                            title: 'Link Copied',
-                            description: 'Form link copied to clipboard',
-                            variant: 'success',
-                            duration: 2000
-                        })
-                    }}
-                    variant={"icon"} size={"icon"} className='flex gap-2'>
-                    {/* Link Icon */}
-                    <ShareIcon />
-                </Button>
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                onClick={() => {
+                                    navigator.clipboard.writeText(`${window.location.origin}/forms/${form.id}/view`)
+                                    toast({
+                                        title: 'Link Copied',
+                                        description: 'Form link copied to clipboard',
+                                        variant: 'success',
+                                        duration: 2000
+                                    })
+                                }}
+                                variant={"icon"} size={"sm"} className='flex gap-2'>
+                                <Link2Icon />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Copy Form Link</TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
                 {
-                    buttonVisibility.settings && <Button variant={"icon"} size={"icon"}
-                        onClick={handleEditSettings} className='flex gap-2'>
-                        <FaCog />
-                    </Button>
+                    buttonVisibility.settings && <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button variant={"icon"} size={"icon"}
+                                    onClick={handleEditSettings} className='flex gap-2'>
+                                    <FaCog />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Edit Form Settings</TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                 }
             </div>
         </ListItem>
