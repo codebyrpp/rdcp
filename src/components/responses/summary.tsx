@@ -10,6 +10,7 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
+import { selectColor } from './chart_colors';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -43,7 +44,6 @@ const ResponsesSummary = ({ fields, formId }: {
         // fetch data
         getSummary({ formId: formId, field: selectedField }).unwrap()
             .then((data) => {
-                console.log(data);
                 setSummaries((prev) => ({
                     ...prev,
                     [selectedField]: data.map((dp: { _id: string; count: number; }) => ({
@@ -62,7 +62,12 @@ const ResponsesSummary = ({ fields, formId }: {
         <div className="p-3 bg-slate-50 rounded-lg
     flex flex-col gap-3 border-l-slate-900">
             {/* Summary */}
-            <h4 className="text-lg font-semibold">Summary</h4>
+            <div className='flex flex-col gap-2'>
+                <h4 className="text-lg font-semibold">Summary</h4>
+                <p className='text-sm'>
+                    View summary of responses for select, checkbox fields
+                </p>
+            </div>
             {
                 fields &&
                 <ClearableSelect
@@ -89,12 +94,16 @@ const ResponsesSummary = ({ fields, formId }: {
 }
 
 const Chart = ({ data }: { data: { label: string; count: number }[] }) => {
+    const labels = data.map(d => d.label);
     return (
         <div>
             <Pie data={{
-                labels: data.map(d => d.label),
+                labels: labels,
                 datasets: [{
-                    data: data.map(d => d.count)
+                    data: data.map(d => d.count),
+                    backgroundColor: labels.map((_, i) => {
+                        return selectColor(i);
+                    })
                 }]
             }} />
         </div>
