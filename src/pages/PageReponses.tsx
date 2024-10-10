@@ -12,6 +12,7 @@ import { ElementsType } from "@/components/builder/components/FormElements";
 import { set } from "lodash";
 import ClearableSelect from "@/components/common/ClearableSelect";
 import ResponsesSummary, { isChartSupportedField } from "@/components/responses/summary";
+import { Form } from "@/models/forms";
 
 
 type FormRecordData = {
@@ -35,6 +36,7 @@ export function PageResponses() {
   const [getResponses, { isLoading }] = useGetResponsesMutation();
   const [columns, setColumns] = useState<any>([]);
   const [fields, setFields] = useState<Field[]>();
+  const [form, setForm] = useState<Form>();
 
   const processData = (records: FormRecord[]) => {
     const data = records.map((record) => {
@@ -112,6 +114,7 @@ export function PageResponses() {
     if (!formId) return;
 
     getResponses({ formId }).unwrap().then((res) => {
+      setForm(res.form);
       const data = processData(res.responses.items as FormRecord[]);
       const columns = prepareColumns(res.responses.items as FormRecord[]);
       // @ts-ignore
@@ -129,10 +132,15 @@ export function PageResponses() {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex justify-between">
+      <div className="flex gap-2 items-center">
         <BackToProjectButton />
+        <div className="flex flex-col gap-1">
+          <h4 className="text-md font-semibold mb-0">{form?.name}</h4>
+        </div>
       </div>
+
       <div className="flex flex-1">
+        {/* Form name and description */}
         <div className="w-3/4">
           <DataTable columns={columns} data={data} />
         </div>
@@ -153,13 +161,14 @@ export const BackToProjectButton = () => {
   const projectId = useParams<{ projectId: string }>().projectId;
   const { navigateToProject } = useProjectNavigation();
 
-  return (<Button variant={"link"} className="flex gap-2"
-    onClick={() => {
-      if (projectId)
-        navigateToProject(projectId);
-    }}
-  >
-    <FaArrowLeft />
-    Back to Project
-  </Button>);
+  return (
+    <Button variant={"icon"}
+      onClick={() => {
+        if (projectId)
+          navigateToProject(projectId);
+      }}
+    >
+      <FaArrowLeft />
+    </Button>
+  );
 }

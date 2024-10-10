@@ -125,9 +125,9 @@ export function DataTable<TData, TValue>({
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} className="border-slate-300">
+                <TableRow key={row.id} className="border-slate-300 bg-slate-50">
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="py-1 border-slate-300">
+                    <TableCell key={cell.id} className="py-1 border-slate-700">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}

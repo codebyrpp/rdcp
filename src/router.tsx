@@ -25,7 +25,6 @@ import PageProjectSettings from "./pages/PageProjectSettings";
 import PageFormSettings from "./pages/PageFormSettings";
 import PageForgetPassword from "./pages/ForgetPassword/ForgetPassword";
 import PageVerfiyOTP from "./pages/ForgetPassword/OTPPage";
-import FormResponseSummary from "./pages/response_summary/FormResponseSummary.tsx";
 import BuilderLayout from "./pages/form_builder/BuilderLayout.tsx";
 import BuilderError from "./pages/form_builder/BuilderError.tsx";
 import BuilderLoading from "./pages/form_builder/BuilderLoading.tsx";
@@ -57,7 +56,6 @@ const router = createBrowserRouter(
           <Route path={PROJECT_SETTINGS_ROUTE} element={<PageProjectSettings />} />
           <Route path={FORM_SETTINGS_ROUTE} element={<PageFormSettings />} />
           <Route path={FORM_RESPONSES_ROUTE} element={<PageResponses />} />
-          <Route path={FORM_RESPONSES_SUMMARY_ROUTE} element={<FormResponseSummary />} />
         </Route>
         {/* Form Builder */}
         <Route element={<FormLayout />}>
