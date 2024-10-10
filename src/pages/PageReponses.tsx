@@ -31,6 +31,10 @@ type FormRecord = {
   userId: string;
 }
 
+export type FormSummary = {
+  total: number;
+}
+
 export function PageResponses() {
   const [data, setData] = useState([]);
   const { formId } = useParams<{ formId: string }>();
@@ -38,6 +42,9 @@ export function PageResponses() {
   const [columns, setColumns] = useState<any>([]);
   const [fields, setFields] = useState<Field[]>();
   const [form, setForm] = useState<Form>();
+  const [summary, setSummary] = useState<FormSummary>({
+    total: 0,
+  });
 
   const processData = (records: FormRecord[]) => {
     const data = records.map((record) => {
@@ -116,6 +123,9 @@ export function PageResponses() {
 
     getResponses({ formId }).unwrap().then((res) => {
       setForm(res.form);
+      setSummary({
+        total: res.responses.total,
+      })
       const data = processData(res.responses.items as FormRecord[]);
       const columns = prepareColumns(res.responses.items as FormRecord[]);
       // @ts-ignore
@@ -136,7 +146,7 @@ export function PageResponses() {
       <div className="flex gap-2 items-center">
         <BackToProjectButton />
         {
-          isLoading ? <Loading /> : <div className="flex gap-1">
+          isLoading ? <Loading /> : <div className="flex gap-1 items-center">
             <h4 className="text-sm font-semibold mb-0">{form?.name}</h4>
             <FormPrivacyBadge isPrivate={form?.isPrivate!} />
             <FormPublishStateBadge isPublished={form?.isPublished!} />
@@ -152,6 +162,7 @@ export function PageResponses() {
         {
           chartSupportFields && <div className="flex-1 ml-4 my-3 ">
             <ResponsesSummary
+              summary={summary!}
               formId={formId!}
               fields={chartSupportFields} />
           </div>

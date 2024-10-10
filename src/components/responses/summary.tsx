@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react'
 import ClearableSelect from '../common/ClearableSelect';
-import { Field } from '@/pages/PageReponses';
+import { Field, FormSummary } from '@/pages/PageReponses';
 import { useGetSummaryMutation } from '@/state/apiSlices/responsesApi';
 import Loading from '../common/Loading';
 import { Pie } from 'react-chartjs-2';
@@ -19,7 +19,8 @@ export const isChartSupportedField = (field: Field) => {
     return field.type === "CheckboxField" || field.type === "SelectField";
 }
 
-const ResponsesSummary = ({ fields, formId }: {
+const ResponsesSummary = ({ fields, formId, summary }: {
+    summary: FormSummary;
     fields: Field[];
     formId: string;
 }) => {
@@ -63,7 +64,11 @@ const ResponsesSummary = ({ fields, formId }: {
     flex flex-col gap-3 border-l-slate-900">
             {/* Summary */}
             <div className='flex flex-col gap-2'>
-                <h4 className="text-lg font-semibold">Summary</h4>
+                <h4 className="text-lg font-semibold underline">Summary</h4>
+                <div className='font-semibold p-2 bg-green-400 w-fit rounded-md'>
+                    <span className='text-sm'>Total Submissions: </span>
+                    <span className='text-sm'>{summary.total}</span>
+                </div>
                 <p className='text-sm'>
                     View summary of responses for select, checkbox fields
                 </p>
@@ -71,7 +76,7 @@ const ResponsesSummary = ({ fields, formId }: {
             {
                 fields &&
                 <ClearableSelect
-                    placeholder="Select a field"
+                    placeholder="Select Field"
                     options={fields?.map((field) => ({ key: field.field, label: field.label }))}
                     value={selectedField} onValueChange={handleFieldChange} />
             }
