@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import ClearableSelect from '../common/ClearableSelect';
 import { Field, FormSummary } from '@/pages/PageReponses';
 import { useGetSummaryMutation } from '@/state/apiSlices/responsesApi';
@@ -29,7 +29,9 @@ const ResponsesSummary = ({ fields, formId, summary }: {
 
     const handleFieldChange = (value: string | undefined) => {
         setSelectedField(value);
+        setKey(+new Date());
     };
+    const [key, setKey] = useState(+new Date());
 
     const [summaries, setSummaries] = React.useState<Record<string, any>>({});
 
@@ -77,6 +79,7 @@ const ResponsesSummary = ({ fields, formId, summary }: {
                 {
                     fields &&
                     <ClearableSelect
+                        key={key}
                         placeholder="Select Field"
                         options={fields?.map((field) => ({ key: field.field, label: field.label }))}
                         value={selectedField} onValueChange={handleFieldChange} />
