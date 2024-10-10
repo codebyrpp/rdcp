@@ -13,6 +13,7 @@ import { set } from "lodash";
 import ClearableSelect from "@/components/common/ClearableSelect";
 import ResponsesSummary, { isChartSupportedField } from "@/components/responses/summary";
 import { Form } from "@/models/forms";
+import { FormPrivacyBadge, FormPublishStateBadge } from "@/components/feats/forms/ListItemForm";
 
 
 type FormRecordData = {
@@ -134,9 +135,13 @@ export function PageResponses() {
     <div className="h-full flex flex-col">
       <div className="flex gap-2 items-center">
         <BackToProjectButton />
-        <div className="flex flex-col gap-1">
-          <h4 className="text-md font-semibold mb-0">{form?.name}</h4>
-        </div>
+        {
+          isLoading ? <Loading /> : <div className="flex gap-1">
+            <h4 className="text-sm font-semibold mb-0">{form?.name}</h4>
+            <FormPrivacyBadge isPrivate={form?.isPrivate!} />
+            <FormPublishStateBadge isPublished={form?.isPublished!} />
+          </div>
+        }
       </div>
 
       <div className="flex flex-1">
@@ -162,13 +167,14 @@ export const BackToProjectButton = () => {
   const { navigateToProject } = useProjectNavigation();
 
   return (
-    <Button variant={"icon"}
+    <Button variant={"icon"} className="text-sm flex gap-2 p-0"
       onClick={() => {
         if (projectId)
           navigateToProject(projectId);
       }}
     >
       <FaArrowLeft />
+      Back to Project /
     </Button>
   );
 }
