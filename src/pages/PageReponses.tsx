@@ -155,7 +155,7 @@ export function PageResponses() {
       </div>
 
       {
-        !form?.isPublished &&  <div className="text-sm text-muted-foreground p-2">
+        !form?.isPublished && <div className="text-sm text-muted-foreground p-2">
           This form is not published yet.
         </div>
       }
@@ -166,7 +166,7 @@ export function PageResponses() {
         </div>
       }
       {
-        summary.total > 0 ? <div className="flex flex-1">
+        summary.total > 0 && <div className="flex flex-1">
           {/* Form name and description */}
           <div className="w-3/4">
             <DataTable columns={columns} data={data} />
@@ -180,10 +180,6 @@ export function PageResponses() {
             </div>
           }
         </div>
-          : <div className="flex flex-col items-center justify-center gap-2">
-            <p className="text-muted-foreground">No responses found</p>
-            <p className="text-muted-foreground mb-3">Responses will appear here once submitted</p>
-          </div>
       }
     </div>
   );
