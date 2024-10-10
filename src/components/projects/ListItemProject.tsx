@@ -56,7 +56,7 @@ const ProjectListItem = ({ project }: ProjectListItemProps) => {
                 <TooltipProvider>
                     <div className="flex gap-1 items-center">
                         <Tooltip>
-                            <TooltipTrigger>
+                            <TooltipTrigger asChild>
                                 <div
                                     onClick={handleEditClick}
                                     className='flex cursor-pointer p-2 rounded-lg hover:bg-slate-200 h-full aspect-square'>

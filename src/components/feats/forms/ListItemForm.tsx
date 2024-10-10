@@ -101,7 +101,7 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
                 {
                     buttonVisibility.edit && <TooltipProvider>
                         <Tooltip>
-                            <TooltipTrigger>
+                            <TooltipTrigger asChild>
                                 <Button size={"sm"} variant={"warning"}
                                     onClick={handleDesign} className='flex gap-2'>
                                     Edit
@@ -114,7 +114,7 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
                 {
                     buttonVisibility.responses && <TooltipProvider>
                         <Tooltip>
-                            <TooltipTrigger>
+                            <TooltipTrigger asChild>
                                 <Button variant={"success"} size={"sm"}
                                     onClick={handleCheckResponses} className='flex gap-2'>
                                     Responses
@@ -133,7 +133,7 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
                 {
                     <TooltipProvider>
                         <Tooltip>
-                            <TooltipTrigger>
+                            <TooltipTrigger asChild>
                                 <Button onClick={() => { navigateToForm(form.id) }}
                                     variant={"icon"} size={"icon"} className='flex gap-2'>
                                     <View />
@@ -146,7 +146,7 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
                 {/* Copy Link */}
                 <TooltipProvider>
                     <Tooltip>
-                        <TooltipTrigger>
+                        <TooltipTrigger asChild>
                             <Button
                                 onClick={() => {
                                     navigator.clipboard.writeText(`${window.location.origin}/forms/${form.id}/view`)
@@ -166,10 +166,17 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
                     </Tooltip>
                 </TooltipProvider>
                 {
-                    buttonVisibility.settings && <Button variant={"icon"} size={"icon"}
-                        onClick={handleEditSettings} className='flex gap-2'>
-                        <FaCog />
-                    </Button>
+                    buttonVisibility.settings && <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button variant={"icon"} size={"icon"}
+                                    onClick={handleEditSettings} className='flex gap-2'>
+                                    <FaCog />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Edit Form Settings</TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                 }
             </div>
         </ListItem>
