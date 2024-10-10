@@ -238,7 +238,7 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
           <TooltipProvider>
             <div className="absolute right-1 top-1 h-full group">
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger asChild>
                   <Button
                     className="flex justify-center h-full border rounded-md bg-red-500 group-hover:bg-red-600"
                     variant={"outline"}

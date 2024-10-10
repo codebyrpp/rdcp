@@ -142,7 +142,7 @@ const FormUpdateFormSettings = () => {
                   {/* Submit Button */}
                   <div className="flex my-3 justify-end">
                     <Tooltip>
-                      <TooltipTrigger>
+                      <TooltipTrigger asChild>
                         <Button type="submit">Save Changes</Button>
                       </TooltipTrigger>
                       <TooltipContent>
