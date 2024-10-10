@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { SectionWrapper } from '../common/wrapper'
+import { useEffect, useState } from "react";
+import { SectionWrapper } from "../common/wrapper";
 import {
     Command,
     CommandEmpty,
@@ -217,4 +217,4 @@ const AddCollaborator = () => {
     )
 }
 
-export default AddCollaborator
+export default AddCollaborator;
