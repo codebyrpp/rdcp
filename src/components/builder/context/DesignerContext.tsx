@@ -13,9 +13,9 @@ type DesignerContextType = {
 
     selectedElement: FormElementInstance | null;
     setSelectedElement: Dispatch<SetStateAction<FormElementInstance | null>>;
-
+    hasChanges: boolean;
     updateElement: (id: string, element: FormElementInstance) => void;
-    saveFormChanges: (formId: string) => void;
+    saveFormChanges: (formId: string) => Promise<void>;
 };
 
 export const DesignerContext = createContext<DesignerContextType | null>(null);
@@ -29,6 +29,7 @@ export default function DesignerContextProvider({
     const [elements, setElements] = useState<FormElementInstance[]>([]);
     const [selectedElement, setSelectedElement] = useState<FormElementInstance | null>(null)
     const [saveFormMutation] = useSaveFormMutation();
+    const [hasChanges, setHasChanges] = useState(false);
 
     const addElement = (index: number, element: FormElementInstance) => {
         setElements((prev) => {
@@ -37,6 +38,7 @@ export default function DesignerContextProvider({
             return newElements;
         });
         setSelectedElement(element);
+        if (!hasChanges) setHasChanges(true);
     };
 
     const removeElement = (id: string) => {
@@ -44,6 +46,7 @@ export default function DesignerContextProvider({
             setSelectedElement(null);
         }
         setElements((prev) => prev.filter((element) => element.id !== id));
+        if (!hasChanges) setHasChanges(true);
     };
 
     const updateElement = (id: string, element: FormElementInstance) => {
@@ -53,16 +56,17 @@ export default function DesignerContextProvider({
             newElements[index] = element;
             return newElements;
         });
+        if(!hasChanges) setHasChanges(true);
     };
 
     const { toast } = useToast();
-    const saveFormChanges = (formId: string) => {
+    const saveFormChanges = async (formId: string) => {
         try {
             // const jsonElements = JSON.stringify(elements);
             // localStorage.setItem(formId, jsonElements);
 
-            saveFormMutation({ formId, schema: elements });
-
+            await saveFormMutation({ formId, schema: elements });
+            setHasChanges(false);
             // toast success
             toast({
                 title: "Form Saved",
@@ -88,7 +92,7 @@ export default function DesignerContextProvider({
                 setElements,
                 addElement,
                 removeElement,
-
+                hasChanges,
                 selectedElement,
                 setSelectedElement,
 

@@ -1,4 +1,5 @@
 import Session from "@/models/session"
+import { apiSlice } from "@/state/api";
 import { revokeSession, setSession } from "@/state/slices/session";
 import { RootState } from "@/state/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +13,7 @@ const useSession = () => {
     const logout = () => {
         // Dispatch the revokeSession action
         dispatch(revokeSession());
+        dispatch(apiSlice.util.resetApiState())
         // Redirect to the login page
         navigate('/login');
     }

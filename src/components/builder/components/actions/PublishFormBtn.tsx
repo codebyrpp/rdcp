@@ -15,10 +15,11 @@ import { usePublishFormMutation } from '@/state/apiSlices/formsApi';
 import { useToast } from '@/components/ui/use-toast';
 import { Link } from 'react-router-dom';
 
-function PublishFormBtn({ id }: { id: string }) {
+function PublishFormBtn({ id, save, hasChanges }: { id: string, save: () => Promise<void>, hasChanges: boolean }) {
     const [isLoading, setIsLoading] = useState(false);
     const [publishForm] = usePublishFormMutation();
-    const {toast} = useToast();
+
+    const { toast } = useToast();
 
     async function publishFormHandler() {
         setIsLoading(true);
@@ -65,7 +66,15 @@ function PublishFormBtn({ id }: { id: string }) {
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
                         disabled={isLoading}
-                        onClick={publishFormHandler}
+                        onClick={() => {
+                            if (hasChanges) {
+                                save().then(()=>{
+                                    publishFormHandler();
+                                });
+                            } else {
+                                publishFormHandler();
+                            }
+                        }}
                     >
                         Publish
                     </AlertDialogAction>

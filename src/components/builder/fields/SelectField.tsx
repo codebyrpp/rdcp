@@ -112,8 +112,8 @@ function FormComponent({
             onValueChange={(newValue) => {
                 setValue(newValue)
                 if (submitValue) {
-                    requiredValidation(newValue?.toString() ?? "");
-                    submitValue(element.id, newValue?.toString() ?? "");
+                    const isNotValid = requiredValidation(newValue?.toString() ?? "");
+                    submitValue(element.id, newValue?.toString() ?? "", !isNotValid);
                 }
                 setKey(+new Date()); // To force re-render if needed
             }}

@@ -90,11 +90,7 @@ function FormComponent({
                     return;
                 const _value = e.target.value;
                 const isValid = validateFieldFromSchema(_value, schema);
-                if (isValid) {
-                    submitValue(element.id, _value);
-                }else{
-                    console.error("Invalid value");
-                }
+                submitValue(element.id, _value, isValid);
             }} />
         {errors && (
             <FieldErrors errors={errors} />

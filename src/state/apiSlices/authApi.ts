@@ -1,4 +1,5 @@
 import { apiSlice } from "../api";
+import { FORM_TAG, PROJECT_TAG } from "../tags";
 
 interface LoginResponseDto {
     message: string;
@@ -18,15 +19,10 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 url: `${apiBaseDomain}/v2/auth/login`,
                 method: 'POST',
                 body,
+                invalidatesTags: [PROJECT_TAG, FORM_TAG],
             }),
-        }),
-        logout: builder.mutation({
-            query: () => ({
-                url: 'auth/logout',
-                method: 'POST',
-            }),
-        }),
+        })
     }),
 });
 
-export const { useLoginMutation, useLogoutMutation } = authApiSlice;
+export const { useLoginMutation } = authApiSlice;

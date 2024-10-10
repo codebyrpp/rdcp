@@ -17,6 +17,12 @@ import { z } from "zod";
 import { VERIFY_OTP_ROUTE } from "@/constants/routes";
 import Brand from "@/components/common/Brand";
 import { toast, useToast } from "@/components/ui/use-toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"; // Import tooltip components
 
 const EmailSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -32,7 +38,7 @@ export default function ForgotPasswordPage() {
       email: "",
     },
   });
-  const {toast} = useToast();
+  const { toast } = useToast();
 
   const handleSubmit = (data: z.infer<typeof EmailSchema>) => {
     // Simulate successful email submission
@@ -42,7 +48,7 @@ export default function ForgotPasswordPage() {
       description: `An OTP has been sent to ${data.email}`,
       variant: "success",
       duration: 5000,
-    })
+    });
     navigate(VERIFY_OTP_ROUTE); // Redirect to OTP page
   };
 

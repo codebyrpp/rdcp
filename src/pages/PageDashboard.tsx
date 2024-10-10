@@ -102,7 +102,7 @@ const PageDashboard = () => {
           projects?.length === 0 ? (
             <div className="w-full flex flex-col items-center gap-2 my-8">
               <p className='text-muted-foreground'>No projects found</p>
-              <p className='text-muted-foreground mb-3'>Create a new project to get started</p>
+              <p className='text-muted-foreground mb-3'>Create a new project and start building forms in them</p>
               {
                 projects && projects.length == 0 && (
                   <CreateProject />)

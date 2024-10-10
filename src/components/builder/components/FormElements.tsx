@@ -8,15 +8,15 @@ import { ReactNode } from "react";
 import { TitleDescFieldFormElement } from "../fields/TitleDescField";
 import { FileUploadFieldFormElement } from "../fields/FileUploadField";
 
-export type ElementsType = "TextField" | "TitleDescField" | "NumberField" | "TextAreaField" | "DateField" 
-                            | "SelectField" | "CheckboxField" | "FileUploadField";
+export type ElementsType = "TextField" | "TitleDescField" | "NumberField" | "TextAreaField" | "DateField"
+    | "SelectField" | "CheckboxField" | "FileUploadField";
 
-export type SubmitFunction = (key: string, value: string | number | string[] | File) => void;
+export type SubmitFunction = (key: string, value: string | number | string[] | File, isValid: boolean) => void;
 
 export type FormElement = {
     type: ElementsType;
 
-    construct: (id:string) => FormElementInstance;
+    construct: (id: string) => FormElementInstance;
 
     designerBtnElement: {
         label: string;
@@ -43,7 +43,7 @@ export type FormElementInstance = {
 };
 
 type FormElementsType = {
-    [key in ElementsType] : FormElement;
+    [key in ElementsType]: FormElement;
 
 };
 export const FormElements: FormElementsType = {

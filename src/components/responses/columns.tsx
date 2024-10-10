@@ -13,15 +13,10 @@ export const defaultColumns: ColumnDef<any>[] = [
     id: "submittedAt",
     accessorKey: "submittedAt",
     header: "Submitted At",
+    cell: ({ row }) => {
+      return <div className="w-[150px]">
+        {row.original.submittedAt}
+      </div>;
+    }
   },
-  // {
-  //   id: "actions",
-  //   header: "Remove",
-  //   cell: ({ row }) => {
-  //     const user = row.original;
-  //     return <Button size={"icon"} variant={"icon"}>
-  //       <Delete className="text-red-500" />
-  //     </Button>
-  //   },
-  // },
 ];

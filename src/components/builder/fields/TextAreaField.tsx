@@ -89,9 +89,7 @@ function FormComponent({
             onBlur={(e) => {
                 if (!submitValue) return;
                 const isValid = validateFieldFromSchema(e.target.value, schema);
-                if (isValid) {
-                    submitValue(element.id, e.target.value);
-                }
+                submitValue(element.id, e.target.value, isValid);
             }} />
         {errors && (
             <FieldErrors errors={errors} />

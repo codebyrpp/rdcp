@@ -1,8 +1,21 @@
-import { FaPlus } from 'react-icons/fa6'
-import { Button } from '../ui/button'
-import CreateProjectForm from '../forms/FormCreateProject'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
-import { dialogCloseWrapper } from '../common/DialogCloseWrapper'
+import { FaPlus } from "react-icons/fa6";
+import { Button } from "../ui/button";
+import CreateProjectForm from "../forms/FormCreateProject";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { dialogCloseWrapper } from "../common/DialogCloseWrapper";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"; // Import Tooltip components
 
 const CreateProject = () => {
     return (
@@ -31,4 +44,4 @@ const CreateProject = () => {
     )
 }
 
-export default CreateProject
+export default CreateProject;
