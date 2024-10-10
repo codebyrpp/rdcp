@@ -24,6 +24,7 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
                 url: `projects/${projectId}`,
                 method: 'GET',
             }),
+            providesTags: [PROJECT_TAG, FORM_TAG]
         }),
         getProjectWithForms: builder.query<ProjectDTO, { projectId: string }>({
             query: ({ projectId }) => ({
@@ -38,6 +39,7 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
                 method: 'PATCH',
                 body
             }),
+            invalidatesTags: [PROJECT_TAG]
         }),
         deleteProject: builder.mutation<any, { projectId: string }>({
             query: ({ projectId }) => ({

@@ -31,7 +31,7 @@ export const formsApiSlice = apiSlice.injectEndpoints({
             query: ({ formId, schema = false }) => ({
                 url: `forms/${formId}?schema=${schema}`,
                 method: 'GET',
-            }),
+            })
         }),
         updateForm: builder.mutation<Form, { formId: string }>({
             query: ({ formId, ...body }) => ({
