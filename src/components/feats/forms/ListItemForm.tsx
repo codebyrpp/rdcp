@@ -7,7 +7,7 @@ import { ProjectRole } from '@/models/projects'
 import useProjectNavigation from '@/hooks/useProjectNavigation'
 import { ListItem, ListItemTitle } from '@/components/common/ListItems'
 import { FaCog } from 'react-icons/fa'
-import { ExternalLinkIcon, Eye, FileIcon, Pen, ShareIcon, View } from 'lucide-react'
+import { ExternalLinkIcon, Eye, FileIcon, Link2Icon, Pen, ShareIcon, View } from 'lucide-react'
 import { Link1Icon } from '@radix-ui/react-icons'
 import { useToast } from '@/components/ui/use-toast'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
@@ -135,8 +135,8 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Button onClick={() => { navigateToForm(form.id) }}
-                                    variant={"icon"} size={"icon"} className='flex gap-2'>
-                                    <View />
+                                    variant={"secondary"} size={"sm"} className='flex gap-2 text-sm'>
+                                    View
                                 </Button>
                             </TooltipTrigger>
                             <TooltipContent>View Form</TooltipContent>
@@ -157,9 +157,8 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
                                         duration: 2000
                                     })
                                 }}
-                                variant={"icon"} size={"icon"} className='flex gap-2'>
-                                {/* Link Icon */}
-                                <ShareIcon />
+                                variant={"icon"} size={"sm"} className='flex gap-2'>
+                                <Link2Icon />
                             </Button>
                         </TooltipTrigger>
                         <TooltipContent>Copy Form Link</TooltipContent>

@@ -9,7 +9,7 @@ import { useGetResponsesMutation } from "@/state/apiSlices/responsesApi";
 import { defaultColumns } from "@/components/responses/columns";
 import { formatDate } from "@/utils";
 import { ElementsType } from "@/components/builder/components/FormElements";
-import { set } from "lodash";
+import { set, sum } from "lodash";
 import ClearableSelect from "@/components/common/ClearableSelect";
 import ResponsesSummary, { isChartSupportedField } from "@/components/responses/summary";
 import { Form } from "@/models/forms";
@@ -74,7 +74,7 @@ export function PageResponses() {
         if (acc.find((col) => col.accessorKey === field.field))
           return acc;
 
-        if (!field.field || !field.value) return;
+        if (!field.field) return;
 
         const col = {
           id: field.field,
@@ -154,20 +154,31 @@ export function PageResponses() {
         }
       </div>
 
-      <div className="flex flex-1">
-        {/* Form name and description */}
-        <div className="w-3/4">
-          <DataTable columns={columns} data={data} />
+      {
+        !form?.isPublished && summary.total == 0 && <div className="text-sm text-muted-foreground p-2">
+          This form is not published yet.
         </div>
-        {
-          chartSupportFields && <div className="flex-1 ml-4 my-3 ">
-            <ResponsesSummary
-              summary={summary!}
-              formId={formId!}
-              fields={chartSupportFields} />
+      }
+      {
+        form?.isPublished && summary.total > 0 ? <div className="flex flex-1">
+          {/* Form name and description */}
+          <div className="w-3/4">
+            <DataTable columns={columns} data={data} />
           </div>
-        }
-      </div>
+          {
+            chartSupportFields && <div className="flex-1 ml-4 my-3 ">
+              <ResponsesSummary
+                summary={summary!}
+                formId={formId!}
+                fields={chartSupportFields} />
+            </div>
+          }
+        </div>
+          : <div className="flex flex-col items-center justify-center gap-2">
+            <p className="text-muted-foreground">No responses found</p>
+            <p className="text-muted-foreground mb-3">Responses will appear here once submitted</p>
+          </div>
+      }
     </div>
   );
 }
