@@ -236,7 +236,7 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
       {mouseIsOver && (
         <>
           <TooltipProvider>
-            <div className="absolute right-1 top-1 h-full group">
+            <div className="absolute right-0 top-0 h-full group">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button

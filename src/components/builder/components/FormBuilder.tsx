@@ -21,7 +21,7 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
 
     const sensors = useSensors(mouseSensor);
 
-    const { setElements, saveFormChanges, elements } = useDesigner();
+    const { setElements, saveFormChanges, elements, hasChanges } = useDesigner();
     const [previewKey, setPreviewKey] = useState(0);
     const [locked, setLocked] = useState(false);
     const [lockOwner, setLockOwner] = useState<string | null>(null);
@@ -32,8 +32,8 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
 
     const [isReady, setIsReady] = useState(false);
 
-    const saveAction = () => {
-        saveFormChanges(form.id!);
+    const saveAction = async () => {
+        await saveFormChanges(form.id!);
     };
 
     useSaveShortcut(saveAction);
@@ -81,7 +81,8 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
                                     {
                                         !locked && <>
                                             <SaveFormBtn action={saveAction} />
-                                            <PublishFormBtn id={form.id!} />
+                                            <PublishFormBtn hasChanges={hasChanges}
+                                                save={saveAction} id={form.id!} />
                                         </>
                                     }
                                     <LeaveEditorButton
