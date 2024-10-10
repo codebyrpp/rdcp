@@ -64,7 +64,7 @@ const PageProject = () => {
                     isLoading ? <Loading /> :
                         // @ts-ignore
                         isError ? <p>{error?.message}</p> :
-                            forms?.length === 0 ? <p className='m-5 text-muted-foreground'>No forms found</p> :
+                            forms?.length === 0 ? <NoFormsFound /> :
                                 filteredForms?.map((form) => {
                                     return <FormListItem
                                         roles={project.roles!}
@@ -75,5 +75,15 @@ const PageProject = () => {
         </div>
     );
 };
+
+const NoFormsFound = () => {
+    return (
+        <div className="flex flex-col items-center justify-center gap-2">
+            <p className="text-muted-foreground">No forms found</p>
+            <p className="text-muted-foreground mb-3">Create a form to get started</p>
+            <CreateForm />
+        </div>
+    );
+}
 
 export default PageProject;
