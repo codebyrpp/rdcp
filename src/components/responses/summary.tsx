@@ -69,17 +69,19 @@ const ResponsesSummary = ({ fields, formId, summary }: {
                     <span className='text-sm'>Total Submissions: </span>
                     <span className='text-sm'>{summary.total}</span>
                 </div>
-                <p className='text-sm'>
+            </div>
+            <div className="flex flex-col gap-1">
+                <p className='text-xs'>
                     View summary of responses for select, checkbox fields
                 </p>
+                {
+                    fields &&
+                    <ClearableSelect
+                        placeholder="Select Field"
+                        options={fields?.map((field) => ({ key: field.field, label: field.label }))}
+                        value={selectedField} onValueChange={handleFieldChange} />
+                }
             </div>
-            {
-                fields &&
-                <ClearableSelect
-                    placeholder="Select Field"
-                    options={fields?.map((field) => ({ key: field.field, label: field.label }))}
-                    value={selectedField} onValueChange={handleFieldChange} />
-            }
             {
                 isLoading ?
                     <Loading />
