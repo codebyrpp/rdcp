@@ -45,20 +45,10 @@ const FormUpdateFormSettings = () => {
                       <FormItem>
                         <FormLabel>Name</FormLabel>
                         <FormControl>
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <Input
-                                placeholder="Form Name is Required."
-                                {...field}
-                              />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>
-                                Please enter the name of the form. This is a
-                                required field.
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
+                          <Input
+                            placeholder="Form Name is Required."
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -73,20 +63,10 @@ const FormUpdateFormSettings = () => {
                       <FormItem>
                         <FormLabel>Description</FormLabel>
                         <FormControl>
-                          <Tooltip>
-                            <TooltipTrigger>
-                              {/* TextArea */}
-                              <Textarea
-                                {...field}
-                                placeholder="Description is Optional."
-                              />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>
-                                Provide an optional description for the form.
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
+                          <Textarea
+                            {...field}
+                            placeholder="Description is Optional."
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -101,20 +81,10 @@ const FormUpdateFormSettings = () => {
                           Enable Public Survey
                         </FormLabel>
                         <FormControl>
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>
-                                Select to make the form public and accessible to
-                                everyone.
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
                         </FormControl>
                         <FormDescription>
                           Select this option to make the form public and
@@ -130,20 +100,10 @@ const FormUpdateFormSettings = () => {
                       <FormItem>
                         <FormLabel className="mr-3">Publish</FormLabel>
                         <FormControl>
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>
-                                Select to publish the form. It will be available
-                                for responses.
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
                         </FormControl>
                         <FormDescription>
                           Select this option to publish the form. Once
@@ -162,23 +122,13 @@ const FormUpdateFormSettings = () => {
                           Multiple Responses
                         </FormLabel>
                         <FormControl>
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <Switch
-                                disabled={form.getValues().isPublic}
-                                checked={
-                                  form.getValues().isPublic ? true : field.value
-                                }
-                                onCheckedChange={field.onChange}
-                              />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>
-                                Allow multiple responses to the form. Note: Only
-                                available for private forms.
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
+                          <Switch
+                            disabled={form.getValues().isPublic}
+                            checked={
+                              form.getValues().isPublic ? true : field.value
+                            }
+                            onCheckedChange={field.onChange}
+                          />
                         </FormControl>
                         <FormDescription>
                           Select this option to allow multiple responses to the

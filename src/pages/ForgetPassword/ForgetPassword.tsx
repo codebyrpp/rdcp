@@ -71,22 +71,11 @@ export default function ForgotPasswordPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Email</FormLabel>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter your email address"
-                            type="email"
-                            {...field}
-                          />
-                        </FormControl>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>
-                          Enter the email address associated with your account.
-                        </p>
-                      </TooltipContent>
-                    </Tooltip>
+                    <Input
+                      placeholder="Enter your email address"
+                      type="email"
+                      {...field}
+                    />
                     <FormMessage />
                   </FormItem>
                 )}

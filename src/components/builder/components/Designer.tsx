@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { BiSolidTrash } from "react-icons/bi";
 import { DesignerFormElementsPanel, DesignerPropertiesPanel } from "./DesignerSidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
 
 function Designer({ form }: {
   form: {
@@ -234,25 +235,27 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
       <div ref={bottomHalf.setNodeRef} className="absolute bottom-0 w-full h-1/2 rounded-b-md" />
       {mouseIsOver && (
         <>
-          <div className="absolute right-0 h-full group">
-            <Tooltip>
-              <TooltipTrigger>
-                <Button
-                  className="flex justify-center h-full border rounded-md rounded-l-none bg-red-400 group-hover:bg-red-500"
-                  variant={"outline"}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeElement(element.id);
-                  }}
-                >
-                  <BiSolidTrash className="h-8 w-6" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Remove this element</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
+          <TooltipProvider>
+            <div className="absolute right-1 top-1 h-full group">
+              <Tooltip>
+                <TooltipTrigger>
+                  <Button
+                    className="flex justify-center h-full border rounded-md bg-red-500 group-hover:bg-red-600"
+                    variant={"outline"}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeElement(element.id);
+                    }}
+                  >
+                    <BiSolidTrash className="h-8 w-6 text-slate-50" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Remove this element</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          </TooltipProvider>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <p className="text-sm">Click for properties or drag to move</p>
           </div>
@@ -269,7 +272,7 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
           "flex w-full items-center rounded-md bg-background p-4 pointer-events-none opacity-100",
           mouseIsOver && "opacity-30",
           selectedElement === element &&
-            "border-l-4 border-l-slate-500 elevation-2 shadow-md"
+          "border-l-4 border-l-slate-500 elevation-2 shadow-md"
         )}
       >
         <DesignerElement elementInstance={element} />

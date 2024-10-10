@@ -86,15 +86,8 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
             <div className='px-2 flex flex-col gap-1'>
                 <div className="flex gap-2">
                     <ListItemTitle>{form.name}</ListItemTitle>
-                    {
-                        form.isPrivate ? <Badge variant={"outline"} className='bg-blue-50 border-slate-600 border-2
-                         text-slate-600 font-semibold'>Private</Badge> :
-                            <Badge variant={"outline"} className='bg-blue-600 text-blue-50'>Public</Badge>
-                    }
-                    {
-                        form.isPublished ? <Badge variant={"outline"} className='bg-green-500'>Published</Badge> :
-                            <Badge variant={"outline"} className='bg-yellow-500'>Draft</Badge>
-                    }
+                    <FormPrivacyBadge isPrivate={form.isPrivate!} />
+                    <FormPublishStateBadge isPublished={form.isPublished!} />
                 </div>
                 <p className='text-sm text-slate-700 truncate text-ellipsis max-w-lg'>{form.description}</p>
             </div>
@@ -151,6 +144,18 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
             </div>
         </ListItem>
     )
+}
+
+export const FormPrivacyBadge = ({ isPrivate }: { isPrivate: boolean }) => {
+    return isPrivate ? <Badge variant={"outline"}
+        className={"bg-blue-50 border-slate-600 border-2 text-slate-600 font-semibold"}>Private</Badge> :
+        <Badge variant={"outline"} className='bg-blue-600 text-blue-50'>Public</Badge>
+
+}
+
+export const FormPublishStateBadge = ({ isPublished }: { isPublished: boolean }) => {
+    return isPublished ? <Badge variant={"outline"} className='bg-green-500'>Published</Badge> :
+        <Badge variant={"outline"} className='bg-yellow-500'>Draft</Badge>
 }
 
 export default FormListItem
