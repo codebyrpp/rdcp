@@ -21,19 +21,21 @@ const CreateProject = () => {
   return (
     <TooltipProvider>
       <Dialog>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <DialogTrigger asChild>
-              <Button className="flex gap-2">
-                New Project
-                <FaPlus className="text-lg" />
-              </Button>
-            </DialogTrigger>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Create a new project with a custom name and description.</p>
-          </TooltipContent>
-        </Tooltip>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DialogTrigger asChild>
+
+                <Button className="flex gap-2">
+                  New Project
+                  <FaPlus className="text-lg" />
+                </Button>
+
+              </DialogTrigger>
+            </TooltipTrigger>
+            <TooltipContent side="right">Create a new project and start building forms.</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <DialogContent>
           <DialogHeader>
             <DialogTitle asChild>

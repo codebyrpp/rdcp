@@ -22,21 +22,12 @@ import { FaPlus } from "react-icons/fa6";
 const CreateForm = () => {
   return (
     <Dialog>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <DialogTrigger asChild>
-              <Button className="flex gap-2">
-                New Form
-                <FaPlus className="text-lg" />
-              </Button>
-            </DialogTrigger>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Create a new form</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <DialogTrigger asChild>
+        <Button className="flex gap-2">
+          New Form
+          <FaPlus className="text-lg" />
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle asChild>

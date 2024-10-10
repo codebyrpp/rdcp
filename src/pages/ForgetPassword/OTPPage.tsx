@@ -51,24 +51,24 @@ export default function OTPPage() {
   }
 
   return (
-    <TooltipProvider>
-      <div className="flex flex-col gap-y-4 h-screen justify-center items-center">
-        <Brand />
-        <FormWrapper
-          title="Enter OTP"
-          description="Enter the OTP sent to your email."
-        >
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-2 w-80"
-            >
-              <FormField
-                control={form.control}
-                name="pin"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>One-Time Password</FormLabel>
+    <div className="flex flex-col gap-y-4 h-screen justify-center items-center">
+      <Brand />
+      <FormWrapper
+        title="Enter OTP"
+        description="Enter the OTP sent to your email."
+      >
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-2 w-80"
+          >
+            <FormField
+              control={form.control}
+              name="pin"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>One-Time Password</FormLabel>
+                  <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <FormControl>
@@ -88,27 +88,20 @@ export default function OTPPage() {
                         <p>Enter the 6-digit code sent to your email.</p>
                       </TooltipContent>
                     </Tooltip>
-                    <FormDescription>
-                      Please enter the one-time password sent to your email.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button className="flex w-full" type="submit">
-                    Submit
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Click to verify the OTP and continue.</p>
-                </TooltipContent>
-              </Tooltip>
-            </form>
-          </Form>
-        </FormWrapper>
-      </div>
-    </TooltipProvider>
+                  </TooltipProvider>
+                  <FormDescription>
+                    Please enter the one-time password sent to your email.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button className="flex w-full" type="submit">
+              Submit
+            </Button>
+          </form>
+        </Form>
+      </FormWrapper>
+    </div>
   );
 }
