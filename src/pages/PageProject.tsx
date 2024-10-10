@@ -38,7 +38,7 @@ const PageProject = () => {
                     ]} pageName={`Project: ${project.name}`} />
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 mt-1">
                     {/* Search and Filter */}
                     <Input
                         ref={searchInputRef}
@@ -46,7 +46,9 @@ const PageProject = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     {/* End of Search and Filter */}
-                    <CreateForm />
+                    {
+                        forms?.length !== 0 && <CreateForm />
+                    }
                     <Button variant={"secondary"}
                         onClick={() => {
                             // navigate to project settings
