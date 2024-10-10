@@ -1,7 +1,7 @@
 import { FormWithSchema } from "@/models/forms"
 import { FormElements, SubmitFunction } from "./FormElements";
 import { Button } from "@/components/ui/button";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
 export type FormValueType = string | number | string[] | File;
@@ -47,8 +47,11 @@ const FormView = ({ form, isPreview = false, submitFormHandler }: FormViewProps)
         return hasRequiredFields;
     }, []);
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const submitForm = () => {
         // Check if each and every field in the elements is valid
+        setIsSubmitting(true);
         const hasRequiredField =  doRequiredValidation();
 
         const isValid = elements?.every((element) => {
@@ -61,12 +64,13 @@ const FormView = ({ form, isPreview = false, submitFormHandler }: FormViewProps)
                 variant: "destructive",
                 duration: 4000
             });
-
+            setIsSubmitting(false);
             return;
         }
 
         // Call the submitFormHandler if it exists - the form submission happens here
         submitFormHandler?.(form.id!, formValues.current);
+        setIsSubmitting(false);
     }
 
     return (
@@ -91,8 +95,8 @@ const FormView = ({ form, isPreview = false, submitFormHandler }: FormViewProps)
                     );
                 })}
                 <div className="flex mt-2 justify-end md:justify-start w-full">
-                    <Button onClick={submitForm}>
-                        Submit Form
+                    <Button onClick={submitForm} disabled={isSubmitting}>
+                        {isSubmitting ? "Submitting..." : "Submit"}
                     </Button>
                 </div>
             </div>
