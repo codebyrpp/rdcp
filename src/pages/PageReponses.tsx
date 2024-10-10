@@ -5,7 +5,7 @@ import useProjectNavigation from "@/hooks/useProjectNavigation";
 import { useParams } from "react-router-dom";
 import Loading from "@/components/common/Loading";
 import { DataTable } from "@/components/responses/data-table";
-import { useGetResponsesMutation } from "@/state/apiSlices/responsesApi";
+import { useGetAllResponsesMutation, useGetResponsesMutation } from "@/state/apiSlices/responsesApi";
 import { defaultColumns } from "@/components/responses/columns";
 import { formatDate } from "@/utils";
 import { ElementsType } from "@/components/builder/components/FormElements";
@@ -38,7 +38,7 @@ export type FormSummary = {
 export function PageResponses() {
   const [data, setData] = useState([]);
   const { formId } = useParams<{ formId: string }>();
-  const [getResponses, { isLoading }] = useGetResponsesMutation();
+  const [getResponses, { isLoading }] = useGetAllResponsesMutation(); //TODO: Change to useGetResponsesMutation
   const [columns, setColumns] = useState<any>([]);
   const [fields, setFields] = useState<Field[]>();
   const [form, setForm] = useState<Form>();
