@@ -10,6 +10,14 @@ interface LoginResponseDto {
     refreshToken: string
 }
 
+type AccountSetupRequest = {
+    email: string;
+    otp: string;
+    password: string;
+}
+
+type ResetPasswordRequest = AccountSetupRequest;
+
 const apiBaseDomain = import.meta.env.VITE_APP_API_BASE;
 
 export const authApiSlice = apiSlice.injectEndpoints({
@@ -21,8 +29,40 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 body,
                 invalidatesTags: [PROJECT_TAG, FORM_TAG],
             }),
-        })
+        }),
+        accountSetup: builder.mutation<any, any>({
+            query: ({ email }) => ({
+                url: `auth/register?email=${email}`,
+                method: 'GET',
+            }),
+        }),
+        accountSetupVerify: builder.mutation<any, AccountSetupRequest>({
+            query: (body) => ({
+                url: `auth/register`,
+                method: 'POST',
+                body,
+            }),
+        }),
+        forgotPassword: builder.mutation<any, any>({
+            query: ({ email }) => ({
+                url: `auth/reset-password?email=${email}`,
+                method: 'GET',
+            }),
+        }),
+        resetPassword: builder.mutation<any, ResetPasswordRequest>({
+            query: (body) => ({
+                url: `auth/reset-password`,
+                method: 'POST',
+                body,
+            }),
+        }),
     }),
 });
 
-export const { useLoginMutation } = authApiSlice;
+export const {
+    useLoginMutation,
+    useAccountSetupMutation,
+    useAccountSetupVerifyMutation,
+    useForgotPasswordMutation,
+    useResetPasswordMutation,
+} = authApiSlice;
