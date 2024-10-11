@@ -170,7 +170,7 @@ export default function AccountSetupPage() {
                         {...field}
                       />
                     </FormControl>
-                    <div>
+                    <div className="text-sm">
                       Your password must contain:
                       <ul className="list-disc px-6">
                         <li>At least 8 characters</li>
