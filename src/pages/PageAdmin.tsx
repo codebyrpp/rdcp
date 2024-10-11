@@ -29,6 +29,7 @@ import useSession from "@/hooks/useSession";
 
 // Define validation schema using zod
 const UserSchema = z.object({
+  name: z.string().min(2).max(50),
   email: z.string().email({ message: "Invalid email address" }),
   role: z.enum(["user", "admin"]),
 });
@@ -45,6 +46,7 @@ export default function AdminPage() {
   const form = useForm<NewUser>({
     resolver: zodResolver(UserSchema),
     defaultValues: {
+      name: "",
       email: "",
       role: "user",
     },
@@ -146,7 +148,7 @@ export default function AdminPage() {
         </TabsList>
 
         <TabsContent value="users">
-          <div className="flex">
+          <div className="flex gap-2">
             <div className="flex flex-col flex-1 gap-2">
               <FormWrapper
                 title="Add New User"
@@ -155,8 +157,24 @@ export default function AdminPage() {
                 <Form {...form}>
                   <form
                     onSubmit={form.handleSubmit(handleManualEntry)}
-                    className="space-y-4"
+                    className="space-y-2"
                   >
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Name</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Enter user's name"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     <FormField
                       control={form.control}
                       name="email"
@@ -223,13 +241,18 @@ export default function AdminPage() {
               </FormWrapper>
             </div>
             <div className="flex-1">
-
+              <FormWrapper
+                title="Users List"
+                description="View and manage existing users."
+              >
+                <Loading />
+              </FormWrapper>
             </div>
           </div>
         </TabsContent>
 
         <TabsContent value="whitelist">
-          <div className="flex">
+          <div className="flex gap-2">
             <div className="flex flex-col flex-1 gap-2">
               <FormWrapper
                 title="Domain Whitelist"
@@ -267,7 +290,12 @@ export default function AdminPage() {
               </FormWrapper>
             </div>
             <div className="flex-1">
-
+              <FormWrapper
+                title="Whitelist Status"
+                description="View/Manage the whitelisted domains."
+              >
+                <Loading />
+              </FormWrapper>
             </div>
           </div>
         </TabsContent>
