@@ -9,4 +9,13 @@ const Loading = () => {
     )
 }
 
+
+export const PageLoading = () => {
+    return (
+        <div className='h-screen w-full flex flex-1 items-center justify-center'>
+            <ImSpinner2 className="animate-spin h-12 w-12" />
+        </div>
+    )
+}
+
 export default Loading
