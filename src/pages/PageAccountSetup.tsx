@@ -30,6 +30,7 @@ import {
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { REGISTER_ROUTE, RESET_PASSWORD_ROUTE } from "@/constants/routes";
+import { Input } from "@/components/ui/input";
 
 const AccountSetupFormSchema = z.object({
   email: z.string().email({
@@ -40,6 +41,8 @@ const AccountSetupFormSchema = z.object({
   }),
   password: z.string().min(8, {
     message: "Your password must be at least 8 characters.",
+  }).regex(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])"), {
+    message: "Your password must contain at least one uppercase letter, one lowercase letter, and one number.",
   }),
   confirmPassword: z.string().min(8, {
     message: "Your password must be at least 8 characters.",
@@ -49,35 +52,48 @@ const AccountSetupFormSchema = z.object({
   path: ["confirmPassword"],
 });
 
-export default function OTPPage() {
+export default function AccountSetupPage() {
 
   // current route
-  const { pathname } = useLocation();
+  const { pathname, state } = useLocation();
 
-  const [pageForm, setPageForm] = useState({
+  // if state is not defined, go back to the previous page
+  useEffect(() => {
+    if (!state.email) {
+      window.history.back();
+    }
+  }, [state.email]);
+
+
+  /// set the page form name and description
+  const [pageForm, setPageForm] = useState<{
+    name: string;
+    description?: string;
+  }>({
     name: "",
     description: "",
   });
 
   // base on the current route, set the form name and description
   useEffect(() => {
+    let name = "Account Setup";
     if (pathname === RESET_PASSWORD_ROUTE) {
-      setPageForm({
-        name: "RESET PASSWORD",
-        description: "Enter the OTP sent to your email.",
-      });
+      name = "Reset Password";
     } else if (pathname === REGISTER_ROUTE) {
-      setPageForm({
-        name: "Register",
-        description: "Enter the OTP sent to your email.",
-      });
+      name = "Register";
     }
+    setPageForm({
+      name,
+    });
   }, [pathname]);
 
   const form = useForm<z.infer<typeof AccountSetupFormSchema>>({
     resolver: zodResolver(AccountSetupFormSchema),
     defaultValues: {
+      email: state?.email || "",
       otp: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
@@ -88,55 +104,116 @@ export default function OTPPage() {
   return (
     <div className="flex flex-col gap-y-4 h-screen justify-center items-center">
       <Brand />
-      <FormWrapper
-        title={pageForm.name}
-        description={pageForm.description}
-      >
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-2 w-80"
-          >
-            <FormField
-              control={form.control}
-              name="otp"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>One-Time Password</FormLabel>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <FormControl>
-                          <InputOTP maxLength={6} {...field}>
-                            <InputOTPGroup>
-                              <InputOTPSlot index={0} />
-                              <InputOTPSlot index={1} />
-                              <InputOTPSlot index={2} />
-                              <InputOTPSlot index={3} />
-                              <InputOTPSlot index={4} />
-                              <InputOTPSlot index={5} />
-                            </InputOTPGroup>
-                          </InputOTP>
-                        </FormControl>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Enter the 6-digit code sent to your email.</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                  <FormDescription>
-                    Please enter the one-time password sent to your email.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button className="flex w-full" type="submit">
-              Submit
+      <div className="mt-2 md:max-w-[30vw] min-w-[30vw]">
+        <FormWrapper
+          title={pageForm.name}
+          description={pageForm.description}
+        >
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-2 w-90"
+            >
+              {/* Password */}
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        className="input"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Your password must contain:
+                      <ul className="list-disc px-6">
+                        <li>At least 8 characters</li>
+                        <li>At least one uppercase letter</li>
+                        <li>At least one lowercase letter</li>
+                        <li>At least one number</li>
+                      </ul>
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Confirm Password */}
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        className="input"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Please re-enter your password.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* OTP */}
+              <FormField
+                control={form.control}
+                name="otp"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>One-Time Password</FormLabel>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <FormControl>
+                            <InputOTP maxLength={6} {...field}>
+                              <InputOTPGroup>
+                                <InputOTPSlot index={0} />
+                                <InputOTPSlot index={1} />
+                                <InputOTPSlot index={2} />
+                                <InputOTPSlot index={3} />
+                                <InputOTPSlot index={4} />
+                                <InputOTPSlot index={5} />
+                              </InputOTPGroup>
+                            </InputOTP>
+                          </FormControl>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Enter the 6-digit code sent to your email.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <FormDescription>
+                      {
+                        `Enter the one-time password sent to ${state?.email}`
+                      }
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button className="flex w-full mt-3">
+                Submit
+              </Button>
+            </form>
+          </Form>
+          {/* Request another password */}
+          <div className="flex">
+            <Button variant="link" className="px-0 text-muted-foreground">
+              Resend OTP
             </Button>
-          </form>
-        </Form>
-      </FormWrapper>
+          </div>
+        </FormWrapper>
+      </div>
     </div>
   );
 }

@@ -46,7 +46,8 @@ export function PageRequestOTP() {
 
   const handleSubmit = (data: z.infer<typeof EmailSchema>) => {
 
-    // send request, wait for response
+    // TODO: send request, wait for response
+    
     // if response is successful, show toast and navigate to appropriate page
     toast({
       title: "OTP Sent",
