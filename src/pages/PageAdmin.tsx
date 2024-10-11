@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/form";
 import Loading from "@/components/common/Loading";
 import useSession from "@/hooks/useSession";
+import UserTable from "@/components/feats/admin/UserTable";
 
 // Define validation schema using zod
 const UserSchema = z.object({
@@ -245,7 +246,7 @@ export default function AdminPage() {
                 title="Users List"
                 description="View and manage existing users."
               >
-                <Loading />
+                <UserTable />
               </FormWrapper>
             </div>
           </div>
