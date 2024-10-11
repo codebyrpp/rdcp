@@ -36,16 +36,6 @@ const UserSchema = z.object({
 type NewUser = z.infer<typeof UserSchema>;
 
 export default function AdminPage() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { user } = useSession();
-  
-  useEffect(() => {
-    if (!user || user.role !== "admin") {
-      // Redirect to home page if not logged in or not an admin
-      window.location.href = "/";
-    }
-    setIsLoading(false);
-  }, [])
 
   const [whitelist, setWhitelist] = useState<string[]>([]);
   const [newWhitelist, setNewWhitelist] = useState<string>("");
@@ -94,13 +84,15 @@ export default function AdminPage() {
       reader.onload = async (e) => {
         const content = e.target?.result as string;
         const lines = content.split("\n");
+        // Remove first line if it's a header
+        if (isValidEmail(lines[0])) lines.shift();
         const newUsers = lines
-          .map((line) => line.trim())
-          .filter((email) => isValidEmail(email) && isWhitelisted(email))
-          .map((email) => ({ email, role: "user" }));
+          .map((line) => line.trim().split(","))
+          .filter((email) => isValidEmail(email[1]))
+          .map((user) => ({ name: user[0], email: user[1], role: "user" }));
 
         try {
-          await axios.post("/api/admin/bulk-add-users", newUsers);
+          console.log(newUsers);
           toast({
             title: "Users Imported",
             description: `${newUsers.length} users have been imported successfully.`,
@@ -145,133 +137,139 @@ export default function AdminPage() {
     return whitelist.some((domain) => email.endsWith(`@${domain}`));
   };
 
-  if (isLoading) {
-    return <Loading />
-  }
-
   return (
     <div className="">
-      <h1 className="text-2xl font-bold mb-4">Admin - User Management</h1>
-      <Tabs defaultValue="manual">
+      <Tabs defaultValue="users">
         <TabsList>
-          <TabsTrigger value="manual">Manual Entry</TabsTrigger>
-          <TabsTrigger value="bulk">Bulk Upload</TabsTrigger>
+          <TabsTrigger value="users">Manage Users</TabsTrigger>
           <TabsTrigger value="whitelist">Domain Whitelist</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="manual">
-          <FormWrapper
-            title="Add New User"
-            description="Manually add a new user to the system."
-          >
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(handleManualEntry)}
-                className="space-y-4"
+        <TabsContent value="users">
+          <div className="flex">
+            <div className="flex flex-col flex-1 gap-2">
+              <FormWrapper
+                title="Add New User"
+                description="Manually add a new user to the system."
               >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Enter user's email"
-                          type="email"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="role"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Role</FormLabel>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select role" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="user">User</SelectItem>
-                          <SelectItem value="admin">Admin</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button className="flex w-full" type="submit">
-                  <UserPlus className="mr-2 h-4 w-4" /> Add User
-                </Button>
-              </form>
-            </Form>
-          </FormWrapper>
-        </TabsContent>
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(handleManualEntry)}
+                    className="space-y-4"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Enter user's email"
+                              type="email"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="role"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Role</FormLabel>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select role" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="user">User</SelectItem>
+                              <SelectItem value="admin">Admin</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button className="flex w-full" type="submit">
+                      <UserPlus className="mr-2 h-4 w-4" /> Add User
+                    </Button>
+                  </form>
+                </Form>
+              </FormWrapper>
 
-        <TabsContent value="bulk">
-          <FormWrapper
-            title="Bulk Upload"
-            description="Upload a file to add multiple users."
-          >
-            <Input
-              type="file"
-              accept=".csv, .txt"
-              ref={fileInputRef}
-              onChange={handleFileUpload}
-              className="hidden"
-            />
-            <Button onClick={() => fileInputRef.current?.click()}>
-              <Upload className="mr-2 h-4 w-4" /> Upload File
-            </Button>
-            <p className="text-sm text-gray-500 pt-4">
-              File should contain email addresses, one per line.
-            </p>
-          </FormWrapper>
+              <FormWrapper
+                title="Bulk Upload"
+                description="Upload a file to add multiple users."
+              >
+                <Input
+                  type="file"
+                  accept=".csv, .txt"
+                  ref={fileInputRef}
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+                <Button onClick={() => fileInputRef.current?.click()}>
+                  <Upload className="mr-2 h-4 w-4" /> Upload File
+                </Button>
+                <p className="text-sm text-gray-500 pt-4">
+                  File should contain email addresses, one per line.
+                </p>
+              </FormWrapper>
+            </div>
+            <div className="flex-1">
+
+            </div>
+          </div>
         </TabsContent>
 
         <TabsContent value="whitelist">
-          <FormWrapper
-            title="Domain Whitelist"
-            description="Manage the list of whitelisted domains."
-          >
-            <div className="space-y-4">
-              <div className="flex space-x-2">
-                <Input
-                  placeholder="Enter domain (e.g., example.com)"
-                  value={newWhitelist}
-                  onChange={(e) => setNewWhitelist(e.target.value)}
-                />
-                <Button onClick={handleWhitelistAdd}>
-                  <Globe className="mr-2 h-4 w-4" /> Add Domain
-                </Button>
-              </div>
-              <div className="space-y-2">
-                {whitelist.map((domain, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between bg-secondary p-2 rounded"
-                  >
-                    <span>{domain}</span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleWhitelistRemove(domain)}
-                    >
-                      <X className="h-4 w-4" />
+          <div className="flex">
+            <div className="flex flex-col flex-1 gap-2">
+              <FormWrapper
+                title="Domain Whitelist"
+                description="Manage the list of whitelisted domains."
+              >
+                <div className="space-y-4">
+                  <div className="flex space-x-2">
+                    <Input
+                      placeholder="Enter domain (e.g., example.com)"
+                      value={newWhitelist}
+                      onChange={(e) => setNewWhitelist(e.target.value)}
+                    />
+                    <Button onClick={handleWhitelistAdd}>
+                      <Globe className="mr-2 h-4 w-4" /> Add Domain
                     </Button>
                   </div>
-                ))}
-              </div>
+                  <div className="space-y-2">
+                    {whitelist.map((domain, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between bg-secondary p-2 rounded"
+                      >
+                        <span>{domain}</span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleWhitelistRemove(domain)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </FormWrapper>
             </div>
-          </FormWrapper>
+            <div className="flex-1">
+
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
