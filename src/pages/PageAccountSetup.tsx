@@ -29,9 +29,10 @@ import {
 } from "@/components/ui/tooltip"; // Import Tooltip components
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { REGISTER_ROUTE, RESET_PASSWORD_ROUTE } from "@/constants/routes";
+import { LOGIN_ROUTE, REGISTER_ROUTE, RESET_PASSWORD_ROUTE } from "@/constants/routes";
 import { Input } from "@/components/ui/input";
 import Loading, { PageLoading } from "@/components/common/Loading";
+import { useAccountSetupVerifyMutation, useResetPasswordMutation } from "@/state/apiSlices/authApi";
 
 const AccountSetupFormSchema = z.object({
   email: z.string().email({
@@ -101,8 +102,41 @@ export default function AccountSetupPage() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof AccountSetupFormSchema>) {
+  const [accountSetup, { isLoading: accountSetupLoading }] = useAccountSetupVerifyMutation();
+  const [resetPassword, { isLoading: resetPasswordLoading }] = useResetPasswordMutation();
+  const navigate = useNavigate();
 
+  function onSubmit(data: z.infer<typeof AccountSetupFormSchema>) {
+    // prepare body
+    const body = {
+      email: data.email,
+      otp: data.otp,
+      password: data.password,
+    };
+
+    // if pathname is register, call accountSetup mutation, else call resetPassword mutation
+
+    let res = pathname === REGISTER_ROUTE ? accountSetup(body).unwrap() : resetPassword(body).unwrap();
+
+    res.then((res) => {
+      if (res.error) {
+        toast({
+          title: "Something went wrong",
+          description: res.error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Success",
+        description: "Your password has been reset.",
+        variant: "success",
+        duration: 5000,
+      });
+
+      navigate(LOGIN_ROUTE);
+    });
   }
 
   if (loading) {
@@ -214,12 +248,6 @@ export default function AccountSetupPage() {
               </Button>
             </form>
           </Form>
-          {/* Request another password */}
-          <div className="flex">
-            <Button variant="link" className="px-0 text-muted-foreground">
-              Resend OTP
-            </Button>
-          </div>
         </FormWrapper>
       </div>
     </div>

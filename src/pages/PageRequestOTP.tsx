@@ -97,52 +97,49 @@ export function PageRequestOTP() {
     } else {
       setPageForm({
         name: "Forgot Password",
-        description: "Enter the email associated with your account to receive a one-time password.",
       });
     }
   }, [pathname]);
 
   return (
-    <TooltipProvider>
-      <div className="flex flex-col gap-y-4 h-screen justify-center items-center">
-        <Brand />
-        <FormWrapper
-          title={pageForm.name}
-          description={pageForm.description}
-        >
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(handleSubmit)}
-              className="space-y-2 w-80"
-            >
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <Input
-                      placeholder=""
-                      className="w-full"
-                      type="email"
-                      {...field}
-                    />
-                    <FormDescription>
-                      Enter the email address for which you are entitled to create an account in the platform.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button className="flex w-full" type="submit" disabled={isLoading || forgotPasswordLoading}>
-                {
-                  isLoading || forgotPasswordLoading ? 'Sending OTP...' : 'Send OTP'
-                }
-              </Button>
-            </form>
-          </Form>
-        </FormWrapper>
-      </div>
-    </TooltipProvider>
+    <div className="flex flex-col gap-y-4 h-screen justify-center items-center">
+      <Brand />
+      <FormWrapper
+        title={pageForm.name}
+        description={pageForm.description}
+      >
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-2 w-80"
+          >
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <Input
+                    placeholder=""
+                    className="w-full"
+                    type="email"
+                    {...field}
+                  />
+                  <FormDescription>
+                    Enter the email address for which you are entitled to create an account in the platform.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button className="flex w-full" type="submit" disabled={isLoading || forgotPasswordLoading}>
+              {
+                isLoading || forgotPasswordLoading ? 'Sending OTP...' : 'Send OTP'
+              }
+            </Button>
+          </form>
+        </Form>
+      </FormWrapper>
+    </div>
   );
 }
