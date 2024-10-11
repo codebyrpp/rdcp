@@ -28,9 +28,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"; // Import Tooltip components
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { REGISTER_ROUTE, RESET_PASSWORD_ROUTE } from "@/constants/routes";
 import { Input } from "@/components/ui/input";
+import Loading, { PageLoading } from "@/components/common/Loading";
 
 const AccountSetupFormSchema = z.object({
   email: z.string().email({
@@ -56,13 +57,16 @@ export default function AccountSetupPage() {
 
   // current route
   const { pathname, state } = useLocation();
+  const [loading, setLoading] = useState(true);
 
   // if state is not defined, go back to the previous page
   useEffect(() => {
-    if (!state.email) {
+    if (!state || state.email === undefined) {
       window.history.back();
+    } else {
+      setLoading(false);
     }
-  }, [state.email]);
+  }, [state]);
 
 
   /// set the page form name and description
@@ -101,6 +105,10 @@ export default function AccountSetupPage() {
 
   }
 
+  if (loading) {
+    return <PageLoading />;
+  }
+
   return (
     <div className="flex flex-col gap-y-4 h-screen justify-center items-center">
       <Brand />
@@ -128,7 +136,7 @@ export default function AccountSetupPage() {
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>
+                    <div>
                       Your password must contain:
                       <ul className="list-disc px-6">
                         <li>At least 8 characters</li>
@@ -136,7 +144,7 @@ export default function AccountSetupPage() {
                         <li>At least one lowercase letter</li>
                         <li>At least one number</li>
                       </ul>
-                    </FormDescription>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
