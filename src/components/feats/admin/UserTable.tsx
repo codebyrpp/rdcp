@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
     Table,
     TableBody,
@@ -25,18 +24,19 @@ import {
 } from "@/components/ui/alert-dialog"
 import Loading from "@/components/common/Loading"
 import ClearableSelect from "@/components/common/ClearableSelect"
+import { useFetchUsersQuery } from "@/state/apiSlices/usersApi"
 
 // This would typically come from your API or database
 const ROLES = ["admin", "user"]
 
-interface User {
+export interface User {
     id: string
     name: string
     email: string
     role: string
 }
 
-interface PaginatedResponse {
+export interface PaginatedResponse {
     users: User[]
     total: number
 }
@@ -51,6 +51,13 @@ export default function UserTable() {
     const [nameFilter, setNameFilter] = useState<string>()
     const [isLoading, setIsLoading] = useState(false)
     const [deleteUser, setDeleteUser] = useState<User | null>(null)
+
+    const {
+        data: usersData,
+        error: usersError,
+        isLoading: usersLoading,
+        isFetching: usersFetching,
+    } = useFetchUsersQuery({ page, pageSize, role: roleFilter, name: nameFilter })
 
     // Fetch users based on current state (page, filters)
     useEffect(() => {
