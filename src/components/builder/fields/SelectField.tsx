@@ -38,7 +38,6 @@ export const selectPropertiesSchema = z.object({
     label: z.string().min(2).max(50),
     helperText: z.string().max(200),
     required: z.boolean().default(false),
-    options: z.array(z.string()).default([]),
 });
 
 export const SelectFieldFormElement: FormElement = {
@@ -46,7 +45,7 @@ export const SelectFieldFormElement: FormElement = {
     construct: (id: string) => ({
         id,
         type,
-        extraAttributes,
+        extraAttributes: { ...extraAttributes, options: [...extraAttributes.options] }, // Deep copy options
     }),
     designerBtnElement: {
         label: "Dropdown",
@@ -141,7 +140,6 @@ export function SelectPropertiesComponent({
             label: element.extraAttributes.label,
             helperText: element.extraAttributes.helperText,
             required: element.extraAttributes.required,
-            options: element.extraAttributes.options,
         },
     });
 
@@ -150,28 +148,26 @@ export function SelectPropertiesComponent({
     }, [element, form]);
 
     function applyChanges(values: propertiesFormschemaType) {
-        const { label, helperText, required, options } = values;
+        const { label, helperText, required } = values;
         updateElement(element.id, {
             ...element,
             extraAttributes: {
-                ...element.extraAttributes,
                 label,
                 helperText,
                 required,
+                options: element.extraAttributes.options,
             },
         });
     }
 
-    const [selectOptions, setSelectOptions] = useState<string[]>(element.extraAttributes.options);
 
     // Function to handle updates to the options
     const updateSelectOptions = (newOptions: string[]) => {
-        setSelectOptions(newOptions);
         updateElement(element.id, {
             ...element,
             extraAttributes: {
                 ...element.extraAttributes,
-                options: newOptions,
+                options: [...newOptions],
             },
         });
     };
@@ -189,7 +185,7 @@ export function SelectPropertiesComponent({
                     <RequiredProperty form={form} />
                 </form>
             </Form>
-            <SelectOptions options={selectOptions} updateOptions={updateSelectOptions} />
+            <SelectOptions key={element.id} options={element.extraAttributes.options} updateOptions={updateSelectOptions} />
         </>
     );
 }
