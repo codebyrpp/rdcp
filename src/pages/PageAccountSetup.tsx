@@ -33,6 +33,7 @@ import { LOGIN_ROUTE, REGISTER_ROUTE, RESET_PASSWORD_ROUTE } from "@/constants/r
 import { Input } from "@/components/ui/input";
 import Loading, { PageLoading } from "@/components/common/Loading";
 import { useAccountSetupVerifyMutation, useResetPasswordMutation } from "@/state/apiSlices/authApi";
+import PasswordInput from "@/components/common/PasswordInput";
 
 const AccountSetupFormSchema = z.object({
   email: z.string().email({
@@ -165,11 +166,7 @@ export default function AccountSetupPage() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
-                        className="input"
-                        {...field}
-                      />
+                      <PasswordInput {...field} />
                     </FormControl>
                     <div className="text-sm">
                       Your password must contain:
@@ -193,11 +190,7 @@ export default function AccountSetupPage() {
                   <FormItem>
                     <FormLabel>Confirm Password</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
-                        className="input"
-                        {...field}
-                      />
+                      <PasswordInput {...field} />
                     </FormControl>
                     <FormDescription>
                       Please re-enter your password.
