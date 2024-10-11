@@ -24,8 +24,8 @@ import RootLayout from "./layouts/RootLayout";
 import PageProject from "./pages/PageProject";
 import PageProjectSettings from "./pages/PageProjectSettings";
 import PageFormSettings from "./pages/PageFormSettings";
-import PageForgetPassword from "./pages/ForgetPassword/ForgetPassword";
-import PageAccountSetup from "./pages/ForgetPassword/OTPPage";
+import PageForgetPassword from "./pages/PageForgetPassword.tsx";
+import PageAccountSetup from "./pages/PageAccountSetup.tsx";
 import BuilderLayout from "./pages/form_builder/BuilderLayout.tsx";
 import BuilderError from "./pages/form_builder/BuilderError.tsx";
 import BuilderLoading from "./pages/form_builder/BuilderLoading.tsx";
@@ -34,7 +34,7 @@ import FormLayout from "./layouts/FormLayout.tsx";
 import PageForm from "./pages/PageForm.tsx";
 import AuthGuard from "./layouts/AuthGuard.tsx";
 import { PageError, PageNotFound, PageUnAuthorized } from "./pages/PageError.tsx";
-import { PageResponses } from "./pages/PageReponses.tsx";
+import { PageResponses } from "./pages/PageResponses.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
