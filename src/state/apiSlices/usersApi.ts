@@ -4,9 +4,9 @@ import { USER_TAG } from "../tags";
 
 export const usersApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        fetchUsers: builder.query<PaginatedResponse, { page: number, pageSize: number, role?: string, name?: string }>({
-            query: ({ page, pageSize, role, name }) => ({
-                url: `users?page=${page}&pageSize=${pageSize}&role=${role || ''}&name=${name || ''}`,
+        fetchUsers: builder.query<PaginatedResponse, { page: number, pageSize: number, role?: string, email?: string }>({
+            query: ({ page, pageSize, role, email }) => ({
+                url: `users?page=${page}&limit=${pageSize}&role=${role || ''}&email=${email || ''}`,
             }),
             providesTags: [USER_TAG],
         }),

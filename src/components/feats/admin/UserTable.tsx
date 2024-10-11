@@ -47,60 +47,42 @@ export default function UserTable() {
     const [total, setTotal] = useState(0)
     const [page, setPage] = useState(1)
     const [pageSize] = useState(10)
+    const [roleFilterInput, setRoleFilterInput] = useState<string>()
     const [roleFilter, setRoleFilter] = useState<string>()
-    const [nameFilter, setNameFilter] = useState<string>()
+    const [emailFilterInput, setEmailFilterInput] = useState<string>()
+    const [emailFilter, setEmailFilter] = useState<string>()
     const [isLoading, setIsLoading] = useState(false)
     const [deleteUser, setDeleteUser] = useState<User | null>(null)
-
     const {
         data: usersData,
         error: usersError,
         isLoading: usersLoading,
         isFetching: usersFetching,
-    } = useFetchUsersQuery({ page, pageSize, role: roleFilter, name: nameFilter })
+    } = useFetchUsersQuery({ page, pageSize, role: roleFilter, email: emailFilter })
 
-    // Fetch users based on current state (page, filters)
     useEffect(() => {
-        const fetchUsers = async () => {
-            setIsLoading(true)
-            try {
-                // Construct the query string based on local state
-                const queryParams = new URLSearchParams({
-                    page: page.toString(),
-                    pageSize: pageSize.toString(),
-                    role: roleFilter || "",
-                    name: nameFilter || "",
-                })
+        setIsLoading(usersLoading || usersFetching)
+    }, [usersLoading, usersFetching])
 
-                // Fetch users based on internal filters (local state)
-                const response = await fetch(`/api/users?${queryParams}`)
-                if (!response.ok) throw new Error('Failed to fetch users')
-                const data: PaginatedResponse = await response.json()
-                setUsers(data.users)
-                setTotal(data.total)
-            } catch (error) {
-                console.error('Error fetching users:', error)
-            } finally {
-                setIsLoading(false)
-            }
+    useEffect(() => {
+        console.log(usersData, usersError)
+        if (usersData) {
+            setUsers(usersData.users ?? [])
+            setTotal(usersData.total ?? 0)
         }
-
-        fetchUsers()
-    }, [page, pageSize, roleFilter, nameFilter]) // Only updates when these dependencies change
+    }, [usersData])
 
     const handlePageChange = (newPage: number) => {
         setPage(newPage) // Local state management
     }
 
     const handleRoleFilterChange = (role: string) => {
-        setRoleFilter(role)
-        setPage(1) // Reset page to 1 when filter is changed
+        setRoleFilterInput(role)
     }
     const [roleFilterKey, setRoleFilterKey] = useState(+new Date());
 
-    const handleNameFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setNameFilter(event.target.value)
-        setPage(1) // Reset page to 1 when search is performed
+    const handleEmailFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setEmailFilterInput(event.target.value)
     }
 
     const handleDeleteUser = async () => {
@@ -124,26 +106,37 @@ export default function UserTable() {
     }
 
 
+    const updateFilters = () => {
+        setRoleFilter(roleFilterInput)
+        setEmailFilter(emailFilterInput)
+        setPage(1)
+    }
     return (
         <div className="space-y-4">
             {/* Filters */}
             <div className="flex justify-between items-center gap-3">
                 <Input
-                    placeholder="Filter by name"
-                    value={nameFilter}
-                    onChange={handleNameFilterChange}
+                    placeholder="Filter by email"
+                    value={emailFilterInput}
+                    onChange={handleEmailFilterChange}
                     className="max-w-sm"
                 />
                 <ClearableSelect
                     options={ROLES.map(role => ({ key: role, label: role }))}
                     key={roleFilterKey}
                     placeholder="Filter by role"
-                    value={roleFilter}
+                    value={roleFilterInput}
                     onValueChange={(value) => {
                         handleRoleFilterChange(value!);
                         setRoleFilterKey(+new Date());
                     }}
                 />
+                <Button
+                    onClick={updateFilters}
+                    disabled={isLoading}
+                >
+                    {isLoading ? "Loading..." : "Apply Filters"}
+                </Button>
             </div>
 
             {/* User Table */}
@@ -168,13 +161,13 @@ export default function UserTable() {
                             <TableCell colSpan={4} className="text-center">No users found</TableCell>
                         </TableRow>
                     ) : (
-                        users.map(user => (
-                            <TableRow key={user.id}>
-                                <TableCell>{user.name}</TableCell>
-                                <TableCell>{user.email}</TableCell>
-                                <TableCell>{user.role}</TableCell>
-                                <TableCell>
-                                    <Button variant="destructive" size="icon" onClick={() => setDeleteUser(user)}>
+                        users.map((user, index) => (
+                            <TableRow key={index} className="py-1">
+                                <TableCell className="!py-1">{user.name}</TableCell>
+                                <TableCell className="!py-1">{user.email}</TableCell>
+                                <TableCell className="!py-1">{user.role}</TableCell>
+                                <TableCell className="!py-1">
+                                    <Button variant="destructive" size={"sm"} onClick={() => setDeleteUser(user)}>
                                         <Trash2 className="h-4 w-4" />
                                     </Button>
                                 </TableCell>

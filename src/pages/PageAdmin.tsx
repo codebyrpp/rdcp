@@ -150,7 +150,7 @@ export default function AdminPage() {
 
         <TabsContent value="users">
           <div className="flex gap-2">
-            <div className="flex flex-col flex-1 gap-2">
+            <div className="flex flex-col flex-1 gap-2 w-1/2">
               <FormWrapper
                 title="Add New User"
                 description="Manually add a new user to the system."
@@ -241,7 +241,7 @@ export default function AdminPage() {
                 </p>
               </FormWrapper>
             </div>
-            <div className="flex-1">
+            <div className="flex-1 w-1/2">
               <FormWrapper
                 title="Users List"
                 description="View and manage existing users."
