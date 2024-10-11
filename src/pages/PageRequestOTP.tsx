@@ -57,19 +57,18 @@ export function PageRequestOTP() {
     const email = data.email;
     let res = null;
     // if pathname is register, call accountSetup mutation, else call forgotPassword mutation
-    res = pathname === REGISTER_ROUTE ? accountSetup({ email }).unwrap() : forgotPassword({ email }).unwrap();
+    res = pathname === REGISTER_ROUTE ? accountSetup({ email }) : forgotPassword({ email });
 
     res.then((res) => {
-      // if response is successful, show toast and navigate to appropriate page
       if (res.error) {
         toast({
-          title: "Something went wrong",
-          description: res.error.message,
+          title: "Bad Request",
+          //@ts-ignore
+          description: res.error.data.message,
           variant: "destructive",
         });
         return;
       }
-
       toast({
         title: "OTP Sent",
         description: `An OTP has been sent to ${data.email}`,
@@ -83,7 +82,7 @@ export function PageRequestOTP() {
       } else {
         navigate(RESET_PASSWORD_ROUTE, { state });
       }
-    });
+    })
 
   };
 
