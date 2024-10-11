@@ -24,16 +24,17 @@ import {
 } from "@/components/ui/alert-dialog"
 import Loading from "@/components/common/Loading"
 import ClearableSelect from "@/components/common/ClearableSelect"
-import { useFetchUsersQuery } from "@/state/apiSlices/usersApi"
+import { useDeleteUserMutation, useFetchUsersQuery } from "@/state/apiSlices/usersApi"
 
 // This would typically come from your API or database
 const ROLES = ["admin", "user"]
 
 export interface User {
-    id: string
+    _id: string
     name: string
     email: string
     role: string
+    verified: boolean
 }
 
 export interface PaginatedResponse {
@@ -85,18 +86,15 @@ export default function UserTable() {
         setEmailFilterInput(event.target.value)
     }
 
+    const [deleteUserReq] = useDeleteUserMutation()
+
     const handleDeleteUser = async () => {
         if (!deleteUser) return
 
         try {
-            const response = await fetch(`/api/users/${deleteUser.id}`, {
-                method: 'DELETE',
-            })
-
-            if (!response.ok) throw new Error('Failed to delete user')
-
+            const response = await deleteUserReq(deleteUser._id).unwrap()
             // Remove the user from the local state
-            setUsers(users.filter(user => user.id !== deleteUser.id))
+            setUsers(users.filter(user => user._id !== deleteUser._id))
             setTotal(prev => prev - 1)
         } catch (error) {
             console.error('Error deleting user:', error)
@@ -146,6 +144,7 @@ export default function UserTable() {
                         <TableHead>Name</TableHead>
                         <TableHead>Email</TableHead>
                         <TableHead>Role</TableHead>
+                        <TableHead>Is Verified</TableHead>
                         <TableHead>Actions</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -166,6 +165,7 @@ export default function UserTable() {
                                 <TableCell className="!py-1">{user.name}</TableCell>
                                 <TableCell className="!py-1">{user.email}</TableCell>
                                 <TableCell className="!py-1">{user.role}</TableCell>
+                                <TableCell className="!py-1">{user.verified ? "Yes" : "No"}</TableCell>
                                 <TableCell className="!py-1">
                                     <Button variant="destructive" size={"sm"} onClick={() => setDeleteUser(user)}>
                                         <Trash2 className="h-4 w-4" />

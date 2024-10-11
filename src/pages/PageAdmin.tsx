@@ -27,6 +27,7 @@ import {
 import Loading from "@/components/common/Loading";
 import useSession from "@/hooks/useSession";
 import UserTable from "@/components/feats/admin/UserTable";
+import { useAddUsersMutation } from "@/state/apiSlices/usersApi";
 
 // Define validation schema using zod
 const UserSchema = z.object({
@@ -53,28 +54,22 @@ export default function AdminPage() {
     },
   });
 
+  const [addUsers, { isLoading: isAddingUsers, }] = useAddUsersMutation();
   const handleManualEntry = async (data: NewUser) => {
-    if (isWhitelisted(data.email)) {
-      try {
-        await axios.post("/api/admin/add-user", data);
-        toast({
-          title: "User Added",
-          description: `${data.email} has been added successfully.`,
-          variant: "success",
-        });
-        form.reset();
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to add user.",
-          variant: "destructive",
-        });
-      }
-    } else {
+    try {
+
+      await addUsers([data]).unwrap();
+
       toast({
-        title: "Invalid Input",
-        description:
-          "Please enter a valid email address from an allowed domain.",
+        title: "User Added",
+        description: `${data.email} has been added successfully.`,
+        variant: "success",
+      });
+      form.reset();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add user.",
         variant: "destructive",
       });
     }
@@ -133,11 +128,6 @@ export default function AdminPage() {
   const isValidEmail = (email: string) => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return re.test(email);
-  };
-
-  const isWhitelisted = (email: string) => {
-    if (whitelist.length === 0) return true; // Allow all if no whitelist set
-    return whitelist.some((domain) => email.endsWith(`@${domain}`));
   };
 
   return (
@@ -215,7 +205,7 @@ export default function AdminPage() {
                         </FormItem>
                       )}
                     />
-                    <Button className="flex w-full" type="submit">
+                    <Button className="flex" type="submit" disabled={isAddingUsers}>
                       <UserPlus className="mr-2 h-4 w-4" /> Add User
                     </Button>
                   </form>

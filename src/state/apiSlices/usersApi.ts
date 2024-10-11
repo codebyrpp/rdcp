@@ -17,7 +17,21 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: [USER_TAG],
         }),
+        addUsers: builder.mutation<any, { name: string, role: string, email: string }[]>({
+            query: (users) => ({
+                url: `users`,
+                method: 'POST',
+                body: {
+                    users
+                },
+            }),
+            invalidatesTags: [USER_TAG],
+        }),
     }),
 });
 
-export const { useFetchUsersQuery, useDeleteUserMutation } = usersApiSlice;
+export const { 
+    useFetchUsersQuery, 
+    useDeleteUserMutation,
+    useAddUsersMutation
+ } = usersApiSlice;
