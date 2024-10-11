@@ -27,7 +27,9 @@ import {
 import Loading from "@/components/common/Loading";
 import useSession from "@/hooks/useSession";
 import UserTable from "@/components/feats/admin/UserTable";
-import { useAddUsersMutation } from "@/state/apiSlices/usersApi";
+import { Domain, useAddDomainMutation, useAddUsersMutation, useDeleteDomainMutation, useFetchDomainsQuery } from "@/state/apiSlices/usersApi";
+import DomainsTable from "@/components/feats/admin/DomainsTable";
+import { remove } from "lodash";
 
 // Define validation schema using zod
 const UserSchema = z.object({
@@ -40,7 +42,7 @@ type NewUser = z.infer<typeof UserSchema>;
 
 export default function AdminPage() {
 
-  const [whitelist, setWhitelist] = useState<string[]>([]);
+  const [whitelist, setWhitelist] = useState<Domain[]>([]);
   const [newWhitelist, setNewWhitelist] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -97,22 +99,37 @@ export default function AdminPage() {
     }
   };
 
+  const { data: domainData, isLoading } = useFetchDomainsQuery({})
+  const [domains, setDomains] = useState<Domain[]>([]);
+  const [totalDomains, setTotalDomains] = useState(0);
+
+  useEffect(() => {
+      if (domainData) {
+          setWhitelist(domainData.domains)
+          setTotalDomains(domainData.total)
+      }
+  }, [domainData])
+
+  const [addDomain, { isLoading: addingDomain }] = useAddDomainMutation();
+  const [deleteDomain, ] = useDeleteDomainMutation();
+
   const handleWhitelistAdd = () => {
-    if (newWhitelist && !whitelist.includes(newWhitelist)) {
-      setWhitelist([...whitelist, newWhitelist]);
-      toast({
-        title: "Domain Whitelisted",
-        description: `${newWhitelist} has been added to the whitelist.`,
+    if (newWhitelist) {
+      addDomain(newWhitelist).then(() => {
+        toast({
+          title: "Domain Whitelisted",
+          description: `${newWhitelist} has been added to the whitelist.`,
+        });
       });
     }
   };
 
-  const handleWhitelistRemove = (domain: string) => {
-    setWhitelist(whitelist.filter((d) => d !== domain));
+  const handleWhitelistRemove = (domainId: string) => {
     toast({
       title: "Domain Removed",
-      description: `${domain} has been removed from the whitelist.`,
+      description: `${domainId} has been removed from the whitelist.`,
     });
+    deleteDomain(domainId);
   };
 
   const isValidEmail = (email: string) => {
@@ -267,11 +284,11 @@ export default function AdminPage() {
                         key={index}
                         className="flex items-center justify-between bg-secondary p-2 rounded"
                       >
-                        <span>{domain}</span>
+                        <span>{domain.domain}</span>
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleWhitelistRemove(domain)}
+                          onClick={() => handleWhitelistRemove(domain._id)}
                         >
                           <X className="h-4 w-4" />
                         </Button>
@@ -279,14 +296,6 @@ export default function AdminPage() {
                     ))}
                   </div>
                 </div>
-              </FormWrapper>
-            </div>
-            <div className="flex-1">
-              <FormWrapper
-                title="Whitelist Status"
-                description="View/Manage the whitelisted domains."
-              >
-                <Loading />
               </FormWrapper>
             </div>
           </div>
