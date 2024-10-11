@@ -116,13 +116,14 @@ export default function AccountSetupPage() {
 
     // if pathname is register, call accountSetup mutation, else call resetPassword mutation
 
-    let res = pathname === REGISTER_ROUTE ? accountSetup(body).unwrap() : resetPassword(body).unwrap();
+    let res = pathname === REGISTER_ROUTE ? accountSetup(body) : resetPassword(body);
 
     res.then((res) => {
       if (res.error) {
         toast({
-          title: "Something went wrong",
-          description: res.error.message,
+          title: "Bad Request",
+          //@ts-ignore
+          description: res.error.data.message,
           variant: "destructive",
         });
         return;
