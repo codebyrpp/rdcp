@@ -65,7 +65,7 @@ export function SelectOptions({ options, updateOptions }: { options: string[]; u
             </div>
             <ul className="space-y-2 mb-4">
                 {fields.map((field, index) => (
-                    <li className="flex items-center justify-betweenrounded">
+                    <li key={index} className="flex items-center justify-betweenrounded">
                         <div className="flex-1 text-sm overflow-x-auto">
                             <span>{field.value}</span>
                         </div>

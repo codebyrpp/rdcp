@@ -19,6 +19,7 @@ import ClearableSelect from "@/components/common/ClearableSelect";
 import DraggableList from "./common/DraggableList";
 import useFormValidation from "./validations/useFormValidation";
 import { FieldErrors } from "./FieldErrors";
+import { SelectOptions } from "./common/SelectOptions";
 
 const type: ElementsType = "SelectField";
 
@@ -79,8 +80,8 @@ function DesignerComponent({
         <div className="flex flex-wrap items-center gap-2">
             <div className="text-xs">Options: </div>
             {
-                options.map((option) => (
-                    <div key={option} className="bg-slate-100 rounded-md
+                options.map((option, index) => (
+                    <div key={index} className="bg-slate-100 rounded-md
                      badge text-xs px-2 py-1">{option}</div>
                 ))
             }
@@ -153,73 +154,43 @@ export function SelectPropertiesComponent({
         updateElement(element.id, {
             ...element,
             extraAttributes: {
+                ...element.extraAttributes,
                 label,
                 helperText,
                 required,
-                options,
             },
         });
     }
 
+    const [selectOptions, setSelectOptions] = useState<string[]>(element.extraAttributes.options);
+
+    // Function to handle updates to the options
+    const updateSelectOptions = (newOptions: string[]) => {
+        setSelectOptions(newOptions);
+        updateElement(element.id, {
+            ...element,
+            extraAttributes: {
+                ...element.extraAttributes,
+                options: newOptions,
+            },
+        });
+    };
+
     return (
-        <Form {...form}>
-            <form onChange={form.handleSubmit(applyChanges)}
-                onSubmit={(e) => {
-                    e.preventDefault();
-                }}
-                className="space-y-3">
-                <LabelProperty form={form} />
-                <DescriptionProperty form={form} />
-                <RequiredProperty form={form} />
-
-                <FormField
-                    control={form.control}
-                    name="options"
-                    render={({ field }) => (
-                        <FormItem>
-                            <div className="flex justify-between items-center">
-                                <FormLabel>Options</FormLabel>
-                            </div>
-                            <DraggableList
-                                items={form.watch("options")}
-                                onUpdate={(newItems) => {
-                                    form.setValue("options", newItems);
-                                    applyChanges(form.getValues());
-                                }}
-                                onRemove={(index) => {
-                                    form.setValue("options", field.value.filter((_, i) => i !== index));
-                                    applyChanges(form.getValues());
-                                }}
-                                onChangeItem={(index, newValue) => {
-                                    field.value[index] = newValue;
-                                    field.onChange(field.value);
-                                }}
-                            />
-                            <Button
-                                variant={"outline"}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    handleAddOption(e, field, form);
-                                }}
-                            >
-                                <AiOutlinePlus className="h-4 mr-2" />
-                                Add Option
-                            </Button>
-                        </FormItem>
-                    )}
-                />
-            </form>
-        </Form>
+        <>
+            <Form {...form}>
+                <form onChange={form.handleSubmit(applyChanges)}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                    }}
+                    className="space-y-3">
+                    <LabelProperty form={form} />
+                    <DescriptionProperty form={form} />
+                    <RequiredProperty form={form} />
+                </form>
+            </Form>
+            <SelectOptions options={selectOptions} updateOptions={updateSelectOptions} />
+        </>
     );
-
-    function handleAddOption(e: any, field: any, form: any) {
-        // filter the options to remove empty strings
-        const options = form.getValues().options.filter((option: string) => option.trim() !== "");
-        if (options.length !== 0) {
-            form.setValue("options", options);
-        }
-        applyChanges(form.getValues());
-        form.setValue("options", [...field.value, ""]);
-    }
 }
 
