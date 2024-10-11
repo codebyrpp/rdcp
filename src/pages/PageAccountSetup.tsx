@@ -27,35 +27,70 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"; // Import Tooltip components
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { REGISTER_ROUTE, RESET_PASSWORD_ROUTE } from "@/constants/routes";
 
-const OTPFormSchema = z.object({
-  pin: z.string().length(6, {
+const AccountSetupFormSchema = z.object({
+  email: z.string().email({
+    message: "Please enter a valid email address.",
+  }),
+  otp: z.string().length(6, {
     message: "Your one-time password must be 6 characters.",
   }),
+  password: z.string().min(8, {
+    message: "Your password must be at least 8 characters.",
+  }),
+  confirmPassword: z.string().min(8, {
+    message: "Your password must be at least 8 characters.",
+  }),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
 });
 
 export default function OTPPage() {
-  const form = useForm<z.infer<typeof OTPFormSchema>>({
-    resolver: zodResolver(OTPFormSchema),
+
+  // current route
+  const { pathname } = useLocation();
+
+  const [pageForm, setPageForm] = useState({
+    name: "",
+    description: "",
+  });
+
+  // base on the current route, set the form name and description
+  useEffect(() => {
+    if (pathname === RESET_PASSWORD_ROUTE) {
+      setPageForm({
+        name: "RESET PASSWORD",
+        description: "Enter the OTP sent to your email.",
+      });
+    } else if (pathname === REGISTER_ROUTE) {
+      setPageForm({
+        name: "Register",
+        description: "Enter the OTP sent to your email.",
+      });
+    }
+  }, [pathname]);
+
+  const form = useForm<z.infer<typeof AccountSetupFormSchema>>({
+    resolver: zodResolver(AccountSetupFormSchema),
     defaultValues: {
-      pin: "",
+      otp: "",
     },
   });
 
-  function onSubmit(data: z.infer<typeof OTPFormSchema>) {
-    // Simulate successful OTP verification
-    toast({
-      title: "OTP Verified",
-      description: "You have successfully verified your OTP.",
-    });
+  function onSubmit(data: z.infer<typeof AccountSetupFormSchema>) {
+
   }
 
   return (
     <div className="flex flex-col gap-y-4 h-screen justify-center items-center">
       <Brand />
       <FormWrapper
-        title="Enter OTP"
-        description="Enter the OTP sent to your email."
+        title={pageForm.name}
+        description={pageForm.description}
       >
         <Form {...form}>
           <form
@@ -64,7 +99,7 @@ export default function OTPPage() {
           >
             <FormField
               control={form.control}
-              name="pin"
+              name="otp"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>One-Time Password</FormLabel>

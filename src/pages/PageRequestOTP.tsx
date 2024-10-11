@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,7 +14,6 @@ import FormWrapper from "@/components/forms/FormWrapper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { VERIFY_OTP_ROUTE } from "@/constants/routes";
 import Brand from "@/components/common/Brand";
 import { toast, useToast } from "@/components/ui/use-toast";
 import {
@@ -23,14 +22,19 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"; // Import tooltip components
+import { REGISTER_CONFIRMATION_ROUTE, REGISTER_ROUTE, RESET_PASSWORD_ROUTE } from "@/constants/routes";
 
 const EmailSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
 });
 
-export default function ForgotPasswordPage() {
+export function PageRequestOTP() {
   const [emailSubmitted, setEmailSubmitted] = useState(false);
   const navigate = useNavigate();
+  const [pageForm, setPageForm] = useState({
+    name: "",
+    description: "",
+  });
 
   const form = useForm<z.infer<typeof EmailSchema>>({
     resolver: zodResolver(EmailSchema),
@@ -41,24 +45,47 @@ export default function ForgotPasswordPage() {
   const { toast } = useToast();
 
   const handleSubmit = (data: z.infer<typeof EmailSchema>) => {
-    // Simulate successful email submission
-    setEmailSubmitted(true);
+
+    // send request, wait for response
+    // if response is successful, show toast and navigate to appropriate page
     toast({
       title: "OTP Sent",
       description: `An OTP has been sent to ${data.email}`,
       variant: "success",
       duration: 5000,
     });
-    navigate(VERIFY_OTP_ROUTE); // Redirect to OTP page
+
+    const state = { email: data.email };
+    if (pathname === REGISTER_ROUTE) {
+      navigate(REGISTER_CONFIRMATION_ROUTE, { state });
+    } else {
+      navigate(RESET_PASSWORD_ROUTE, { state });
+    }
   };
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (pathname === REGISTER_ROUTE) {
+      setPageForm({
+        name: "Register",
+        description: "Enter your email to receive a one-time password.",
+      });
+    } else {
+      setPageForm({
+        name: "Forgot Password",
+        description: "Enter your email to receive a one-time password.",
+      });
+    }
+  }, [pathname]);
 
   return (
     <TooltipProvider>
       <div className="flex flex-col gap-y-4 h-screen justify-center items-center">
         <Brand />
         <FormWrapper
-          title="Forgot Password"
-          description="Enter your email to receive a one-time password."
+          title={pageForm.name}
+          description={pageForm.description}
         >
           <Form {...form}>
             <form

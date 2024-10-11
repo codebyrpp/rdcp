@@ -70,7 +70,6 @@ export default function LoginForm() {
           )}
         </form>
       </Form>
-      {/* TODO: Add forget password link */}
       <div className="flex justify-center">
         <Button onClick={handleForgetPassword} className="mt-3" variant={"link"}>
           Forgot your password?

@@ -11,10 +11,11 @@ import {
   FORM_SETTINGS_ROUTE,
   FORM_RESPONSES_ROUTE,
   FORM_RESPONSES_SUMMARY_ROUTE,
-  VERIFY_OTP_ROUTE,
   FORM_EDIT_ROUTE,
   FORM_VIEW_ROUTE,
-  REGISTER_ROUTE
+  REGISTER_ROUTE,
+  REGISTER_CONFIRMATION_ROUTE,
+  RESET_PASSWORD_ROUTE
 } from "./constants/routes";
 
 import PageDashboard from "./pages/PageDashboard";
@@ -24,7 +25,7 @@ import RootLayout from "./layouts/RootLayout";
 import PageProject from "./pages/PageProject";
 import PageProjectSettings from "./pages/PageProjectSettings";
 import PageFormSettings from "./pages/PageFormSettings";
-import PageForgetPassword from "./pages/PageForgetPassword.tsx";
+import { PageRequestOTP } from "./pages/PageRequestOTP.tsx";
 import PageAccountSetup from "./pages/PageAccountSetup.tsx";
 import BuilderLayout from "./pages/form_builder/BuilderLayout.tsx";
 import BuilderError from "./pages/form_builder/BuilderError.tsx";
@@ -41,10 +42,11 @@ const router = createBrowserRouter(
     <Route element={<RootLayout />} errorElement={<PageError />}>
       <Route path="/" element={<PageLogin />} />
       <Route path={LOGIN_ROUTE} element={<PageLogin />} />
-      <Route path={FORGOT_PASSWORD_ROUTE} element={<PageForgetPassword />} />
-      <Route path={VERIFY_OTP_ROUTE} element={<PageAccountSetup />} />
-      <Route path={REGISTER_ROUTE} element={<PageAccountSetup />} />
-      
+      <Route path={FORGOT_PASSWORD_ROUTE} element={<PageRequestOTP />} />
+      <Route path={RESET_PASSWORD_ROUTE} element={<PageAccountSetup />} />
+      <Route path={REGISTER_ROUTE} element={<PageRequestOTP />} />
+      <Route path={REGISTER_CONFIRMATION_ROUTE} element={<PageAccountSetup />} />
+
       {/*  Form Submission View */}
       <Route element={<FormLayout />}>
         <Route path={FORM_VIEW_ROUTE} element={<PageForm />} />
@@ -75,8 +77,8 @@ const router = createBrowserRouter(
 
       {/* Error pages */}
       <Route path="*" element={<PageNotFound />} />
-      <Route path="/404" element={<PageNotFound/>}/>
-      <Route path="/unauthorized" element={<PageUnAuthorized/>}/>
+      <Route path="/404" element={<PageNotFound />} />
+      <Route path="/unauthorized" element={<PageUnAuthorized />} />
     </Route>
   )
 );
