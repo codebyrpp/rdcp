@@ -134,16 +134,11 @@ export function PageRequestOTP() {
                   </FormItem>
                 )}
               />
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button className="flex w-full" type="submit">
-                    Send OTP
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Click to receive a one-time password via email.</p>
-                </TooltipContent>
-              </Tooltip>
+              <Button className="flex w-full" type="submit" disabled={isLoading || forgotPasswordLoading}>
+                {
+                  isLoading || forgotPasswordLoading ? 'Sending OTP...' : 'Send OTP'
+                }
+              </Button>
             </form>
           </Form>
         </FormWrapper>
