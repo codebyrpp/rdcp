@@ -75,6 +75,9 @@ export default function AdminPage() {
     }
   };
 
+
+  const [bulkUsers, setBulkUsers] = useState<NewUser[]>([]);
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -87,21 +90,8 @@ export default function AdminPage() {
         const newUsers = lines
           .map((line) => line.trim().split(","))
           .filter((email) => isValidEmail(email[1]))
-          .map((user) => ({ name: user[0], email: user[1], role: "user" }));
-
-        try {
-          console.log(newUsers);
-          toast({
-            title: "Users Imported",
-            description: `${newUsers.length} users have been imported successfully.`,
-          });
-        } catch (error) {
-          toast({
-            title: "Error",
-            description: "Failed to import users.",
-            variant: "destructive",
-          });
-        }
+          .map((user) => ({ name: user[0], email: user[1], role: "user" as const }));
+        setBulkUsers(newUsers);
       };
       reader.readAsText(file);
     }
@@ -140,7 +130,7 @@ export default function AdminPage() {
 
         <TabsContent value="users">
           <div className="flex gap-2">
-            <div className="flex flex-col flex-1 gap-2 w-1/2">
+            <div className="flex flex-col flex-1 gap-2 w-1/2 max-h-[80vh] overflow-y-auto">
               <FormWrapper
                 title="Add New User"
                 description="Manually add a new user to the system."
@@ -214,7 +204,7 @@ export default function AdminPage() {
 
               <FormWrapper
                 title="Bulk Upload"
-                description="Upload a file to add multiple users."
+                description="Upload a CSV, or TXT file with the format [Name, Email] to add multiple users."
               >
                 <Input
                   type="file"
@@ -226,9 +216,20 @@ export default function AdminPage() {
                 <Button onClick={() => fileInputRef.current?.click()}>
                   <Upload className="mr-2 h-4 w-4" /> Upload File
                 </Button>
-                <p className="text-sm text-gray-500 pt-4">
-                  File should contain email addresses, one per line.
-                </p>
+                <div className="space-y-2 mt-2">
+                  {bulkUsers.map((user, index) => (
+                    <div key={index} className="flex items-center justify-between bg-slate-100 text-sm p-2 rounded">
+                      {/* Name and Email */}
+                      <span>{user.name} ({user.email})</span>
+                      {/* Remove Button */}
+                      <Button
+                        onClick={() => setBulkUsers(bulkUsers.filter((u) => u.email !== user.email))}
+                        variant="ghost" size="sm">
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
               </FormWrapper>
             </div>
             <div className="flex-1 w-1/2">
