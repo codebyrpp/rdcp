@@ -43,7 +43,6 @@ export const useLoginFormViewModel = () => {
             });
 
         } catch (error) {
-            // setErrorMessage("Failed to Login"); //TODO: Improve error handling
             const fetchError = error as FetchBaseQueryError;
             if (fetchError.status === 401) {
                 setErrorMessage("Invalid Credentials");
