@@ -14,6 +14,7 @@ import FormWrapper from "@/components/forms/FormWrapper"
 import { useLoginFormViewModel } from "@/viewmodels/login"
 import { useNavigate } from "react-router-dom"
 import { FORGOT_PASSWORD_ROUTE } from "@/constants/routes"
+import PasswordInput from "../common/PasswordInput"
 
 
 export default function LoginForm() {
@@ -49,7 +50,7 @@ export default function LoginForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="********" type="password" {...field} />
+                  <PasswordInput {...field} />
                 </FormControl>
                 <FormDescription>
 
