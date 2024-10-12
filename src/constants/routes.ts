@@ -11,8 +11,10 @@ const FORM_RESPONSES_ROUTE = "/projects/:projectId/forms/:formId/responses";
 const FORM_RESPONSES_SUMMARY_ROUTE = "/projects/:projectId/forms/:formId/summary";
 const FORM_EDIT_ROUTE = "/projects/:projectId/forms/:formId/edit";
 const FORM_VIEW_ROUTE = "/forms/:formId/view";
+const ADMIN_ROUTE = "/admin";
 
 export {
+    ADMIN_ROUTE,
     LOGIN_ROUTE,
     REGISTER_ROUTE,
     REGISTER_CONFIRMATION_ROUTE,

@@ -15,7 +15,8 @@ import {
   FORM_VIEW_ROUTE,
   REGISTER_ROUTE,
   REGISTER_CONFIRMATION_ROUTE,
-  RESET_PASSWORD_ROUTE
+  RESET_PASSWORD_ROUTE,
+  ADMIN_ROUTE
 } from "./constants/routes";
 
 import PageDashboard from "./pages/PageDashboard";
@@ -33,9 +34,10 @@ import BuilderLoading from "./pages/form_builder/BuilderLoading.tsx";
 import BuilderPage from "./pages/form_builder/BuilderPage.tsx";
 import FormLayout from "./layouts/FormLayout.tsx";
 import PageForm from "./pages/PageForm.tsx";
-import AuthGuard from "./layouts/AuthGuard.tsx";
+import AuthGuard, { AdminGuard } from "./layouts/AuthGuard.tsx";
 import { PageError, PageNotFound, PageUnAuthorized } from "./pages/PageError.tsx";
 import { PageResponses } from "./pages/PageResponses.tsx";
+import AdminPage from "./pages/PageAdmin.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -74,6 +76,14 @@ const router = createBrowserRouter(
           <Route path={FORM_VIEW_ROUTE} element={<PageForm />} />
         </Route>
       </Route>
+
+      {/* Admin Routes */}
+      <Route element={<AdminGuard />}>
+        <Route element={<AppLayout />}>
+          <Route path={ADMIN_ROUTE} element={<AdminPage />} />
+        </Route>
+      </Route>
+
 
       {/* Error pages */}
       <Route path="*" element={<PageNotFound />} />
