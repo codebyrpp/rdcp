@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import ClearableSelect from '../common/ClearableSelect';
-import { Field, FormSummary } from '@/pages/PageReponses';
+import { Field, FormSummary } from '@/pages/PageResponses';
 import { useGetSummaryMutation } from '@/state/apiSlices/responsesApi';
 import Loading from '../common/Loading';
 import { Pie } from 'react-chartjs-2';

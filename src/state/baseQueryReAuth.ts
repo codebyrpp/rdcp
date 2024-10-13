@@ -43,7 +43,8 @@ const baseQueryWithReAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
         } else {
             // If the refresh token failed, log out the user
             api.dispatch(revokeSession());
-            window.location.href = '/login';
+            if(window.location.pathname !== '/login')
+                window.location.href = '/login';
         }
     }
 
