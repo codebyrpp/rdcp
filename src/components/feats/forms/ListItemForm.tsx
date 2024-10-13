@@ -7,11 +7,9 @@ import { ProjectRole } from '@/models/projects'
 import useProjectNavigation from '@/hooks/useProjectNavigation'
 import { ListItem, ListItemTitle } from '@/components/common/ListItems'
 import { FaCog } from 'react-icons/fa'
-import { ExternalLinkIcon, Eye, FileIcon, Link2Icon, Pen, ShareIcon, View } from 'lucide-react'
-import { Link1Icon } from '@radix-ui/react-icons'
+import { Link2Icon } from 'lucide-react'
 import { useToast } from '@/components/ui/use-toast'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { FaPen } from 'react-icons/fa6'
 
 interface FormListItemProps {
     form: Form
@@ -54,10 +52,6 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
 
     const canViewDashboard = (roles: ProjectRole[]) => {
         return canCheckResponses(roles)
-    }
-    const handleViewDashboard = (e: any) => {
-        e.stopPropagation()
-        navigateToFormSummary(form.projectId, form.id)
     }
 
     const canEditSettings = (roles: ProjectRole[]) => {
@@ -124,12 +118,6 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
                         </Tooltip>
                     </TooltipProvider>
                 }
-                {/* {
-                    buttonVisibility.dashboard && <Button variant={"gray"} size={"sm"}
-                        onClick={handleViewDashboard} className='flex gap-2'>
-                        Dashboard
-                    </Button>
-                } */}
                 {
                     <TooltipProvider>
                         <Tooltip>
