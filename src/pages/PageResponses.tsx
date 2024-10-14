@@ -90,7 +90,7 @@ export function PageResponses() {
 
         if (field.type === "DateField") {
           cell = ({ value }: { value: string }) => <div className="w-[150px]">
-            {formatDate(value)}
+            {value ? formatDate(value): null}
           </div>;
         } else if (field.type === "FileUploadField") {
           cell = ({ row }: any) => {
