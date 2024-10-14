@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/dialog"
 import { AlertTriangle, X } from 'lucide-react'
 import useProjectNavigation from '@/hooks/useProjectNavigation'
+import { ExitIcon } from '@radix-ui/react-icons'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 type LeaveEditorButtonProps = {
   hasChanges: boolean;
@@ -39,10 +41,19 @@ export function LeaveEditorButton({
 
   return (
     <div>
-      <Button variant="secondary" size={"icon"}
-        onClick={() => setIsOpen(true)}>
-        <X className="h-5 w-5" />
-      </Button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <Button variant="secondary" size={"icon"}
+              onClick={() => setIsOpen(true)}>
+              <ExitIcon />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent sideOffset={5}>
+            <span>Leave Designer</span>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent>
           <DialogHeader>
