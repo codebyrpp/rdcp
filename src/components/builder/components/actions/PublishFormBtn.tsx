@@ -28,11 +28,12 @@ function PublishFormBtn({ id, save, hasChanges }: { id: string, save: () => Prom
             toast({
                 title: "Success",
                 description: "Your form is now available to the public",
-                action: (<Button asChild>
-                    <a href={`/forms/${id}/view`} target="_blank" rel="noreferrer">
-                        View Form
-                    </a>
-                </Button>
+                action: (
+                    <Button asChild>
+                        <a href={`/forms/${id}/view`} target="_blank" rel="noreferrer">
+                            View Form
+                        </a>
+                    </Button>
                 ),
                 variant: "success",
                 duration: 5000
@@ -49,7 +50,9 @@ function PublishFormBtn({ id, save, hasChanges }: { id: string, save: () => Prom
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button variant={"success"} className='gap-2'>Publish</Button>
+                <Button
+                    disabled={isLoading || !hasChanges}
+                    variant={"success"} className='gap-2'>Publish</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
@@ -68,7 +71,7 @@ function PublishFormBtn({ id, save, hasChanges }: { id: string, save: () => Prom
                         disabled={isLoading}
                         onClick={() => {
                             if (hasChanges) {
-                                save().then(()=>{
+                                save().then(() => {
                                     publishFormHandler();
                                 });
                             } else {

@@ -14,11 +14,17 @@ import { AlertTriangle, X } from 'lucide-react'
 import useProjectNavigation from '@/hooks/useProjectNavigation'
 
 type LeaveEditorButtonProps = {
+  hasChanges: boolean;
+  canSave: boolean;
   projectId: string;
   saveChanges: () => void;
 }
 
-export function LeaveEditorButton({ saveChanges, projectId }: LeaveEditorButtonProps) {
+export function LeaveEditorButton({
+  hasChanges,
+  canSave,
+  saveChanges,
+  projectId }: LeaveEditorButtonProps) {
   const [isOpen, setIsOpen] = useState(false)
   const { navigateToProject } = useProjectNavigation();
 
@@ -51,25 +57,27 @@ export function LeaveEditorButton({ saveChanges, projectId }: LeaveEditorButtonP
           <DialogFooter className="sm:justify-start">
             <Button
               type="button"
-              variant="destructive"
+              variant="warning"
               onClick={handleLeave}
             >
-              Leave without saving
+              {canSave && hasChanges ? 'Leave without saving' : 'Leave'}
             </Button>
-            <Button
-              type="button"
-              variant="success"
-              onClick={handleSaveAndLeave}
-              className='font-bold'
-            >
-              Save and Exit
-            </Button>
+            {
+              canSave && hasChanges && <Button
+                type="button"
+                variant="success"
+                onClick={handleSaveAndLeave}
+                className='font-bold'
+              >
+                Save and Exit
+              </Button>
+            }
             <Button
               type="button"
               variant="outline"
               onClick={() => setIsOpen(false)}
             >
-              Go Back
+              Don't Leave
             </Button>
           </DialogFooter>
         </DialogContent>

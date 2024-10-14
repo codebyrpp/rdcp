@@ -33,7 +33,9 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
     const [isReady, setIsReady] = useState(false);
 
     const saveAction = async () => {
-        await saveFormChanges(form.id!);
+        const canSave = !locked && hasChanges;
+        if (canSave)
+            await saveFormChanges(form.id!);
     };
 
     useSaveShortcut(saveAction);
@@ -80,12 +82,17 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
                                     }} />
                                     {
                                         !locked && <>
-                                            <SaveFormBtn action={saveAction} />
+                                            <SaveFormBtn
+                                                canSave={hasChanges}
+                                                action={saveAction} />
+                                                
                                             <PublishFormBtn hasChanges={hasChanges}
                                                 save={saveAction} id={form.id!} />
                                         </>
                                     }
                                     <LeaveEditorButton
+                                        hasChanges={hasChanges}
+                                        canSave={hasChanges}
                                         projectId={form.projectId!}
                                         saveChanges={saveAction} />
                                 </div>
