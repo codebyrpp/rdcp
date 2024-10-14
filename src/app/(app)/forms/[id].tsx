@@ -43,7 +43,7 @@ function FormScreen({ id }: FormScreenProps) {
     <>
       <Stack.Screen
         options={{
-          title: `${params.name}`,
+          title: `${"Form 1"}`,
           headerShown: true,
         }} />
       <ViewForm />

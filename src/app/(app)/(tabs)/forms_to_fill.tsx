@@ -69,9 +69,6 @@ function FormListElement({ form }: FormListElementProps): React.JSX.Element {
         >
           <Text className="text-white">Fill Form</Text>
         </Link>
-        <Pressable className="bg-white border p-2 rounded-lg justify-center">
-          <Text className="">Local Records</Text>
-        </Pressable>
       </View>
     </View>
   );

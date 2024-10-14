@@ -36,7 +36,7 @@ export default function Home() {
     // CircularProgressIndicator in the center of the screen
     return (
       <View className="flex-1 justify-center items-center">
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#000000" />
       </View>
     );
   }
