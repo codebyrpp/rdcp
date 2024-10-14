@@ -8,7 +8,7 @@ export const ListItem = ({ children, onClick }: {
      hover:border-slate-300
      hover:elevation-2 hover:shadow-sm
      rounded-xl p-2 bg-slate-50 cursor-pointer'
-            onClick={(e)=>{
+            onClick={(e) => {
                 onClick && onClick()
             }}
         >
@@ -19,6 +19,8 @@ export const ListItem = ({ children, onClick }: {
 
 export const ListItemTitle = ({ children }: { children: React.ReactNode }) => {
     return (
-        <h6 className='font-semibold'>{children}</h6>
+        <div className="max-w-md">
+            <h6 className='font-semibold max-w-full text-ellipsis truncate'>{children}</h6>
+        </div>
     )
 }
