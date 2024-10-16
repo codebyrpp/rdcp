@@ -10,7 +10,7 @@ import { Form } from "@/models/forms";
 import useProjectViewModel from "@/viewmodels/projects/single";
 import { useEffect, useRef, useState } from "react";
 import { FaCog } from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const PageProject = () => {
   // read projectId form useLocation
@@ -69,17 +69,18 @@ const PageProject = () => {
         {isLoading ? (
           <Loading />
         ) : // @ts-ignore
-        isError ? (
-          <p>{error?.message}</p>
-        ) : forms?.length === 0 ? (
-          <NoFormsFound />
-        ) : (
-          filteredForms?.map((form) => {
-            return (
-              <FormListItem roles={project.roles!} key={form.id} form={form} />
-            );
-          })
-        )}
+          isError ? (
+            // @ts-ignore
+            <p>{error?.message}</p>
+          ) : forms?.length === 0 ? (
+            <NoFormsFound />
+          ) : (
+            filteredForms?.map((form) => {
+              return (
+                <FormListItem roles={project.roles!} key={form.id} form={form} />
+              );
+            })
+          )}
       </div>
     </div>
   );
