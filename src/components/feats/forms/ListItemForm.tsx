@@ -59,7 +59,7 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
     const handleEditSettings = (e: any) => {
         e.stopPropagation()
         // Edit form
-        navigateToFormSettings(form.projectId, form.id)
+        navigateToFormSettings(form)
     }
 
     useEffect(() => {

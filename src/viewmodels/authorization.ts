@@ -12,6 +12,8 @@ export type AuthAction = keyof typeof authActionsMap
 
 const useAuthorization = (roles: ProjectRole[]) => {
     const hasPermission = (action: AuthAction) => {
+        // if owner then has permission to do anything
+        if (roles.includes(ProjectRole.OWNER)) return true;
         return authActionsMap[action].some(role => roles.includes(role))
     }
 

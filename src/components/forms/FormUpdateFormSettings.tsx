@@ -21,10 +21,11 @@ import {
   TooltipProvider,
 } from "../ui/tooltip"; // Adjust your imports as necessary
 
-const FormUpdateFormSettings = () => {
-  const { formId } = useParams<{ formId: string }>();
+const FormUpdateFormSettings = (props: {
+  id: string;
+}) => {
   const { form, handleUpdateForm, isSuccess } =
-    useFormSettingsViewModel(formId);
+    useFormSettingsViewModel(props.id);
 
   return (
     <>

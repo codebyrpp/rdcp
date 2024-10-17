@@ -5,8 +5,8 @@ const REGISTER_CONFIRMATION_ROUTE = "/register-confirmation";
 const RESET_PASSWORD_ROUTE = "/reset-password";
 const PROJECTS_ROUTE = "/projects";
 const PROJECT_ROUTE = "/project";
-const PROJECT_SETTINGS_ROUTE = "/projects/:projectId/settings";
-const FORM_SETTINGS_ROUTE = "/projects/:projectId/forms/:formId/settings";
+const PROJECT_SETTINGS_ROUTE = "/project/settings";
+const FORM_SETTINGS_ROUTE = "/project/form/settings";
 const FORM_RESPONSES_ROUTE = "/projects/:projectId/forms/:formId/responses";
 const FORM_RESPONSES_SUMMARY_ROUTE =
   "/projects/:projectId/forms/:formId/summary";

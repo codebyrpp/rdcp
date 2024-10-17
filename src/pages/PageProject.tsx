@@ -14,11 +14,9 @@ import { useLocation } from "react-router-dom";
 
 const PageProject = () => {
   // read projectId form useLocation
-  const { state } = useLocation();
-  const projectId = state?.projectId;
-  const projectRoles = state?.projectRoles;
-  
-  const { navigateToProjectSettings } = useProjectNavigation();
+  const { project: _project, navigateToProjectSettings } = useProjectNavigation();
+  const { id: projectId } = _project!;
+
   const { forms, project, isLoading, isError, error } = useProjectViewModel({
     projectId,
   });
