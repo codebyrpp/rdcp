@@ -8,7 +8,7 @@ const PROJECT_ROUTE = "/project";
 const PROJECT_SETTINGS_ROUTE = "/project/settings";
 const FORM_SETTINGS_ROUTE = "/project/form/settings";
 const FORM_RESPONSES_ROUTE = "/project/form/responses";
-const FORM_EDIT_ROUTE = "/projects/:projectId/forms/:formId/edit";
+const FORM_EDIT_ROUTE = "/project/form/edit";
 const FORM_VIEW_ROUTE = "/forms/:formId/view";
 const ADMIN_ROUTE = "/admin";
 
