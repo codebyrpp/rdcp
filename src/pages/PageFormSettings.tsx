@@ -10,7 +10,7 @@ import { Form } from "@/models/forms";
 const PageFormSettings = () => {
 
     // get projectId and formId from params
-    const { project, form, navigateToProject } = useProjectNavigation();
+    const { project, form, navigateToProject, navigateToAllProjects } = useProjectNavigation();
     const { id: projectId, } = project as Project;
     const { id: formId, name: formName } = form as Form;
 
@@ -18,8 +18,8 @@ const PageFormSettings = () => {
         <div className="overflow-y-auto">
             <div className="flex mb-4">
                 <BreadCrumbs links={[
-                    { name: '...' },
-                    { name: "Project", url: `/projects/${projectId}` },
+                    { name: '...', action: navigateToAllProjects },
+                    { name: "Project", action: () => navigateToProject(project) },
                 ]} pageName={`Form Settings - ${formName}`} />
             </div>
 

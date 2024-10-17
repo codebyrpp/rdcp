@@ -25,12 +25,8 @@ const useProjectNavigation = () => {
     });
   };
 
-  const navigateToProjectSettings = (projectId: string) => {
+  const navigateToProjectSettings = (project: Project) => {
     // Open the project settings
-    const project = {
-      id: projectId,
-    } as Project;
-
     navigate(PROJECT_SETTINGS_ROUTE, {
       state: { project },
     });
@@ -43,7 +39,7 @@ const useProjectNavigation = () => {
   const navigateToFormSettings = (form: Form) => {
     // Open the form settings
     navigate(FORM_SETTINGS_ROUTE, {
-      state: { project: { id: form.projectId }, form: { id: form.id, name: form.name } },
+      state: { project, form },
     });
   };
 
@@ -64,7 +60,7 @@ const useProjectNavigation = () => {
   const navigateToFormDesigner = (projectId: string, formId: string) => {
     // Open the form designer
     navigate(FORM_EDIT_ROUTE, {
-      state: { project: { id: projectId }, form: { id: formId } },
+      state: { project: project, form: { id: formId } },
     });
   };
 

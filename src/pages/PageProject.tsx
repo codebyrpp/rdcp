@@ -64,7 +64,7 @@ const PageProject = () => {
             variant={"secondary"}
             onClick={() => {
               // navigate to project settings
-              navigateToProjectSettings(projectId!);
+              navigateToProjectSettings(_project);
             }}
           >
             Project Settings

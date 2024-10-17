@@ -22,7 +22,7 @@ const ProjectListItem = ({ project }: ProjectListItemProps) => {
     }
     const handleSettingsClick = (e: any) => {
         e.stopPropagation()
-        navigateToProjectSettings(project.id)
+        navigateToProjectSettings(project)
     }
 
     return (

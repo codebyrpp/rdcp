@@ -17,8 +17,14 @@ const BreadCrumbs = ({ links, pageName }: BreadCrumbsProps) => {
                 {links.map((link, index) => (
                     <React.Fragment key={index}>
                         <BreadcrumbItem>
-                            <BreadcrumbLink className='font-semibold' 
-                            onClick={link.action}>{link.name}</BreadcrumbLink>
+                            <BreadcrumbLink className='font-semibold' asChild>
+                                <button type="button" onClick={e => {
+                                    e.preventDefault();
+                                    if (link.action) link.action();
+                                }}>
+                                    {link.name}
+                                </button>
+                            </BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                     </React.Fragment>

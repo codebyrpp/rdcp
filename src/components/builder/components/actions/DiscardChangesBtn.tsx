@@ -28,15 +28,15 @@ export function LeaveEditorButton({
   saveChanges,
   projectId }: LeaveEditorButtonProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const { navigateToProject } = useProjectNavigation();
+  const { project, navigateToProject } = useProjectNavigation();
 
   const handleLeave = () => {
-    navigateToProject(projectId);
+    navigateToProject(project);
   }
 
   const handleSaveAndLeave = () => {
     saveChanges();
-    navigateToProject(projectId);
+    navigateToProject(project);
   }
 
   return (
