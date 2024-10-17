@@ -10,6 +10,7 @@ import { FaCog } from 'react-icons/fa'
 import { Link2Icon } from 'lucide-react'
 import { useToast } from '@/components/ui/use-toast'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { useAuthorization } from '@/viewmodels/authorization'
 
 interface FormListItemProps {
     form: Form
@@ -25,15 +26,14 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
         settings: false
     })
 
-    const { navigateToFormSettings, navigateToFormResponses,
-        navigateToFormSummary, navigateToForm, navigateToFormDesigner } = useProjectNavigation()
+    const { project,
+        navigateToFormSettings, navigateToFormResponses,
+        navigateToForm, navigateToFormDesigner } = useProjectNavigation()
 
-    const canDo = (roles: ProjectRole[], compareRoles: ProjectRole[]) => {
-        return roles.some(role => compareRoles.includes(role))
-    }
+    const { hasPermission } = useAuthorization(roles);
 
-    const canDesign = (roles: ProjectRole[]) => {
-        return canDo(roles, [ProjectRole.OWNER, ProjectRole.EDITOR])
+    const canDesign = () => {
+        return hasPermission('edit_form')
     }
     const handleDesign = (e: any) => {
         e.stopPropagation()
@@ -41,36 +41,36 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
         navigateToFormDesigner(form.projectId, form.id)
     }
 
-    const canCheckResponses = (roles: ProjectRole[]) => {
-        return canDo(roles, [ProjectRole.OWNER, ProjectRole.DATA_ANALYST])
+    const canCheckResponses = () => {
+        return hasPermission('form_responses')
     }
     const handleCheckResponses = (e: any) => {
         e.stopPropagation()
         // Check responses
-        navigateToFormResponses(form.projectId, form.id)
+        navigateToFormResponses(project, form)
     }
 
-    const canViewDashboard = (roles: ProjectRole[]) => {
-        return canCheckResponses(roles)
+    const canViewDashboard = () => {
+        return canCheckResponses()
     }
 
-    const canEditSettings = (roles: ProjectRole[]) => {
-        return canDo(roles, [ProjectRole.OWNER, ProjectRole.MANAGER])
+    const canEditSettings = () => {
+        return hasPermission('form_settings')
     }
     const handleEditSettings = (e: any) => {
         e.stopPropagation()
         // Edit form
-        navigateToFormSettings(form.projectId, form.id)
+        navigateToFormSettings(form)
     }
 
     useEffect(() => {
         setButtonVisibility({
-            edit: canDesign(roles),
-            responses: canCheckResponses(roles),
-            dashboard: canViewDashboard(roles),
-            settings: canEditSettings(roles)
+            edit: canDesign(),
+            responses: canCheckResponses(),
+            dashboard: canViewDashboard(),
+            settings: canEditSettings()
         })
-    }, [roles])
+    }, [])
 
     const { toast } = useToast()
 

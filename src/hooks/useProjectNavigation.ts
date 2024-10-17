@@ -1,43 +1,54 @@
-import { FORM_EDIT_ROUTE, FORM_RESPONSES_ROUTE, FORM_RESPONSES_SUMMARY_ROUTE, FORM_SETTINGS_ROUTE, FORM_VIEW_ROUTE, PROJECT_ROUTE, PROJECT_SETTINGS_ROUTE, PROJECTS_ROUTE } from "@/constants/routes"
-import { useNavigate } from "react-router-dom"
+import {
+  FORM_EDIT_ROUTE,
+  FORM_RESPONSES_ROUTE,
+  FORM_SETTINGS_ROUTE,
+  FORM_VIEW_ROUTE,
+  PROJECT_ROUTE,
+  PROJECT_SETTINGS_ROUTE,
+  PROJECTS_ROUTE,
+} from "@/constants/routes";
+import { Form } from "@/models/forms";
+import { Project, ProjectRole } from "@/models/projects";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const useProjectNavigation = () => {
+  const { state } = useLocation();
+  const project = state?.project;
+  const form = state?.form;
 
-    const navigate = useNavigate()
+  const navigate = useNavigate();
 
-    const navigateToProject = (projectId: string) => {
-        // Open the project
-        const route = PROJECT_ROUTE.replace(':projectId', projectId)
-        navigate(route);
-    }
+  const navigateToProject = (project: Project) => {
+    // Open the project
+    navigate(PROJECT_ROUTE, {
+      state: { project },
+    });
+  };
 
-    const navigateToProjectSettings = (projectId: string) => {
-        // Open the project settings
-        const route = `${PROJECT_SETTINGS_ROUTE.replace(':projectId', projectId)}`
-        navigate(route);
-    }
+  const navigateToProjectSettings = (project: Project) => {
+    // Open the project settings
+    navigate(PROJECT_SETTINGS_ROUTE, {
+      state: { project },
+    });
+  };
 
     const navigateToAllProjects = () => {
         navigate(PROJECTS_ROUTE);
     }
 
-    const navigateToFormSettings = (projectId: string, formId: string) => {
-        // Open the form settings
-        const route = FORM_SETTINGS_ROUTE.replace(':projectId', projectId).replace(':formId', formId)
-        navigate(route);
-    }
+  const navigateToFormSettings = (form: Form) => {
+    // Open the form settings
+    navigate(FORM_SETTINGS_ROUTE, {
+      state: { project, form },
+    });
+  };
 
-    const navigateToFormResponses = (projectId: string, formId: string) => {
-        // Open the form responses
-        const route = FORM_RESPONSES_ROUTE.replace(':projectId', projectId).replace(':formId', formId)
-        navigate(route);
-    }
-
-    const navigateToFormSummary = (projectId: string, formId: string) => {
-        // Open the form summary
-        const route = FORM_RESPONSES_SUMMARY_ROUTE.replace(':projectId', projectId).replace(':formId', formId)
-        navigate(route);
-    }
+  const navigateToFormResponses = (project: Project, form: Form) => {
+    // Open the form responses
+    navigate(FORM_RESPONSES_ROUTE, {
+      state: { project, form },
+    });
+  };
 
     const navigateToForm = (formId: string) => {
         // Open the form
@@ -46,22 +57,24 @@ const useProjectNavigation = () => {
         window.open(route, '_blank');
     }
 
-    const navigateToFormDesigner = (projectId: string, formId: string) => {
-        // Open the form designer
-        const route = FORM_EDIT_ROUTE.replace(':projectId', projectId).replace(':formId', formId)
-        navigate(route);
-    }
+  const navigateToFormDesigner = (projectId: string, formId: string) => {
+    // Open the form designer
+    navigate(FORM_EDIT_ROUTE, {
+      state: { project: project, form: { id: formId } },
+    });
+  };
 
-    return {
-        navigateToProject,
-        navigateToProjectSettings,
-        navigateToAllProjects,
-        navigateToFormSettings,
-        navigateToFormResponses,
-        navigateToFormSummary,
-        navigateToForm,
-        navigateToFormDesigner
-    }
-}
+  return {
+    project,
+    form,
+    navigateToProject,
+    navigateToProjectSettings,
+    navigateToAllProjects,
+    navigateToFormSettings,
+    navigateToFormResponses,
+    navigateToForm,
+    navigateToFormDesigner,
+  };
+};
 
 export default useProjectNavigation

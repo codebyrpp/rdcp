@@ -1,8 +1,8 @@
-import Loading from "@/components/common/Loading";
+import { PageLoading } from "@/components/common/Loading";
 
 const BuilderLoading = () => {
   return (
-    <Loading />
+    <PageLoading />
   );
 }
 

@@ -6,6 +6,7 @@ import { FaCog } from 'react-icons/fa'
 import { FaPen } from 'react-icons/fa6'
 import { ListItem, ListItemTitle } from '../common/ListItems'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { FolderOpenIcon } from 'lucide-react'
 
 interface ProjectListItemProps {
     project: ProjectDTO
@@ -15,19 +16,19 @@ const ProjectListItem = ({ project }: ProjectListItemProps) => {
 
     const { navigateToProject, navigateToProjectSettings } = useProjectNavigation()
 
-    const handleEditClick = (e: any) => {
+    const handleOpenClick = (e: any) => {
         e.stopPropagation()
-        navigateToProject(project.id)
+        navigateToProject(project)
     }
     const handleSettingsClick = (e: any) => {
         e.stopPropagation()
-        navigateToProjectSettings(project.id)
+        navigateToProjectSettings(project)
     }
 
     return (
         <ListItem
             onClick={() => {
-                navigateToProject(project.id)
+                navigateToProject(project)
             }}
         >
             <div className='px-2 flex flex-col gap-1'>
@@ -58,9 +59,9 @@ const ProjectListItem = ({ project }: ProjectListItemProps) => {
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <div
-                                    onClick={handleEditClick}
+                                    onClick={handleOpenClick}
                                     className='flex cursor-pointer p-2 rounded-lg hover:bg-slate-200 h-full aspect-square'>
-                                    <FaPen className='!text-slate-600' />
+                                    <FolderOpenIcon className='!text-slate-600' />
                                 </div>
                             </TooltipTrigger>
                             <TooltipContent>View Project</TooltipContent>

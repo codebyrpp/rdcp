@@ -1,7 +1,6 @@
 import { Button } from '../ui/button'
 import { FaTrash } from 'react-icons/fa6'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
-import { useParams } from 'react-router-dom'
 import { useDeleteProjectMutation } from '@/state/apiSlices/projectsApi'
 import useProjectNavigation from '@/hooks/useProjectNavigation'
 import { ToastAction } from '../ui/toast'
@@ -26,15 +25,14 @@ const DeleteProject = () => {
 
 const DeleteAction = () => {
 
-    const { projectId } = useParams<{ projectId: string }>();
     const [deleteProjectMutation, { isLoading, isError, error, isSuccess }] = useDeleteProjectMutation()
-    const { navigateToAllProjects } = useProjectNavigation()
+    const { project, navigateToAllProjects } = useProjectNavigation()
     const { toast } = useToast()
 
     const handleDelete = async () => {
-        if (projectId) {
+        if (project.id) {
             try {
-                await deleteProjectMutation({ projectId }).unwrap();
+                await deleteProjectMutation({ projectId: project.id }).unwrap();
                 const t = toast({
                     title: 'Project deleted successfully',
                     variant: 'success'
