@@ -21,6 +21,16 @@ import { FaCog } from "react-icons/fa";
 import { FormPrivacyBadge, FormPublishStateBadge } from "@/components/feats/forms/ListItemForm";
 
 const FormBuilder = ({ form }: { form: FormWithSchema }) => {
+
+    const [formData, setFormData] = useState(form);  // Use state to manage form updates
+
+    const handleFormUpdate = useCallback((updatedForm: Partial<FormWithSchema>) => {
+        setFormData((prevForm) => ({
+            ...prevForm,
+            ...updatedForm,
+        }));
+    }, []);
+
     const mouseSensor = useSensor(MouseSensor, {
         activationConstraint: {
             distance: 10,
@@ -85,11 +95,11 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
                                         </div>
                                         <div className="flex gap-2">
                                             <div>
-                                                {form.name}
+                                                {formData.name}
                                             </div>
                                             <div className="flex gap-2">
-                                                <FormPublishStateBadge isPublished={form.isPublished!} />
-                                                <FormPrivacyBadge isPrivate={form.isPrivate!} />
+                                                <FormPublishStateBadge isPublished={formData.isPublished!} />
+                                                <FormPrivacyBadge isPrivate={formData.isPrivate!} />
                                             </div>
                                         </div>
                                     </div>
@@ -115,7 +125,10 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
                                         </>
                                     }
                                     {
-                                        hasPermission('form_settings') && <FormSettingsButton formId={form.id!} />
+                                        hasPermission('form_settings') 
+                                        && <FormSettingsButton formId={form.id!}
+                                        onUpdateForm={handleFormUpdate} 
+                                         />
                                     }
                                     <LeaveEditorButton
                                         hasChanges={hasChanges}
@@ -133,8 +146,8 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
                             locked && <div className="absolute z-[10] w-full h-screen bg-black/20" />
                         }
                         <Designer form={{
-                            name: form.name!,
-                            description: form.description!,
+                            name: formData.name!,
+                            description: formData.description!,
                         }} />
                     </div>
                 </div>
@@ -146,7 +159,7 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
 
 export default FormBuilder;
 
-function FormSettingsButton(props: { formId: string }) {
+function FormSettingsButton(props: { formId: string, onUpdateForm: (form: Partial<FormWithSchema>) => void }) {
     return <Dialog>
         <DialogTrigger asChild>
             <Button className="flex gap-2">
@@ -155,7 +168,7 @@ function FormSettingsButton(props: { formId: string }) {
             </Button>
         </DialogTrigger>
         <DialogContent>
-            <FormUpdateFormSettings id={props.formId} />
+            <FormUpdateFormSettings id={props.formId} onUpdateForm={props.onUpdateForm} />
         </DialogContent>
     </Dialog>
 }

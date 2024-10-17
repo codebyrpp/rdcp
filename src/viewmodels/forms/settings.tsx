@@ -1,6 +1,7 @@
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import useProjectNavigation from "@/hooks/useProjectNavigation";
+import { Form } from "@/models/forms";
 import { useGetFormQuery, useUpdateFormMutation } from "@/state/apiSlices/formsApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef } from "react";
@@ -17,7 +18,9 @@ export const formSchema = z.object({
 });
 
 
-export const useFormSettingsViewModel = (formId: string | undefined) => {
+export const useFormSettingsViewModel = (formId: string | undefined,
+    onUpdateForm?: (form: Partial<Form>) => void
+) => {
 
     const { toast } = useToast();
 
@@ -74,14 +77,13 @@ export const useFormSettingsViewModel = (formId: string | undefined) => {
                 ...body
             }).unwrap();
 
+            if(onUpdateForm)
+                onUpdateForm(body);
+
             toast({
                 title: 'Form Updated Successfully',
-                duration: 6000,
-                variant: 'success',
-                action: <ToastAction altText={"Go back to project"} onClick={() => {
-                    // Redirect to the form
-                    navigateToProject(project);
-                }}>Back to Project</ToastAction>,
+                duration: 3000,
+                variant: 'success'
             })
 
         } catch (error) {

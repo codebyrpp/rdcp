@@ -19,12 +19,14 @@ import {
   TooltipContent,
   TooltipProvider,
 } from "../ui/tooltip"; // Adjust your imports as necessary
+import {Form as FormModel} from "@/models/forms";
 
 const FormUpdateFormSettings = (props: {
   id: string;
+  onUpdateForm?: (form: Partial<FormModel>) => void; 
 }) => {
   const { form, handleUpdateForm, isSuccess } =
-    useFormSettingsViewModel(props.id);
+    useFormSettingsViewModel(props.id, props.onUpdateForm);
 
   return (
     <>
