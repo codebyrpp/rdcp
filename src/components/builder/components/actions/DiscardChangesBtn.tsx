@@ -43,7 +43,7 @@ export function LeaveEditorButton({
     <div>
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger asChild>
             <Button variant="secondary" size={"icon"}
               onClick={() => setIsOpen(true)}>
               <ExitIcon />
