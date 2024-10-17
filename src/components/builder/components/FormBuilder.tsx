@@ -58,13 +58,13 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
 
     useSaveShortcut(saveAction);
 
-    const { releaseLock, getLockInfo } = useFormLock(form.id!);
+    const { releaseLock, lockInfo } = useFormLock(form.id!);
 
     useEffect(() => {
-        const { locked, owner } = getLockInfo();
+        const { locked, owner } = lockInfo;
         setLocked(locked);
         setLockOwner(owner);
-    }, [getLockInfo]);
+    }, [lockInfo]);
 
     useEffect(() => {
         if (isReady) return;
@@ -109,7 +109,12 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
                                     {
                                         locked && <div className="flex items-center">
                                             <span className="p-1 px-2 text-sm rounded-lg text-slate-800 font-bold bg-yellow-500">
-                                                Form is locked by {lockOwner}
+                                                {lockOwner ? `Form is locked by ${lockOwner}` : <>
+                                                    The form editing session has expired
+                                                    <Button onClick={()=> window.location.reload()} className="ml-2">
+                                                        Refresh Page
+                                                    </Button>
+                                                </>}
                                             </span>
                                         </div>
                                     }

@@ -19,8 +19,6 @@ const useFormLock = (
 
     let idleTimer: NodeJS.Timeout | undefined = undefined;
 
-    const getLockInfo = () => lockInfo;
-
     // Reset idle timer
     const resetIdleTimer = () => {
         clearTimeout(idleTimer);
@@ -31,9 +29,18 @@ const useFormLock = (
 
     // Send heartbeat to keep the lock alive
     const sendHeartbeat = () => {
+        
+        if(lockInfo.locked) return;
+
         keepAliveMutation({ formId })
             .unwrap()
             .catch((error: any) => {
+                // if error is a conflict status, it means current user has lost the lock, therefore alert the user, ask to reload the page
+                if (error.status === 409) {
+                    setLockInfo({ locked: true, owner: null });
+                    return;
+                }
+
                 console.error('Failed to send heartbeat:', error);
             });
     };
@@ -113,7 +120,7 @@ const useFormLock = (
         });
     }, [formId]);
 
-    return { releaseLock, getLockInfo };
+    return { releaseLock, lockInfo };
 };
 
 export default useFormLock;
