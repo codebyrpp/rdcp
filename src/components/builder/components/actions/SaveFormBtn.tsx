@@ -17,6 +17,7 @@ function SaveFormBtn({ action, canSave }: SaveFormBtnProps) {
       onClick={() => {
         startTransition(action);
       }}
+      variant={"success"}
       disabled={loading || !canSave}
       className="gap-2">
       Save Changes

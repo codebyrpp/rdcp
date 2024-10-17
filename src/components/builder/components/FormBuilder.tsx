@@ -11,6 +11,13 @@ import { LeaveEditorButton } from "./actions/DiscardChangesBtn";
 import useSaveShortcut from "../hooks/useSaveShortcut";
 import useFormLock from "../hooks/useFormLock";
 import PublishFormBtn from "./actions/PublishFormBtn";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import FormUpdateFormSettings from "@/components/forms/FormUpdateFormSettings";
+import { DialogTrigger } from "@radix-ui/react-dialog";
+import { Button } from "@/components/ui/button";
+import { useAuthorization } from "@/viewmodels/authorization";
+import useProjectNavigation from "@/hooks/useProjectNavigation";
+import { FaCog } from "react-icons/fa";
 
 const FormBuilder = ({ form }: { form: FormWithSchema }) => {
     const mouseSensor = useSensor(MouseSensor, {
@@ -57,6 +64,9 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
         return () => clearTimeout(isReadyTimeout);
     }, [form, setElements]);
 
+    const { project } = useProjectNavigation();
+    const { hasPermission } = useAuthorization(project.roles);
+
     if (!isReady)
         return (<FormLoading />);
 
@@ -85,10 +95,10 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
                                             <SaveFormBtn
                                                 canSave={hasChanges}
                                                 action={saveAction} />
-                                                
-                                            <PublishFormBtn hasChanges={hasChanges}
-                                                save={saveAction} id={form.id!} />
                                         </>
+                                    }
+                                    {
+                                        hasPermission('form_settings') && <FormSettingsButton formId={form.id!} />
                                     }
                                     <LeaveEditorButton
                                         hasChanges={hasChanges}
@@ -119,3 +129,16 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
 
 export default FormBuilder;
 
+function FormSettingsButton(props: { formId: string }) {
+    return <Dialog>
+        <DialogTrigger asChild>
+            <Button className="flex gap-2">
+                Settings
+                <FaCog />
+            </Button>
+        </DialogTrigger>
+        <DialogContent>
+            <FormUpdateFormSettings id={props.formId} />
+        </DialogContent>
+    </Dialog>
+}
