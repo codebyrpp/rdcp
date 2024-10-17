@@ -2,15 +2,12 @@ import { Button } from "@/components/ui/button";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import useProjectNavigation from "@/hooks/useProjectNavigation";
-import { useParams } from "react-router-dom";
-import Loading from "@/components/common/Loading";
+import Loading, { PageLoading } from "@/components/common/Loading";
 import { DataTable } from "@/components/responses/data-table";
 import { useGetAllResponsesMutation, useGetResponsesMutation } from "@/state/apiSlices/responsesApi";
 import { defaultColumns } from "@/components/responses/columns";
 import { formatDate } from "@/utils";
 import { ElementsType } from "@/components/builder/components/FormElements";
-import { set, sum } from "lodash";
-import ClearableSelect from "@/components/common/ClearableSelect";
 import ResponsesSummary, { isChartSupportedField } from "@/components/responses/summary";
 import { Form } from "@/models/forms";
 import { FormPrivacyBadge, FormPublishStateBadge } from "@/components/feats/forms/ListItemForm";
@@ -37,8 +34,9 @@ export type FormSummary = {
 
 export function PageResponses() {
   const [data, setData] = useState([]);
-  const { formId } = useParams<{ formId: string }>();
-  const [getResponses, { isLoading }] = useGetAllResponsesMutation(); //TODO: Change to useGetResponsesMutation
+  const { project, form: _form } = useProjectNavigation();
+  const { id: formId } = _form as Form;
+  const [getResponses, { isLoading }] = useGetAllResponsesMutation();
   const [columns, setColumns] = useState<any>([]);
   const [fields, setFields] = useState<Field[]>();
   const [form, setForm] = useState<Form>();
@@ -90,7 +88,7 @@ export function PageResponses() {
 
         if (field.type === "DateField") {
           cell = ({ value }: { value: string }) => <div className="w-[150px]">
-            {value ? formatDate(value): null}
+            {value ? formatDate(value) : null}
           </div>;
         } else if (field.type === "FileUploadField") {
           cell = ({ row }: any) => {
@@ -139,7 +137,7 @@ export function PageResponses() {
     return fields?.filter(isChartSupportedField);
   }, [fields]);
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <PageLoading />;
 
   return (
     <div className="h-full flex flex-col">
@@ -187,14 +185,13 @@ export function PageResponses() {
 
 
 export const BackToProjectButton = () => {
-  const projectId = useParams<{ projectId: string }>().projectId;
-  const { navigateToProject } = useProjectNavigation();
+  const { navigateToProject, project } = useProjectNavigation();
 
   return (
     <Button variant={"icon"} className="text-sm flex gap-2 p-0"
       onClick={() => {
-        if (projectId)
-          navigateToProject(projectId);
+        if (project)
+          navigateToProject(project.id, project.roles);
       }}
     >
       <FaArrowLeft />

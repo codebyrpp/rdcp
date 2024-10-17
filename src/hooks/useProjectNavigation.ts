@@ -1,7 +1,6 @@
 import {
   FORM_EDIT_ROUTE,
   FORM_RESPONSES_ROUTE,
-  FORM_RESPONSES_SUMMARY_ROUTE,
   FORM_SETTINGS_ROUTE,
   FORM_VIEW_ROUTE,
   PROJECT_ROUTE,
@@ -55,7 +54,7 @@ const useProjectNavigation = () => {
 
   const navigateToFormResponses = (projectId: string, formId: string) => {
     // Open the form responses
-    navigate(FORM_RESPONSES_SUMMARY_ROUTE, {
+    navigate(FORM_RESPONSES_ROUTE, {
       state: { project: { id: projectId }, form: { id: formId } },
     });
   };

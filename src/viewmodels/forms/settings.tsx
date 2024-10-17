@@ -33,7 +33,7 @@ export const useFormSettingsViewModel = (formId: string | undefined) => {
         },
     });
 
-    const { navigateToProject } = useProjectNavigation()
+    const { navigateToProject, project } = useProjectNavigation()
 
     // RTK Query hook to get the form settings
     const { data: formSettings, isLoading: isDataLoading, isSuccess } = useGetFormQuery({ formId: formId ?? '' }, {
@@ -80,7 +80,7 @@ export const useFormSettingsViewModel = (formId: string | undefined) => {
                 variant: 'success',
                 action: <ToastAction altText={"Go back to project"} onClick={() => {
                     // Redirect to the form
-                    navigateToProject(formSettings?.projectId ?? '')
+                    navigateToProject(formSettings?.projectId ?? '', project?.roles!);
                 }}>Back to Project</ToastAction>,
             })
 
