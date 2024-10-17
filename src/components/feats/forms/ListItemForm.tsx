@@ -26,7 +26,8 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
         settings: false
     })
 
-    const { navigateToFormSettings, navigateToFormResponses,
+    const { project,
+        navigateToFormSettings, navigateToFormResponses,
         navigateToForm, navigateToFormDesigner } = useProjectNavigation()
 
     const { hasPermission } = useAuthorization(roles);
@@ -46,7 +47,7 @@ const FormListItem = ({ form, roles }: FormListItemProps) => {
     const handleCheckResponses = (e: any) => {
         e.stopPropagation()
         // Check responses
-        navigateToFormResponses(form.projectId, form.id)
+        navigateToFormResponses(project, form)
     }
 
     const canViewDashboard = () => {

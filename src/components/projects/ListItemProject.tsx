@@ -18,7 +18,7 @@ const ProjectListItem = ({ project }: ProjectListItemProps) => {
 
     const handleOpenClick = (e: any) => {
         e.stopPropagation()
-        navigateToProject(project.id, project.roles)
+        navigateToProject(project)
     }
     const handleSettingsClick = (e: any) => {
         e.stopPropagation()
@@ -28,7 +28,7 @@ const ProjectListItem = ({ project }: ProjectListItemProps) => {
     return (
         <ListItem
             onClick={() => {
-                navigateToProject(project.id, project.roles)
+                navigateToProject(project)
             }}
         >
             <div className='px-2 flex flex-col gap-1'>

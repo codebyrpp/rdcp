@@ -18,13 +18,8 @@ const useProjectNavigation = () => {
 
   const navigate = useNavigate();
 
-  const navigateToProject = (projectId: string, roles: ProjectRole[]) => {
+  const navigateToProject = (project: Project) => {
     // Open the project
-    const project = {
-      id: projectId,
-      roles: roles,
-    } as Project;
-
     navigate(PROJECT_ROUTE, {
       state: { project },
     });
@@ -52,10 +47,10 @@ const useProjectNavigation = () => {
     });
   };
 
-  const navigateToFormResponses = (projectId: string, formId: string) => {
+  const navigateToFormResponses = (project: Project, form: Form) => {
     // Open the form responses
     navigate(FORM_RESPONSES_ROUTE, {
-      state: { project: { id: projectId }, form: { id: formId } },
+      state: { project, form },
     });
   };
 

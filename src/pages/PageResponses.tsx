@@ -191,7 +191,7 @@ export const BackToProjectButton = () => {
     <Button variant={"icon"} className="text-sm flex gap-2 p-0"
       onClick={() => {
         if (project)
-          navigateToProject(project.id, project.roles);
+          navigateToProject(project);
       }}
     >
       <FaArrowLeft />

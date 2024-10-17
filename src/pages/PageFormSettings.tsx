@@ -10,7 +10,7 @@ import { Form } from "@/models/forms";
 const PageFormSettings = () => {
 
     // get projectId and formId from params
-    const { project, form } = useProjectNavigation();
+    const { project, form, navigateToProject } = useProjectNavigation();
     const { id: projectId, } = project as Project;
     const { id: formId, name: formName } = form as Form;
 
@@ -18,10 +18,9 @@ const PageFormSettings = () => {
         <div className="overflow-y-auto">
             <div className="flex mb-4">
                 <BreadCrumbs links={[
-                    { name: '...', url: '/projects' },
+                    { name: '...' },
                     { name: "Project", url: `/projects/${projectId}` },
                 ]} pageName={`Form Settings - ${formName}`} />
-                {/* TODO: Update the form name from router state */}
             </div>
 
             <div className="grid grid-cols-2 gap-2">
