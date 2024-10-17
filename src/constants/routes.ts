@@ -1,6 +1,6 @@
 const LOGIN_ROUTE = "/login";
 const FORGOT_PASSWORD_ROUTE = "/forgot-password";
-const REGISTER_ROUTE = "/register";
+const REGISTER_ROUTE = "/register"; 
 const REGISTER_CONFIRMATION_ROUTE = "/register-confirmation";
 const RESET_PASSWORD_ROUTE = "/reset-password";
 const PROJECTS_ROUTE = "/projects";

@@ -32,9 +32,9 @@ const useProjectNavigation = () => {
     });
   };
 
-  const navigateToAllProjects = () => {
-    navigate(PROJECTS_ROUTE);
-  };
+    const navigateToAllProjects = () => {
+        navigate(PROJECTS_ROUTE);
+    }
 
   const navigateToFormSettings = (form: Form) => {
     // Open the form settings
@@ -50,12 +50,12 @@ const useProjectNavigation = () => {
     });
   };
 
-  const navigateToForm = (formId: string) => {
-    // Open the form
-    const route = FORM_VIEW_ROUTE.replace(":formId", formId);
-    // open in new tab
-    window.open(route, "_blank");
-  };
+    const navigateToForm = (formId: string) => {
+        // Open the form
+        const route = FORM_VIEW_ROUTE.replace(':formId', formId)
+        // open in new tab
+        window.open(route, '_blank');
+    }
 
   const navigateToFormDesigner = (projectId: string, formId: string) => {
     // Open the form designer
@@ -77,4 +77,4 @@ const useProjectNavigation = () => {
   };
 };
 
-export default useProjectNavigation;
+export default useProjectNavigation
