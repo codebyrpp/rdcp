@@ -30,22 +30,21 @@ const DeleteProject = () => {
 
 const DeleteAction = () => {
 
-    const { formId } = useParams<{ formId: string }>();
-    const { projectId } = useParams<{ projectId: string }>();
+    const { form, project } = useProjectNavigation()
     const [deleteFormMutation, { isLoading, isError, error, isSuccess }] = useDeleteFormMutation()
     const { navigateToProject } = useProjectNavigation()
     const { toast } = useToast()
 
     const handleDelete = async () => {
-        if (formId) {
+        if (form && form.id) {
             try {
-                await deleteFormMutation({ formId }).unwrap();
+                await deleteFormMutation({ formId: form.id }).unwrap();
                 toast({
                     title: 'Project deleted successfully',
                     duration: 5000,
                     variant: 'success'
                 });
-                navigateToProject(projectId ?? '');
+                navigateToProject(project);
 
             } catch (e) {
                 toast({

@@ -80,7 +80,7 @@ export const useFormSettingsViewModel = (formId: string | undefined) => {
                 variant: 'success',
                 action: <ToastAction altText={"Go back to project"} onClick={() => {
                     // Redirect to the form
-                    navigateToProject(formSettings?.projectId ?? '', project?.roles!);
+                    navigateToProject(project);
                 }}>Back to Project</ToastAction>,
             })
 
