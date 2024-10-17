@@ -7,15 +7,25 @@ import { Input } from "@/components/ui/input";
 import useProjectNavigation from "@/hooks/useProjectNavigation";
 import { useSearchRef } from "@/hooks/useSearchRef";
 import { Form } from "@/models/forms";
+import { useAuthorization } from "@/viewmodels/authorization";
 import useProjectViewModel from "@/viewmodels/projects/single";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FaCog } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 
 const PageProject = () => {
   // read projectId form useLocation
   const { project: _project, navigateToProjectSettings } = useProjectNavigation();
-  const { id: projectId } = _project!;
+  const { id: projectId, roles } = _project!;
+  const { hasPermission } = useAuthorization(roles);
+
+  const canViewSettings = useMemo(() => {
+    return hasPermission("project_settings");
+  }, [roles]);
+
+  const canCreateForm = useMemo(() => {
+    return hasPermission("create_form");
+  }, [roles]);
 
   const { forms, project, isLoading, isError, error } = useProjectViewModel({
     projectId,
@@ -49,8 +59,8 @@ const PageProject = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           {/* End of Search and Filter */}
-          {forms?.length !== 0 && <CreateForm />}
-          <Button
+          {canCreateForm && forms?.length !== 0 && <CreateForm />}
+          {canViewSettings && (<Button
             variant={"secondary"}
             onClick={() => {
               // navigate to project settings
@@ -59,7 +69,7 @@ const PageProject = () => {
           >
             Project Settings
             <FaCog className="ml-2 text-lg text-slate-800" />
-          </Button>
+          </Button>)}
         </div>
       </div>
       {/* List of forms */}

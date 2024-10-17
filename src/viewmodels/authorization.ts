@@ -3,6 +3,7 @@ import { has } from "lodash"
 
 const authActionsMap = {
     project_settings: [],
+    create_form: [ProjectRole.MANAGER],
     edit_form: [ProjectRole.MANAGER, ProjectRole.EDITOR],
     form_settings: [ProjectRole.MANAGER],
     form_responses: [ProjectRole.MANAGER, ProjectRole.DATA_ANALYST],
