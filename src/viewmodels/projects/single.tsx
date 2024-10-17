@@ -96,7 +96,7 @@ export const useProjectInfoViewModel = ({ projectId }: {
                 variant: 'success',
                 action: <ToastAction altText={"Go back to project"} onClick={() => {
                     // Redirect to the form
-                    navigateToProject(projectId ?? '')
+                    navigateToProject(projectId ?? '', project?.roles!);
                 }}>Back to Project</ToastAction>
             });
 
