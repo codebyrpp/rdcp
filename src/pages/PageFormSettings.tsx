@@ -1,7 +1,6 @@
 import BreadCrumbs from "@/components/common/BreadCrumbs"
 import DeleteForm from "@/components/feats/forms/DeleteForm"
 import FormUpdateFormSettings from "@/components/forms/FormUpdateFormSettings"
-import { useParams } from "react-router-dom"
 import ViewParticipants from "@/components/projects/ViewParticipant";
 import useProjectNavigation from "@/hooks/useProjectNavigation";
 import { Project } from "@/models/projects";

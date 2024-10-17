@@ -12,7 +12,6 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { useFormSettingsViewModel } from "@/viewmodels/forms/settings";
 import { Switch } from "../ui/switch";
-import { useParams } from "react-router-dom";
 import { SectionWrapper } from "../common/wrapper";
 import {
   Tooltip,

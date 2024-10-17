@@ -4,7 +4,6 @@ import {
     DialogDescription, DialogFooter,
     DialogHeader, DialogTitle, DialogTrigger
 } from '@/components/ui/dialog'
-import { useParams } from 'react-router-dom'
 import useProjectNavigation from '@/hooks/useProjectNavigation'
 import { useToast } from '@/components/ui/use-toast'
 import { ToastAction } from '@/components/ui/toast'

@@ -1,6 +1,6 @@
 import FormView, { FormFieldValuesType, FormValueType } from '@/components/builder/components/FormView';
 import Brand from '@/components/common/Brand';
-import { useGetFormQuery, useViewFormQuery } from '@/state/apiSlices/formsApi';
+import { useViewFormQuery } from '@/state/apiSlices/formsApi';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom'
 import useSubmitForm from '@/hooks/useSubmitForm';
