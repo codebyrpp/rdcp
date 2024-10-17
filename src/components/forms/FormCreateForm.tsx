@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "../ui/textarea"
 import { ReactNode } from "react"
 import { useCreateFormViewModel } from "@/viewmodels/forms/create"
-import { useParams } from "react-router-dom"
+import useProjectNavigation from "@/hooks/useProjectNavigation"
 
 
 interface FormCreateFormProps {
@@ -21,8 +21,8 @@ interface FormCreateFormProps {
 
 export default function FormCreateForm({ buttonWrapper }: FormCreateFormProps) {
 
-    const { projectId } = useParams<{ projectId: string }>();
-    const { form, handleCreateForm, isLoading } = useCreateFormViewModel({ projectId });
+    const { project } = useProjectNavigation();
+    const { form, handleCreateForm, isLoading } = useCreateFormViewModel({ projectId: project.id });
 
     return (
         <div className={"w-full"}>

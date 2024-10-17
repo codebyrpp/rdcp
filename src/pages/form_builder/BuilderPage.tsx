@@ -1,13 +1,13 @@
 import FormBuilder from "@/components/builder/components/FormBuilder";
-import Loading from "@/components/common/Loading";
 import { useGetFormQuery } from "@/state/apiSlices/formsApi";
-import { useParams } from "react-router-dom";
 import BuilderError from "./BuilderError";
 import BuilderLoading from "./BuilderLoading";
+import useProjectNavigation from "@/hooks/useProjectNavigation";
 
 export default function BuilderPage() {
 
-    const formId = useParams<{ formId: string }>().formId;
+    const { form: _form } = useProjectNavigation();
+    const { id: formId } = _form!;
 
     // RTK Query hook to get the form settings
     const { data: form, isLoading: isDataLoading, isSuccess } = useGetFormQuery({

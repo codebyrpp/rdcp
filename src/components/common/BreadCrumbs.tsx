@@ -4,7 +4,8 @@ import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbS
 interface BreadCrumbsProps {
     links: {
         name: string,
-        url: string
+        url?: string,
+        action?: () => void
     }[],
     pageName: string
 }
@@ -16,7 +17,14 @@ const BreadCrumbs = ({ links, pageName }: BreadCrumbsProps) => {
                 {links.map((link, index) => (
                     <React.Fragment key={index}>
                         <BreadcrumbItem>
-                            <BreadcrumbLink className='font-semibold' href={link.url}>{link.name}</BreadcrumbLink>
+                            <BreadcrumbLink className='font-semibold' asChild>
+                                <button type="button" onClick={e => {
+                                    e.preventDefault();
+                                    if (link.action) link.action();
+                                }}>
+                                    {link.name}
+                                </button>
+                            </BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                     </React.Fragment>

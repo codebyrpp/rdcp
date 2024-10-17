@@ -1,29 +1,23 @@
 import { Button } from "../ui/button";
 import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
+    Form,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormControl,
+    FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { useProjectInfoViewModel } from "@/viewmodels/projects/single";
-import { useParams } from "react-router-dom";
-import { Skeleton } from "../ui/skeleton";
 import { SectionWrapper } from "../common/wrapper";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import useProjectNavigation from "@/hooks/useProjectNavigation";
 
 const FormUpdateProjectSettings = () => {
-  const { projectId } = useParams<{ projectId: string }>();
-  const { projectForm: form, handleProjectUpdate: handleSubmit } =
-    useProjectInfoViewModel({ projectId });
+
+    const { project: { id: projectId } } = useProjectNavigation();
+    const { projectForm: form, handleProjectUpdate: handleSubmit } =
+        useProjectInfoViewModel({ projectId });
 
     return (
         <SectionWrapper>
@@ -63,8 +57,8 @@ const FormUpdateProjectSettings = () => {
                             />
                             <div className="flex justify-end">
                                 <Button type="submit"
-                                variant={"success"}
-                                 className='ml-auto'>Save Changes</Button>
+                                    variant={"success"}
+                                    className='ml-auto'>Save Changes</Button>
                             </div>
                         </form>
                     </Form>
