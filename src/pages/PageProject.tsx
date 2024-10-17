@@ -15,7 +15,7 @@ import { useLocation } from "react-router-dom";
 
 const PageProject = () => {
   // read projectId form useLocation
-  const { project: _project, navigateToProjectSettings } = useProjectNavigation();
+  const { project: _project, navigateToProjectSettings, navigateToAllProjects } = useProjectNavigation();
   const { id: projectId, roles } = _project!;
   const { hasPermission } = useAuthorization(roles);
 
@@ -32,24 +32,24 @@ const PageProject = () => {
   });
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-    const filteredForms = forms?.filter((form: Form) => {
-        return form.name.toLowerCase().includes(searchTerm.toLowerCase());
-    });
+  const filteredForms = forms?.filter((form: Form) => {
+    return form.name.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
-    const searchInputRef = useSearchRef();
+  const searchInputRef = useSearchRef();
 
-    if (isLoading)
-        return <Loading />;
+  if (isLoading)
+    return <Loading />;
 
-    return (
-        <div className='flex flex-col gap-3 overflow-hidden'>
-            <div className="flex justify-between">
+  return (
+    <div className='flex flex-col gap-3 overflow-hidden'>
+      <div className="flex justify-between">
 
-                <div className="flex gap-2 items-center">
-                    <BreadCrumbs links={[
-                        { name: 'Projects', url: '/projects' },
-                    ]} pageName={`Project: ${project.name}`} />
-                </div>
+        <div className="flex gap-2 items-center">
+          <BreadCrumbs links={[
+            { name: 'Projects', action: navigateToAllProjects },
+          ]} pageName={`Project: ${project.name}`} />
+        </div>
 
         <div className="flex gap-2 mt-1">
           {/* Search and Filter */}
@@ -97,13 +97,13 @@ const PageProject = () => {
 };
 
 const NoFormsFound = () => {
-    return (
-        <div className="flex flex-col items-center justify-center gap-2">
-            <p className="text-muted-foreground">No forms found</p>
-            <p className="text-muted-foreground mb-3">Create a form to get started</p>
-            <CreateForm />
-        </div>
-    );
+  return (
+    <div className="flex flex-col items-center justify-center gap-2">
+      <p className="text-muted-foreground">No forms found</p>
+      <p className="text-muted-foreground mb-3">Create a form to get started</p>
+      <CreateForm />
+    </div>
+  );
 }
 
 export default PageProject;
