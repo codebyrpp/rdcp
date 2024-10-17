@@ -1,0 +1,21 @@
+import { ProjectRole } from "@/models/projects"
+import { has } from "lodash"
+
+const authActionsMap = {
+    project_settings: [],
+    edit_form: [ProjectRole.MANAGER, ProjectRole.EDITOR],
+    form_settings: [ProjectRole.MANAGER],
+    form_responses: [ProjectRole.MANAGER, ProjectRole.DATA_ANALYST],
+}
+
+export type AuthAction = keyof typeof authActionsMap
+
+const useAuthorization = (roles: ProjectRole[]) => {
+    const hasPermission = (action: AuthAction) => {
+        return authActionsMap[action].some(role => roles.includes(role))
+    }
+
+    return { hasPermission };
+}
+
+export { useAuthorization };

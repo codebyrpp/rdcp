@@ -8,15 +8,16 @@ import {
   PROJECT_SETTINGS_ROUTE,
   PROJECTS_ROUTE,
 } from "@/constants/routes";
+import { ProjectRole } from "@/models/projects";
 import { useNavigate } from "react-router-dom";
 
 const useProjectNavigation = () => {
   const navigate = useNavigate();
 
-  const navigateToProject = (projectId: string) => {
+  const navigateToProject = (projectId: string, roles: ProjectRole[]) => {
     // Open the project
-    navigate(route, {
-      state: { projectId },
+    navigate(PROJECT_ROUTE, {
+      state: { projectId, projectRoles: roles },
     });
   };
 

@@ -16,7 +16,8 @@ const PageProject = () => {
   // read projectId form useLocation
   const { state } = useLocation();
   const projectId = state?.projectId;
-
+  const projectRoles = state?.projectRoles;
+  
   const { navigateToProjectSettings } = useProjectNavigation();
   const { forms, project, isLoading, isError, error } = useProjectViewModel({
     projectId,
