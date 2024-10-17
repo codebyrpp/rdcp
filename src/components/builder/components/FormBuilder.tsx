@@ -168,6 +168,9 @@ function FormSettingsButton(props: { formId: string, onUpdateForm: (form: Partia
             </Button>
         </DialogTrigger>
         <DialogContent>
+            <DialogTitle className="hidden">
+                Form Settings
+            </DialogTitle>
             <FormUpdateFormSettings id={props.formId} onUpdateForm={props.onUpdateForm} />
         </DialogContent>
     </Dialog>
