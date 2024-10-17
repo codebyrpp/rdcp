@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useAuthorization } from "@/viewmodels/authorization";
 import useProjectNavigation from "@/hooks/useProjectNavigation";
 import { FaCog } from "react-icons/fa";
+import { FormPrivacyBadge, FormPublishStateBadge } from "@/components/feats/forms/ListItemForm";
 
 const FormBuilder = ({ form }: { form: FormWithSchema }) => {
     const mouseSensor = useSensor(MouseSensor, {
@@ -77,7 +78,23 @@ const FormBuilder = ({ form }: { form: FormWithSchema }) => {
                     <div className="flex w-screen">
                         <div className="flex-1 py-2 px-4 bg-gray-50">
                             <div className="flex justify-between items-center">
-                                <h1 className="text-lg font-semibold">{form.name}</h1>
+                                <div className="flex gap-2 items-end">
+                                    <div className="flex-col gap-1 text-sm font-semibold">
+                                        <div className="text-muted-foreground">
+                                            {project.name}
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <div>
+                                                {form.name}
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <FormPublishStateBadge isPublished={form.isPublished!} />
+                                                <FormPrivacyBadge isPrivate={form.isPrivate!} />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
                                 <div className="flex justify-end space-x-2">
                                     {
                                         locked && <div className="flex items-center">
