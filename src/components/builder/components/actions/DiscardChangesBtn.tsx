@@ -12,13 +12,21 @@ import {
 } from "@/components/ui/dialog"
 import { AlertTriangle, X } from 'lucide-react'
 import useProjectNavigation from '@/hooks/useProjectNavigation'
+import { ExitIcon } from '@radix-ui/react-icons'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 type LeaveEditorButtonProps = {
+  hasChanges: boolean;
+  canSave: boolean;
   projectId: string;
   saveChanges: () => void;
 }
 
-export function LeaveEditorButton({ saveChanges, projectId }: LeaveEditorButtonProps) {
+export function LeaveEditorButton({
+  hasChanges,
+  canSave,
+  saveChanges,
+  projectId }: LeaveEditorButtonProps) {
   const [isOpen, setIsOpen] = useState(false)
   const { navigateToProject } = useProjectNavigation();
 
@@ -33,10 +41,19 @@ export function LeaveEditorButton({ saveChanges, projectId }: LeaveEditorButtonP
 
   return (
     <div>
-      <Button variant="secondary" size={"icon"}
-        onClick={() => setIsOpen(true)}>
-        <X className="h-5 w-5" />
-      </Button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <Button variant="secondary" size={"icon"}
+              onClick={() => setIsOpen(true)}>
+              <ExitIcon />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent sideOffset={5}>
+            <span>Leave Designer</span>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent>
           <DialogHeader>
@@ -51,25 +68,27 @@ export function LeaveEditorButton({ saveChanges, projectId }: LeaveEditorButtonP
           <DialogFooter className="sm:justify-start">
             <Button
               type="button"
-              variant="destructive"
+              variant="warning"
               onClick={handleLeave}
             >
-              Leave without saving
+              {canSave && hasChanges ? 'Leave without saving' : 'Leave'}
             </Button>
-            <Button
-              type="button"
-              variant="success"
-              onClick={handleSaveAndLeave}
-              className='font-bold'
-            >
-              Save and Exit
-            </Button>
+            {
+              canSave && hasChanges && <Button
+                type="button"
+                variant="success"
+                onClick={handleSaveAndLeave}
+                className='font-bold'
+              >
+                Save and Exit
+              </Button>
+            }
             <Button
               type="button"
               variant="outline"
               onClick={() => setIsOpen(false)}
             >
-              Go Back
+              Don't Leave
             </Button>
           </DialogFooter>
         </DialogContent>

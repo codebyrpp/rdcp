@@ -3,7 +3,12 @@ import { useTransition } from "react";
 import { FaSpinner } from "react-icons/fa6";
 import { SaveAll } from "lucide-react";
 
-function SaveFormBtn({ action }: { action: () => void }) {
+type SaveFormBtnProps = {
+  canSave: boolean;
+  action: () => void;
+};
+
+function SaveFormBtn({ action, canSave }: SaveFormBtnProps) {
 
   const [loading, startTransition] = useTransition();
 
@@ -12,7 +17,7 @@ function SaveFormBtn({ action }: { action: () => void }) {
       onClick={() => {
         startTransition(action);
       }}
-      disabled={loading}
+      disabled={loading || !canSave}
       className="gap-2">
       Save Changes
       {loading ? <FaSpinner className="animate-spin h-4 w-4" />

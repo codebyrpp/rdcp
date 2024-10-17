@@ -68,7 +68,6 @@ export function DataTable<TData, TValue>({
 
 
   const handleExport = () => {
-    // FIXME: This is a temporary solution to export data to CSV
     // All responses should fetch for the export
     const { rows } = table.getRowModel();
     exportCSV(rows, table.getAllColumns().map((column) => ({
