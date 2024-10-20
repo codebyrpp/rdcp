@@ -7,11 +7,11 @@ export class MailerConfigFactory {
   create(configService: ConfigService) {
     return {
       transport: {
-        host: 'smtp.sendgrid.net',
-        port: Number('587'),
+        host: configService.get<string>('SMTP_HOST'),
+        port: configService.get<number>('SMTP_PORT'),
         auth: {
-          user: 'apikey',
-          pass: configService.get<string>('SENDGRID_API_KEY'),
+          user: configService.get<string>('SMTP_USER'),
+          pass: configService.get<string>('SMTP_PASS'),
         },
       },
       defaults: {
