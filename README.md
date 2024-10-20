@@ -24,6 +24,10 @@
 $ yarn install
 ```
 
+**Note**: It is recommended to use Yarn as the package manager for this project. If you do not have Yarn installed, you can install it by running
+`npm install --global yarn`. If you accidentally use npm to install the dependencies, you may encounter issues when running the application. To fix this, delete the `node_modules` directory, 
+`package-lock.json` and run `yarn` to install the dependencies using Yarn.
+
 ### Running the app
 
 ```bash
