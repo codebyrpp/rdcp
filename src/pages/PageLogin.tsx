@@ -23,7 +23,7 @@ const LoginPage = () => {
     }, [user])
 
     return <>
-        <div className='flex flex-col gap-y-4 h-screen justify-center items-center'>
+        <div className='flex flex-col gap-y-4 h-screen justify-center items-center' data-testid="login-form">
             <Brand />
             <LoginForm />
         </div>

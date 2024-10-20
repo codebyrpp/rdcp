@@ -37,9 +37,9 @@ export default function LoginForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="This is your public display name." {...field} />
+                  <Input placeholder="This is your public display name." {...field} data-testid="email-input" />
                 </FormControl>
-                <FormMessage />
+                <FormMessage data-testid="email-input-message" />
               </FormItem>
             )}
           />
@@ -50,29 +50,29 @@ export default function LoginForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <PasswordInput {...field} />
+                  <PasswordInput {...field} data-testid="password-input" />
                 </FormControl>
                 <FormDescription>
 
                 </FormDescription>
-                <FormMessage />
+                <FormMessage data-testid="password-input-message"/>
               </FormItem>
             )}
           />
 
-          <Button className="flex w-full" type="submit" disabled={isLoading}>
+          <Button className="flex w-full" type="submit" disabled={isLoading} data-testid="login-button">
             {isLoading ? 'Logging in...' : 'Login'}
           </Button>
 
           {isError && (
-            <p className="text-red-500 mt-2 text-sm">
+            <p className="text-red-500 mt-2 text-sm" data-testid="invalid-credentials-message">
               {errorMessage || 'Failed to login. Please try again.'}
             </p>
           )}
         </form>
       </Form>
       <div className="flex justify-center">
-        <Button onClick={handleForgetPassword} className="mt-3" variant={"link"}>
+        <Button onClick={handleForgetPassword} className="mt-3" variant={"link"} data-testid="forgot-passsword">
           Forgot your password?
         </Button>
       </div>

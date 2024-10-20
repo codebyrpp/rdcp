@@ -33,7 +33,7 @@ const ProjectListItem = ({ project }: ProjectListItemProps) => {
         >
             <div className='px-2 flex flex-col gap-1'>
                 <div className="flex gap-2 items-center">
-                    <ListItemTitle>
+                    <ListItemTitle  data-testid="project-list-item-name">
                         {project.name}
                     </ListItemTitle>
                     <div className="">
@@ -47,7 +47,7 @@ const ProjectListItem = ({ project }: ProjectListItemProps) => {
                         })}
                     </div>
                 </div>
-                <p className='text-xs text-slate-700 truncate text-ellipsis max-w-lg'>{project.description}</p>
+                <p className='text-xs text-slate-700 truncate text-ellipsis max-w-lg' data-testid="project-list-item-description">{project.description}</p>
             </div>
             <div className="flex gap-3 items-center">
                 <div className='flex flex-col items-end'>

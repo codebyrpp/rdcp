@@ -109,10 +109,10 @@ const PageDashboard = () => {
               }
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-2">
+            <div className="grid grid-cols-1 gap-2" data-testid="project-list">
               {
                 filteredProjects().map((project: Project) => (
-                  <ProjectListItem key={project.id} project={project} />
+                  <ProjectListItem key={project.id} project={project} data-testid={`project-list-item-${project.name}`}/>
                 ))
               }
             </div>
