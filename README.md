@@ -8,6 +8,7 @@
 
 ## Setup
 - Clone the repository
+- Create a `.env` file in the root directory of the project. You can use the `.env.template` file as a template.
 - Run `yarn install` to install the dependencies
 - Run `docker-compose up` to start the database and redis server
 - Run `yarn start:dev` to start the application in development watch mode
