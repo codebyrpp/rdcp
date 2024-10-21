@@ -11,15 +11,24 @@ type FormValues = {
     options: { value: string }[];
 };
 
-export function SelectOptions({ options, updateOptions }: { options: string[]; updateOptions: (newOptions: string[]) => void }) {
+export function SelectOptions({
+    options, updateOptions,
+    elementId
+}: {
+    elementId: string;
+    options: string[];
+    updateOptions: (newOptions: string[]) => void
+}) {
     const { control, register } = useForm<FormValues>({
         defaultValues: { options: options.map((option) => ({ value: option })) },
     });
 
     const { fields, append, remove, update } = useFieldArray({
         control,
-        name: "options"
+        name: "options",
+        keyName: `${elementId}-options`,
     });
+    
     const [currentOption, setCurrentOption] = useState("");
     const [editIndex, setEditIndex] = useState<number | null>(null);
 
