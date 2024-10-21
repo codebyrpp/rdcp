@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from "../components/FormElements";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useDesigner from "../hooks/useDesigner";
 import { useForm } from "react-hook-form";
 import { Form, FormField, FormItem, FormLabel } from "../../ui/form";
@@ -124,7 +124,7 @@ function FormComponent({
     );
 }
 
-type propertiesFormschemaType = z.infer<typeof selectPropertiesSchema>;
+type propertiesFormSchemaType = z.infer<typeof selectPropertiesSchema>;
 
 export function SelectPropertiesComponent({
     elementInstance,
@@ -133,7 +133,7 @@ export function SelectPropertiesComponent({
 }) {
     const element = elementInstance as CustomInstance;
     const { updateElement } = useDesigner();
-    const form = useForm<propertiesFormschemaType>({
+    const form = useForm<propertiesFormSchemaType>({
         resolver: zodResolver(selectPropertiesSchema),
         mode: "onChange",
         defaultValues: {
@@ -144,10 +144,14 @@ export function SelectPropertiesComponent({
     });
 
     useEffect(() => {
-        form.reset(element.extraAttributes);
+        form.reset({
+            label: element.extraAttributes.label,
+            helperText: element.extraAttributes.helperText,
+            required: element.extraAttributes.required,
+        });
     }, [element, form]);
 
-    function applyChanges(values: propertiesFormschemaType) {
+    function applyChanges(values: propertiesFormSchemaType) {
         const { label, helperText, required } = values;
         updateElement(element.id, {
             ...element,
@@ -162,7 +166,7 @@ export function SelectPropertiesComponent({
 
 
     // Function to handle updates to the options
-    const updateSelectOptions = (newOptions: string[]) => {
+    const updateSelectOptions = useCallback((newOptions: string[]) => {
         updateElement(element.id, {
             ...element,
             extraAttributes: {
@@ -170,22 +174,23 @@ export function SelectPropertiesComponent({
                 options: [...newOptions],
             },
         });
-    };
+    }, [element]);
 
     return (
         <>
             <Form {...form}>
                 <form onChange={form.handleSubmit(applyChanges)}
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                    }}
+                    onSubmit={(e) => { e.preventDefault(); }}
                     className="space-y-3">
                     <LabelProperty form={form} />
                     <DescriptionProperty form={form} />
                     <RequiredProperty form={form} />
                 </form>
             </Form>
-            <SelectOptions key={element.id} options={element.extraAttributes.options} updateOptions={updateSelectOptions} />
+            <SelectOptions
+                key={element.id}
+                elementId={element.id}
+                options={element.extraAttributes.options} updateOptions={updateSelectOptions} />
         </>
     );
 }
