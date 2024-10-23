@@ -1,20 +1,14 @@
-"use client";
-
-import { zodResolver } from "@hookform/resolvers/zod";
 import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from "../components/FormElements";
 import { Label } from "../../ui/label";
-import { useEffect, useState } from "react";
-import useDesigner from "../hooks/useDesigner";
-import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { LetterText } from "lucide-react";
 import { InputDescription, InputLabel } from "./common/Input";
-import { TextAreaValidations, TextFieldValidation, TextFieldValidationInstance, TextValidations } from "./validations/text/validations";
+import { TextAreaValidations, TextFieldValidationInstance, TextValidations } from "./validations/text/validations";
 import useFormValidation from "./validations/useFormValidation";
-import { FieldProperties } from "./validations/FieldProperties";
-import useFieldValidation from "./validations/useFieldValidation";
-import { baseExtraAttributes, basePropertiesSchema, basePropertiesSchemaType } from "./validations/base";
+import { baseExtraAttributes } from "./validations/base";
 import { FieldErrors } from "./FieldErrors";
+import TextBasedProperties from "./common/TextBasedProperties";
 
 const type: ElementsType = "TextAreaField";
 const PLACEHOLDER = "Long answer text";
@@ -33,7 +27,7 @@ export const TextAreaFieldFormElement: FormElement = {
     },
     designerComponent: DesignerComponent,
     formComponent: FormComponent,
-    propertiesComponent: PropertiesComponent,
+    propertiesComponent: TextBasedProperties,
 
 };
 
@@ -95,60 +89,6 @@ function FormComponent({
             <FieldErrors errors={errors} />
         )}
     </div>
-    );
-}
-
-function PropertiesComponent({
-    elementInstance,
-}: {
-    elementInstance: FormElementInstance;
-}) {
-    const element = elementInstance as CustomInstance;
-    const { updateElement } = useDesigner();
-    const form = useForm<basePropertiesSchemaType>({
-        resolver: zodResolver(basePropertiesSchema),
-        mode: "onChange",
-        defaultValues: {
-            label: element.extraAttributes.label,
-            helperText: element.extraAttributes.helperText,
-            required: element.extraAttributes.required,
-        },
-    });
-
-    const {
-        validation,
-        validationInstance,
-        setValidationType,
-        updateValidationInstance
-    } = useFieldValidation<TextFieldValidationInstance, TextFieldValidation>(element, form, TextValidations);
-
-    useEffect(() => {
-        form.reset(element.extraAttributes);
-    }, [element, form]);
-
-    function applyChanges(values: basePropertiesSchemaType) {
-        const { label, helperText, required } = values;
-        updateElement(element.id, {
-            ...element,
-            extraAttributes: {
-                label,
-                helperText,
-                required,
-                validation: validationInstance
-            },
-        });
-    }
-
-    return (
-        <FieldProperties<TextFieldValidationInstance>
-            form={form}
-            applyChanges={applyChanges}
-            validationInstance={validationInstance}
-            setValidationType={setValidationType}
-            validation={validation}
-            updateValidationInstance={updateValidationInstance}
-            validations={TextValidations}
-        />
     );
 }
 
