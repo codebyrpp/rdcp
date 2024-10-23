@@ -7,10 +7,11 @@ import { TextFieldValidationInstance, TextValidations } from "./validations/text
 import useFormValidation from "./validations/useFormValidation";
 import { baseExtraAttributes } from "./validations/base";
 import { FieldErrors } from "./FieldErrors";
-import TextBasedProperties from "./common/TextBasedProperties";
+import { TextBasedDesignerComponent, TextBasedInstance, TextBasedProperties } from "./common/TextBasedComponents";
+import { QuestionPlaceholder } from "./placeholders";
 
 const type: ElementsType = "TextField";
-const PLACEHOLDER = "Short Answer";
+const PLACEHOLDER = QuestionPlaceholder[type];
 
 
 export const TextFieldFormElement: FormElement = {
@@ -30,32 +31,16 @@ export const TextFieldFormElement: FormElement = {
 
 };
 
-type CustomInstance = FormElementInstance & {
-    extraAttributes: typeof baseExtraAttributes & {
-        validation?: TextFieldValidationInstance;
-    };
-};
+type CustomInstance = TextBasedInstance;
 
 function DesignerComponent({
     elementInstance,
 }: {
     elementInstance: FormElementInstance;
 }) {
-    const element = elementInstance as CustomInstance;
-    const { label, required, helperText } = element.extraAttributes;
-    const validation = element.extraAttributes.validation as TextFieldValidationInstance | undefined;
-    const ValidationInfo = validation ? TextValidations[validation.type].designerComponent : undefined;
-    return (<div className="flex flex-col gap-2 w-full">
-        <InputLabel label={label} required={required} />
-        {helperText && (<InputDescription description={helperText} />)}
-        <Input readOnly disabled placeholder={PLACEHOLDER}></Input>
-        {validation && ValidationInfo && (
-            <ValidationInfo
-                validations={TextValidations}
-                validationInstance={validation} />
-        )}
-    </div>
-    );
+    return <TextBasedDesignerComponent
+        textBasedInput={Input}
+        elementInstance={elementInstance} />;
 }
 
 function FormComponent({

@@ -8,7 +8,7 @@ import { TextAreaValidations, TextFieldValidationInstance, TextValidations } fro
 import useFormValidation from "./validations/useFormValidation";
 import { baseExtraAttributes } from "./validations/base";
 import { FieldErrors } from "./FieldErrors";
-import TextBasedProperties from "./common/TextBasedProperties";
+import { TextBasedDesignerComponent, TextBasedInstance, TextBasedProperties } from "./common/TextBasedComponents";
 
 const type: ElementsType = "TextAreaField";
 const PLACEHOLDER = "Long answer text";
@@ -31,31 +31,16 @@ export const TextAreaFieldFormElement: FormElement = {
 
 };
 
-type CustomInstance = FormElementInstance & {
-    extraAttributes: typeof baseExtraAttributes & {
-        validation?: TextFieldValidationInstance;
-    };
-};
+type CustomInstance = TextBasedInstance;
 
 function DesignerComponent({
     elementInstance,
 }: {
     elementInstance: FormElementInstance;
 }) {
-    const element = elementInstance as CustomInstance;
-    const { label, required, helperText, validation } = element.extraAttributes;
-    const ValidationInfo = validation ? TextValidations[validation.type].designerComponent : undefined;
-    return (<div className="flex flex-col gap-2 w-full">
-        <InputLabel label={label} required={required} />
-        {helperText && (<InputDescription description={helperText} />)}
-        <Textarea readOnly disabled placeholder={PLACEHOLDER} />
-        {validation && ValidationInfo && (
-            <ValidationInfo
-                validations={TextAreaValidations}
-                validationInstance={validation} />
-        )}
-    </div>
-    );
+    return <TextBasedDesignerComponent 
+    textBasedInput={Textarea}
+    elementInstance={elementInstance} />;
 }
 
 function FormComponent({
