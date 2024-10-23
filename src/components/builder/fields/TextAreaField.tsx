@@ -8,7 +8,7 @@ import { TextAreaValidations, TextFieldValidationInstance, TextValidations } fro
 import useFormValidation from "./validations/useFormValidation";
 import { baseExtraAttributes } from "./validations/base";
 import { FieldErrors } from "./FieldErrors";
-import { TextBasedDesignerComponent, TextBasedInstance, TextBasedProperties } from "./common/TextBasedComponents";
+import { TextBasedDesignerComponent, TextBasedInstance, TextBasedProperties } from "./TextBasedComponents";
 
 const type: ElementsType = "TextAreaField";
 const PLACEHOLDER = "Long answer text";

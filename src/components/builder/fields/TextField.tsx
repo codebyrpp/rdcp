@@ -7,7 +7,7 @@ import { TextFieldValidationInstance, TextValidations } from "./validations/text
 import useFormValidation from "./validations/useFormValidation";
 import { baseExtraAttributes } from "./validations/base";
 import { FieldErrors } from "./FieldErrors";
-import { TextBasedDesignerComponent, TextBasedInstance, TextBasedProperties } from "./common/TextBasedComponents";
+import { TextBasedDesignerComponent, TextBasedInstance, TextBasedProperties } from "./TextBasedComponents";
 import { QuestionPlaceholder } from "./placeholders";
 
 const type: ElementsType = "TextField";

@@ -1,15 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { FormElementInstance } from "../../components/FormElements";
-import useDesigner from "../../hooks/useDesigner";
-import { basePropertiesSchemaType, basePropertiesSchema, baseExtraAttributes } from "../validations/base";
-import { FieldProperties } from "../validations/FieldProperties";
-import { TextFieldValidationInstance, TextFieldValidation, TextValidations, TextBasedValidations } from "../validations/text/validations";
-import useFieldValidation from "../validations/useFieldValidation";
+import { FormElementInstance } from "../components/FormElements";
+import useDesigner from "../hooks/useDesigner";
+import { basePropertiesSchemaType, basePropertiesSchema, baseExtraAttributes } from "./validations/base";
+import { FieldProperties } from "./validations/FieldProperties";
+import { TextFieldValidationInstance, TextFieldValidation, TextValidations, TextBasedValidations } from "./validations/text/validations";
+import useFieldValidation from "./validations/useFieldValidation";
 import { Input } from "@/components/ui/input";
-import { InputLabel, InputDescription } from "./Input";
-import { QuestionPlaceholder } from "../placeholders";
+import { InputLabel, InputDescription } from "./common/Input";
+import { QuestionPlaceholder } from "./placeholders";
 
 export type TextBasedInstance = FormElementInstance & {
     extraAttributes: typeof baseExtraAttributes & {
