@@ -16,7 +16,7 @@ export class UsersRepository {
     return this.userModel.findByIdAndUpdate(user._id.toString(), user).exec();
   }
 
-  async find(query: { email: string, role: string }, limit = 5, page = 1): Promise<{
+  async find(query: { email: string, role: string }, limit: number, page: number): Promise<{
     users: Partial<User>[],
     total: number
   }> {
