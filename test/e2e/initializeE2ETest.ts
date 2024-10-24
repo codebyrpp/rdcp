@@ -6,7 +6,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { TestingModule, Test } from "@nestjs/testing";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import { Environment } from "src/common/environments.enum";
-import { JWTConfigFactory } from "src/config/jwt.config";
+import { JWTConfigFactory } from "src/configs/jwt.config";
 import { CoreModule } from "src/core.module";
 import { MockRedisModule } from "src/redis/redis.module";
 import { SeedService } from "src/users/seed";
