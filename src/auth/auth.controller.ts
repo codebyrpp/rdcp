@@ -15,8 +15,9 @@ import { ResetPasswordDto } from '../users/dtos/reset-password.dto';
 import { LoginDto } from './dtos/login.dto';
 import { EmailRequiredException } from './exceptions/email-required.exception';
 import { AccountSetupDto } from './dtos/account.dto';
-import { ApiBody, ApiCreatedResponse, ApiDefaultResponse, ApiQuery, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBody, ApiCreatedResponse, ApiDefaultResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
+@ApiTags("Authentication")
 @Controller('auth')
 export class AuthenticationController {
   constructor(

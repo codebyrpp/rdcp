@@ -22,7 +22,9 @@ import { ProjectRoleEnum } from './entities/project-role.enum';
 import { FormsService } from 'src/forms/forms.service';
 import { UsersService } from 'src/users/users.service';
 import { CollaboratorDto } from './dtos/collaborator.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags("Projects")
 @UseGuards(AuthGuard)
 @Controller('projects')
 export class ProjectsController {

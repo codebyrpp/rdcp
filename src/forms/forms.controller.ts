@@ -21,7 +21,9 @@ import { FormAuthorizationGuard } from './forms.guard';
 import { FormActionMeta } from './decorators/form-action.decorator';
 import { FormId } from './decorators/form-id.decorator';
 import { Form } from './entities/form.schema';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags("Forms")
 @UseGuards(AuthGuard)
 @Controller('forms')
 export class FormsController {
@@ -62,13 +64,13 @@ export class FormsController {
   async getForm(@FormId() formId: string, @FormReqDto() form: Form,
     @Query("schema") schema: boolean = false
   ): Promise<FormDTO> {
-    
+
     this.logger.debug(`Getting form with id: ${formId}`);
 
     if (!schema) {
       // Remove schema from form object
       delete form.draft,
-      delete form.schema;
+        delete form.schema;
     }
 
     return FormDTO.fromEntity(form);

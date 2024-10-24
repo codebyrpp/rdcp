@@ -10,19 +10,25 @@ import { FormAuthorizationGuard } from 'src/forms/forms.guard';
 import { FormActionMeta } from 'src/forms/decorators/form-action.decorator';
 import { FormReqDto } from 'src/forms/decorators/form.decorator';
 import { Form } from 'src/forms/entities/form.schema';
+import { ApiAcceptedResponse, ApiBody, ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
 
+@ApiTags("Submissions")
 @Controller('submissions')
 export class ResponsesController {
 
     private readonly logger = new Logger(ResponsesController.name);
-    
+
     constructor(
         private readonly responsesService: ResponsesService,
         private readonly authService: AuthenticationService,
         private readonly formAuth: FormAuthorization,
-    ) {
-    }
+    ) { }
 
+    @ApiOkResponse({
+        description: "Returns the Form for Viewing",
+        type: FormDTO
+    })
+    @ApiParam({ name: "formId", type: "string" })
     @Get("form/:formId")
     async viewForm(
         @FormId() formId: string,
@@ -32,7 +38,7 @@ export class ResponsesController {
 
         const form = await this.formAuth.getForm(formId);
 
-        if(!form) {
+        if (!form) {
             throw new NotFoundException('Form not found');
         }
 
@@ -55,6 +61,8 @@ export class ResponsesController {
         return FormDTO.fromEntity(form);
     }
 
+    @ApiParam({ name: "formId", type: "string" })
+    @ApiAcceptedResponse({ description: "Form Submitted" })
     @Post('form/:formId')
     @UseInterceptors(AnyFilesInterceptor({}))
     async submitForm(

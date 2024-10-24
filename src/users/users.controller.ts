@@ -7,7 +7,9 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { Roles } from './roles.decorator';
 import { UserRoleEnum } from './entities/user-role.enum';
 import { DomainsAdminService } from './admin.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags("Users")
 @UseGuards(AuthGuard)
 @Controller('users')
 export class UsersController {
