@@ -15,16 +15,19 @@ import { ResetPasswordDto } from '../users/dtos/reset-password.dto';
 import { LoginDto } from './dtos/login.dto';
 import { EmailRequiredException } from './exceptions/email-required.exception';
 import { AccountSetupDto } from './dtos/account.dto';
+import { ApiBody, ApiCreatedResponse, ApiDefaultResponse, ApiQuery, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthenticationController {
   constructor(
     private readonly authService: AuthenticationService,
     private readonly userService: UsersService,
-  ) {}
+  ) { }
 
   private readonly logger = new Logger(AuthenticationController.name);
 
+  @ApiCreatedResponse({ description: 'Login Successful' })
+  @ApiUnauthorizedResponse({ description: 'Invalid Credentials' })
   @Post('login')
   async login(@Body() loginDto: LoginDto): Promise<LoginResponseDto> {
     this.logger.debug(`Login request for ${loginDto.email}`);
@@ -32,22 +35,31 @@ export class AuthenticationController {
     return await this.authService.login(user, loginDto.password);
   }
 
+  @ApiCreatedResponse({ description: 'Login Successful' })
+  @ApiUnauthorizedResponse({ description: 'Invalid Credentials' })
   @Version(['2', VERSION_NEUTRAL])
   @Post('login')
-  async loginV2(@Body() loginDto: LoginDto): Promise<LoginV2ResponseDto>{
+  async loginV2(@Body() loginDto: LoginDto): Promise<LoginV2ResponseDto> {
     this.logger.debug(`Login request for ${loginDto.email}`);
     const user = await this.userService.findUserByEmail(loginDto.email);
     return await this.authService.loginV2(user, loginDto.password);
   }
 
   // endpoint to refresh the accessToken
+  @ApiCreatedResponse({ description: 'Token Refresh Successful' })
+  @ApiUnauthorizedResponse({ description: "Invalid Refresh Token" })
   @Post('refresh')
-  async refresh(@Body('refreshToken') refreshToken: string){
+  async refresh(@Body('refreshToken') refreshToken: string) {
     this.logger.debug('Refresh request');
     return await this.authService.refresh(refreshToken);
   }
 
   @Get('reset-password')
+  @ApiQuery({
+    "allowEmptyValue": false,
+    "name": "email",
+    "required": true
+  })
   async forgotPassword(@Query('email') email: string) {
     this.logger.debug(`Forgot password request for ${email}`);
 
@@ -72,6 +84,11 @@ export class AuthenticationController {
     };
   }
 
+  @ApiQuery({
+    "allowEmptyValue": false,
+    "name": "email",
+    "required": true
+  })
   @Get('register')
   async accountSetup(@Query('email') email: string) {
     this.logger.debug(`Account setup request for ${email}`);
