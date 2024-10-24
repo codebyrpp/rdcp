@@ -26,11 +26,7 @@ export class FormsEditingService {
 
   // Extend the lock with heartbeat
   async keepAlive(formId: string, userId: string) {
-    const currentEditor = await this.getCurrentEditor(formId);
-
-    if (!currentEditor || currentEditor.id !== userId)
-      throw new NoLockOwnershipException();
-
+    await this.assertLockOwnership(formId, userId);
     const lockKey = this.makeLockKey(formId);
     await this.redisService.updateTTL(lockKey, this.lockTTL);
     return { success: true };
@@ -38,13 +34,22 @@ export class FormsEditingService {
 
   // Release the lock
   async releaseLock(formId: string, userId: string) {
+    await this.assertLockOwnership(formId, userId);
+    await this.removeCurrentEditor(formId);
+    return { success: true };
+  }
+
+  private async assertLockOwnership(formId: string, userId: string) {
     const currentEditor = await this.getCurrentEditor(formId);
 
     if (!currentEditor || currentEditor.id !== userId)
       throw new NoLockOwnershipException();
+  }
 
-    await this.removeCurrentEditor(formId);
-    return { success: true };
+  async formModificationAssert(formId: string, userId: string) {
+    const currentEditor = await this.getCurrentEditor(formId);
+    if(!currentEditor || currentEditor.id === userId) return;
+    throw new NoLockOwnershipException();
   }
 
   private async removeCurrentEditor(formId: string) {
