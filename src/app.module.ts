@@ -5,7 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { RedisModule } from './redis/redis.module';
 import { CoreModule } from './core.module';
 import { EmailModule } from './email/email.module';
-import { JWTConfigFactory } from './config/jwt.config';
+import { JWTConfigFactory } from './configs/jwt.config';
 
 export const dbModule = MongooseModule.forRootAsync({
   inject: [ConfigService],

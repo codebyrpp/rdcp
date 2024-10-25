@@ -31,13 +31,18 @@ export class UsersService {
     limit: number,
     page: number,
   ): Promise<{
-    users: Partial<User>[],
+    users: Partial<UserDTO>[],
     total: number
   }> {
-    return await this.userRepository.find({
+    const res = await this.userRepository.find({
       email: email ? email : undefined,
       role: role ? role : undefined,
     }, limit, page);
+
+    return {
+      users: res.users.map((user) => UserDTO.fromUser(user)),
+      total: res.total,
+    };
   }
 
   async findUserByEmail(email: string): Promise<User> {

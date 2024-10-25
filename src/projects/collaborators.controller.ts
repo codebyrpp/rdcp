@@ -7,8 +7,10 @@ import { CollaboratorDto } from "./dtos/collaborator.dto";
 import { ProjectRoleEnum } from "./entities/project-role.enum";
 import { User } from "src/users/decorators/user.decorator";
 import { UsersService } from "src/users/users.service";
+import { ApiTags } from "@nestjs/swagger";
 
 
+@ApiTags("Project Collaborators")
 @UseGuards(AuthGuard)
 @Controller('projects/:projectId/collaborators')
 export class CollaboratorsController {

@@ -86,6 +86,7 @@ describe('AuthenticationController (e2e)', () => {
         const accountSetupDto = {
             email: 'newuser@example.com',
             password: 'password123',
+            otp:'123456'
         };
 
         const response = await request(app.getHttpServer())

@@ -7,7 +7,9 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { Roles } from './roles.decorator';
 import { UserRoleEnum } from './entities/user-role.enum';
 import { DomainsAdminService } from './admin.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags("Users")
 @UseGuards(AuthGuard)
 @Controller('users')
 export class UsersController {
@@ -21,10 +23,10 @@ export class UsersController {
   async getUsers(
     @Query('email') email: string,
     @Query('role') role: string,
-    @Query('limit') limit: number,
-    @Query('page') page: number,
+    @Query('limit') limit: number = 5,
+    @Query('page') page: number = 1,
   ): Promise<{
-    users: Partial<User>[],
+    users: Partial<UserDTO>[],
     total: number
   }> {
     this.logger.log(`Getting users with email: ${email}, role: ${role}, limit: ${limit}, page: ${page}`);
@@ -37,9 +39,7 @@ export class UsersController {
 
   @Get('search')
   async searchByEmail(@Query('email') email: string): Promise<UserDTO[]> {
-    if (!email) {
-      return [];
-    }
+    if (!email) return [];
     return await this.userService.searchByEmail(email);
   }
 

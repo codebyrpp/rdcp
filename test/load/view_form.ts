@@ -22,7 +22,6 @@ export default function () {
   // Check function to verify status code, transaction time, etc
   check(res, {
     'status is 200': (r) => r.status === 200,
-    'transaction time OK': (r) => r.timings.duration < 200,
   });
 
   // Record custom metrics

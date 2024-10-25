@@ -5,7 +5,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 import {
   UserAccountCreationEvent,
   UserPasswordResetEvent,
-} from 'src/interface/event-types.interface';
+} from 'src/common/event-types.interface';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()

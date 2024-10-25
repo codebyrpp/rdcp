@@ -21,7 +21,9 @@ import { FormAuthorizationGuard } from './forms.guard';
 import { FormActionMeta } from './decorators/form-action.decorator';
 import { FormId } from './decorators/form-id.decorator';
 import { Form } from './entities/form.schema';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags("Forms")
 @UseGuards(AuthGuard)
 @Controller('forms')
 export class FormsController {
