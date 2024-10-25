@@ -14,9 +14,10 @@ import { baseExtraAttributes, basePropertiesSchema, basePropertiesSchemaType } f
 import useFieldValidation from "./validations/useFieldValidation";
 import { FieldProperties } from "./validations/FieldProperties";
 import { FieldErrors } from "./FieldErrors";
+import { QuestionPlaceholder } from "./placeholders";
 
 const type: ElementsType = "NumberField";
-const PLACEHOLDER = "Number";
+const PLACEHOLDER = QuestionPlaceholder[type];
 
 export const NumberFieldFormElement: FormElement = {
     type,

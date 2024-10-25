@@ -16,7 +16,6 @@ import LabelProperty from "./common/LabelProperty";
 import RequiredProperty from "./common/RequiredProperty";
 import { InputDescription, InputLabel } from "./common/Input";
 import ClearableSelect from "@/components/common/ClearableSelect";
-import DraggableList from "./common/DraggableList";
 import useFormValidation from "./validations/useFormValidation";
 import { FieldErrors } from "./FieldErrors";
 import { SelectOptions } from "./common/SelectOptions";

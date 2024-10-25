@@ -19,12 +19,17 @@ import {
   TooltipContent,
   TooltipProvider,
 } from "../ui/tooltip"; // Adjust your imports as necessary
-import {Form as FormModel} from "@/models/forms";
+import { Form as FormModel } from "@/models/forms";
+import { Link2Icon } from "lucide-react";
+import { useToast } from "../ui/use-toast";
+import { useState } from "react";
 
 const FormUpdateFormSettings = (props: {
   id: string;
-  onUpdateForm?: (form: Partial<FormModel>) => void; 
+  onUpdateForm?: (form: Partial<FormModel>) => void;
 }) => {
+  const { toast } = useToast()
+
   const { form, handleUpdateForm, isSuccess } =
     useFormSettingsViewModel(props.id, props.onUpdateForm);
 
@@ -114,6 +119,10 @@ const FormUpdateFormSettings = (props: {
                     </FormItem>
                   )}
                 />
+                {/* if is published */}
+                {form.getValues().isPublished && (
+                  <FormLink id={props.id} />
+                )}
                 <FormField
                   control={form.control}
                   name="multipleResponses"
@@ -163,3 +172,34 @@ const FormUpdateFormSettings = (props: {
 };
 
 export default FormUpdateFormSettings;
+
+function FormLink(props: { id: string }) {
+
+  const { toast } = useToast();
+  const [copied, setCopied] = useState(false);
+
+  return <div className="flex items-center gap-2 max-w-full">
+    <FormLabel>{`${window.location.origin}/forms/${props.id}/view`}</FormLabel>
+    <Button
+      onClick={(e) => {
+        e.preventDefault();
+        navigator.clipboard.writeText(`${window.location.origin}/forms/${props.id}/view`);
+        setCopied(true);
+        toast({
+          title: 'Link Copied',
+          description: 'Form link copied to clipboard',
+          variant: 'success',
+          duration: 2000
+        })
+      }}
+      variant={"icon"} size={"sm"} className='flex gap-2'>
+      {
+        copied ?
+          <Link2Icon className="text-green-500" />
+          :
+          <Link2Icon />
+      }
+    </Button>
+  </div>;
+}
+
