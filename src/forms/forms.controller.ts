@@ -90,8 +90,15 @@ export class FormsController {
   @UseGuards(FormAuthorizationGuard)
   @FormActionMeta('edit_form_schema')
   @Post(':formId/save-form')
-  async saveForm(@FormId() formId: string, @Body() body) {
+  async saveForm(
+    @FormId() formId: string,
+    @Body() body,
+    @User() user: AuthenticatedUser
+  ) {
     this.logger.debug(`Saving form schema with id: ${formId}`);
+
+    await this.formEditingService.formModificationAssert(formId, user.id);
+
     const { data: schema } = body;
     await this.formsService.saveFormSchema(formId, schema);
     return { success: true };

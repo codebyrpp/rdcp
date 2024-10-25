@@ -5,9 +5,10 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class FormsRepository {
+
   constructor(
     @InjectModel(Form.name) private readonly formModel: Model<FormDocument>,
-  ) {}
+  ) { }
 
   async create(form: Form): Promise<Form> {
     const created = await this.formModel.create(form);
@@ -35,5 +36,9 @@ export class FormsRepository {
 
   async delete(id: string): Promise<Form> {
     return await this.formModel.findByIdAndDelete(id).exec();
+  }
+
+  async isParticipant(userId: string) {
+    return await this.formModel.find({ 'participants.id': userId }) !== null;
   }
 }
