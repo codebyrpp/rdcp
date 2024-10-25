@@ -72,7 +72,7 @@ export class ResponsesService {
     }
 
     private validateRequiredFields(schema: Record<string, any>[], body: Record<string, any>, files: Express.Multer.File[]) {
-        // TODO: check the accuracy of  this method
+        // FIXME: This function is not working as expected
         const requiredFields = schema.filter(field => field.extraAttributes.required);
 
         if (requiredFields.length > 0) {
