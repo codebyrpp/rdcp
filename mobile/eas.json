@@ -1,0 +1,32 @@
+{
+  "cli": {
+    "version": ">= 10.0.2"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_DOMAIN": "https://rdcp-server.greenpond-49de0879.australiaeast.azurecontainerapps.io"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_DOMAIN": "https://rdcp-server.greenpond-49de0879.australiaeast.azurecontainerapps.io"
+      }
+    },
+    "production": {
+      "android": {
+        "image": "latest",
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_DOMAIN": "https://rdcp-server.greenpond-49de0879.australiaeast.azurecontainerapps.io"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
