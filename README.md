@@ -4,6 +4,9 @@
 
 The Research Data Collector Platform is a comprehensive application designed for researchers to collect data from participants. It provides tools for creating surveys, distributing them, and analyzing the collected data. The platform consists of a backend API and a web frontend.
 
+![](docs/guide/images/16.jpg)
+![](docs/guide/images/18.jpg)
+
 ## Technologies Used
 ![](https://skillicons.dev/icons?i=nestjs,mongodb,redis,typescript,react,tailwindcss,jest,cypress,docker,git,githubactions,yarn&perline=6)
 - **Backend**: NestJS, MongoDB, Redis, TypeScript
