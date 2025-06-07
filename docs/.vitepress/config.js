@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress';
 
 export default defineConfig({
   title: 'Research Data Collector Platform',
+  base: '/rdcp/',
   description: 'User Manual',
   themeConfig: {
     nav: [
